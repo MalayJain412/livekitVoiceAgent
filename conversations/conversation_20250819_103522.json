@@ -1,0 +1,28 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-08-19T10:35:22.802677",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते, मैं ट्रायोटेक की सेल्स असिस्टेंट हूँ। मैं आपकी किस प्रकार मदद कर सकती हूँ?",
+      "timestamp": "2025-08-19T10:35:23.625992",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "me charantech se bool raha hu, mera name anurag he",
+      "timestamp": "2025-08-19T10:35:58.626559",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते अनुराग जी,  चरण्टेक से आपका स्वागत है।  मैं आपकी किस प्रकार मदद कर सकती हूँ?  क्या आप किसी खास उत्पाद या सेवा के बारे में जानना चाहते हैं, या फिर कोई और सवाल है?",
+      "timestamp": "2025-08-19T10:35:59.689947",
+      "source": "cartesia_tts"
+    }
+  ]
+}

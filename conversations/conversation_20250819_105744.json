@@ -1,0 +1,178 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-08-19T10:57:46.160831",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-08-19T10:57:46.719007",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-08-19T10:57:49.147481",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-08-19T10:57:51.631343",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते, मैं ट्रायोटेक की सेल्स असिस्टेंट हूँ। मैं आपकी किस प्रकार मदद कर सकती हूँ?",
+      "timestamp": "2025-08-19T10:57:52.793187",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "जैनी के बारे में जानकारी चाहिए जैनी क्या है?",
+      "timestamp": "2025-08-19T10:58:04.367776",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "जैनी के बारे में जानकारी चाहिए जैनी क्या है?",
+      "timestamp": "2025-08-19T10:58:04.921932",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "जैनी के बारे में जानकारी चाहिए जैनी क्या है?",
+      "timestamp": "2025-08-19T10:58:07.362433",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "ट्रायोटेक में, हम डिजिटल ट्रांसफॉर्मेशन को आगे बढ़ाने के लिए डिज़ाइन किए गए AI-पावर्ड उत्पादों के विकास में विशेषज्ञता रखते हैं। एक उत्पाद-आधारित कंपनी के रूप में, हम नवीन समाधान प्रदान करने पर ध्यान केंद्रित करते हैं जो व्यवसाय संचालन को बेहतर बनाने के लिए आर्टिफिशियल इंटेलिजेंस की शक्ति का उपयोग करते हैं। हमारा लक्ष्य अत्याधुनिक उपकरण बनाना है जो व्यवसायों को अधिक कुशल बनाने, स्मार्ट निर्णय लेने और निर्बाध AI एकीकरण के माध्यम से ग्राहक इंटरैक्शन में सुधार करने में मदद करते हैं।\n\nआप जेनी के बारे में कौन सी विशिष्ट जानकारी जानना चाहते हैं?  कृपया मुझे बताएँ ताकि मैं आपको सही जानकारी दे सकूँ।",
+      "timestamp": "2025-08-19T10:58:09.355187",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "वैनिका काम क्या है?",
+      "timestamp": "2025-08-19T10:58:48.351776",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "मुझे माफ़ करना, लेकिन मुझे \"वैनिका\" के बारे में कोई जानकारी नहीं है। क्या आपका मतलब किसी और उत्पाद या सेवा से है, या शायद आपने कोई गलत नाम लिखा है?  कृपया और स्पष्टता प्रदान करें ताकि मैं आपकी मदद कर सकूं।",
+      "timestamp": "2025-08-19T10:58:49.549273",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "वैनिका",
+      "timestamp": "2025-08-19T10:58:50.755925",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "क्षमा करें, मुझे \"वैनिका\" के बारे में कोई जानकारी नहीं है। क्या आप मुझे और कुछ बता सकते हैं?  शायद आप किसी और उत्पाद या सेवा के बारे में पूछ रहे हैं जिसके बारे में मैं आपको जानकारी दे सकती हूँ?  या, क्या आप मुझे बता सकते हैं कि आप किस तरह की जानकारी ढूंढ रहे हैं?",
+      "timestamp": "2025-08-19T10:58:53.036119",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "वैनिका",
+      "timestamp": "2025-08-19T10:59:01.145037",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "वैनिका",
+      "timestamp": "2025-08-19T10:59:01.719579",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "वैनिका",
+      "timestamp": "2025-08-19T10:59:04.180872",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "वैनिका",
+      "timestamp": "2025-08-19T10:59:06.615282",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:19.895496",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:20.449291",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:22.914279",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:25.366840",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:27.050012",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:27.600247",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:30.065514",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:32.497405",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:34.601792",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:35.170735",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:37.632515",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "xeny",
+      "timestamp": "2025-08-19T10:59:40.095216",
+      "source": "google_llm"
+    }
+  ]
+}

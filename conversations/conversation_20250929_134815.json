@@ -1,0 +1,64 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-09-29T13:48:17.971001",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Namaste! Main Triotech ki Sales Assistant hoon. Triotech mein, hum AI-powered products develop karte hain jo digital transformation drive karte hain. As a product-based company, hum innovative solutions par focus karte hain jo business operations ko enhance karti hain. Hamari solutions aapko efficiency, smarter decisions aur better customer interaction ke liye help karti hain.\n\nMain aapki kis tarah help kar sakti hoon?",
+      "timestamp": "2025-09-29T13:48:19.602729",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Just tell me about the stock.",
+      "timestamp": "2025-09-29T13:48:27.943031",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Ji, maaf kariyega, main stock market ke baare mein jaankari nahi de sakti. Triotech ek product-based company hai jo AI-powered solutions banati hai.\n\nAgar aapko hamare AI products jaise Justtawk, Convoze, Xeny, Fohrce, Ringingo, AI Chat Bot, ya AI LMS ke baare mein kuch jaanna hai, toh main zaroor help kar sakti hoon.\n\nAap kis stock ke baare mein jaan'na chahte the, ya kya main aapko hamare AI solutions ke baare mein bata sakti hoon?",
+      "timestamp": "2025-09-29T13:48:30.483694",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "I want to know about the test talk.",
+      "timestamp": "2025-09-29T13:48:36.799517",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Aap shayad Justtawk ke baare mein jaanna chahte hain? Main aapko uske baare mein bata sakti hoon.",
+      "timestamp": "2025-09-29T13:48:38.436107",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Please tell me about it.",
+      "timestamp": "2025-09-29T13:48:50.294851",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Ji, main samajh gaya. Justtawk ek AI-powered Virtual Call Center hai jo intelligent voice bots, real-time analytics aur automation ko integrate karta hai. Yeh SMBs, BPOs aur Enterprises ke liye design kiya gaya hai.\n\nAapko Justtawk ke features ke baare mein aur jaankari chahiye, ya isse aapke business ko kaise fayda ho sakta hai, is par baat karein?",
+      "timestamp": "2025-09-29T13:48:51.813705",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Okay. Thank you.",
+      "timestamp": "2025-09-29T13:49:04.138492",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Aapka swagat hai! Kya aap Triotech ke kisi aur product ke baare mein jaanna chahte hain, ya main aapki aur koi madad kar sakti hoon?",
+      "timestamp": "2025-09-29T13:49:05.468220",
+      "source": "cartesia_tts"
+    }
+  ]
+}

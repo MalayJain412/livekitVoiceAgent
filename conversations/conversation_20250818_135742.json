@@ -1,0 +1,46 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-08-18T13:57:43.694147",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते, मेरा नाम फ्राइडे है, आपका निजी सहायक, मैं आपकी कैसे मदद कर सकती हूँ?",
+      "timestamp": "2025-08-18T13:57:45.110937",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "hello",
+      "timestamp": "2025-08-18T13:57:51.586782",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते, क्या आपकी कोई खास ज़रूरत है?",
+      "timestamp": "2025-08-18T13:57:52.289953",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "bhopal ka temp?",
+      "timestamp": "2025-08-18T13:58:02.615316",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "जी बॉस, मैं भोपाल का तापमान अभी देख रही हूँ।",
+      "timestamp": "2025-08-18T13:58:03.793186",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "agent",
+      "content": "भोपाल का तापमान 28 डिग्री सेल्सियस है, साहब।",
+      "timestamp": "2025-08-18T13:58:13.626235",
+      "source": "cartesia_tts"
+    }
+  ]
+}

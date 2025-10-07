@@ -1,0 +1,578 @@
+Business Manager
+
+Introduction
+UrbanPiper's Business Manager is designed to simplify the back-of-house operations
+for your restaurant. It offers features that allow you to manage multiple brands and
+locations, organize menus across various online food delivery platforms such as
+DoorDash, Grubhub, and Uber Eats, user management, and access analytics for
+informed decision-making. To access the Business Manager, you need to login to your
+Restaurant Portal at login.urbanpiper.com using your credentials.
+
+Key Features of a Business Manager
+Brand Management
+Multi-Brand Support: Allows restaurants to manage each brand independently, making
+it ideal for groups with diverse brand offerings.
+Consistency and Customization: Helps maintain a unified brand identity across
+platforms while enabling each brand to tailor operations to meet unique goals.
+Location Management
+Multi-Location Control: Offers centralized oversight for all outlets, allowing managers
+to monitor performance, menus, and operations in one place.
+Real-Time Updates: Ensures immediate changes across locations, such as new
+promotions or menu updates, for seamless and synchronized operations.
+Menu Management
+Unified Menu Control: Restaurants can manage and update their menus across all
+platforms through a single interface.
+Enhanced Features: Supports item availability management, pricing adjustments, and
+seasonal offers, providing flexibility for dynamic menu adjustments.
+Analytics & Reporting
+Sales and Performance Reports: Generates reports on key metrics, including sales
+trends and revenue growth, helping businesses identify strengths and areas for
+improvement.
+Visual Analytics: Provides intuitive visuals and detailed performance metrics for indepth insights into business operations.
+User Management
+Role-Based Access Control: Allows the creation of multiple user roles with custom
+access levels for store managers, staff, and administrators.
+
+Secure Permissions: Protects sensitive data through permission settings, ensuring only
+relevant access for each team member.
+
+Creating a Brand
+{% embed url="https://urbanpiper.portal.trainn.co/share/v6PHwomkfNNyqWRzRJ9ZrA" %}
+
+How to Create a Brand
+UrbanPiper allows you to manage all your brands from a single place. Follow these steps to
+create a new brand:
+1. Navigate to the Brands section from the navigation menu.
+2. Here, you can view all the existing brands that have already been created.
+3. To create a new brand, click on Create New.
+4. Enter the name of the brand and click Next.
+5. Choose the location you would like to associate with this brand.
+6. Click on Create to add this new brand.
+We have now successfully created a new brand.
+{% hint style="success" %} At any given point of time you can create as many Brands as you
+want. Just make sure that you associate your locations correctly as explained in creatinga-new-location. {% endhint %}
+
+Creating a new Location
+{% embed url="https://urbanpiper.portal.trainn.co/share/thL637P4WHKx06rv9C4zcQ" %}
+
+How to Add a New Location
+In this article, we will guide you through adding a new location on UrbanPiper.
+1. Log into your Atlas portal: Begin by logging-in into your Atlas portal.
+2. Navigate to Locations: Click on the 'Location' tab.
+3. Add a New Location: Click on 'Add Location'.
+4. Select Number of Locations: Choose the number of locations you want to create.
+5. Enter Location Details: Fill in the details for the new location, including:
+a. Name
+b. Address
+c. City
+d. The contact number of the restaurant
+e. Email address (if available)
+6. Proceed to Next Step: Click 'Next' once all the details are entered.
+7. Multi-Brand Setup (Optional): If applicable, associate the Brand with the location
+and click 'Next'.
+8. Catalog Options: Choose to either copy the catalog from existing locations or skip
+to add it later.
+9. Select Platform or DSP: Choose the platform or DSP with which you want to
+associate the location.
+10. Finish: Click 'Finish' to add the location.
+Your new location is now created.
+
+Setting up Schedules for Locations
+{% embed url="https://urbanpiper.portal.trainn.co/share/3ykCkZHVj88v5NtJCLz2QA" %}
+
+How to Create Associate Schedules for Operating Hours
+at a Location
+In this guide, we will learn how to create schedules to set the operating hours for a given
+location. Follow these steps to create and associate schedules effectively.
+1. Navigate to Schedules:
+a. On the navigation section, click on Groups.
+b. Then, click on Schedules.
+2. Create a New Schedule:
+a. Click on Regular Schedules and then Create New.
+b. Enter the name of the schedule.
+
+c. Click on Next to proceed.
+3. Add Timings:
+a. Select the type of schedule: Daily, Weekdays, Weekend, or Custom.
+b. Select the open and close time.
+c. You can choose to add further timings if applicable.
+d. Once the timings are created, click on Save.
+4. Associate Locations:
+a. Click on Associate Your First Location.
+b. Select the list of locations you want to associate with the schedule.
+c. Click on Update to finalize the association.
+Now, the schedule has been successfully created and associated with the selected
+location. Thank you for following this guide!
+
+Creating a Menu
+{% embed
+url="https://urbanpiper.portal.trainn.co/share/QhB4CTEaUAPXb464NJTwGg" %}
+
+How to Create a New Menu
+In this video, let's see how to create a new menu on UrbanPiper from scratch.
+
+Steps to Create a New Menu
+1. Click on the Create New button on the menus list.
+2. Define the following four parameters for the new menu:
+a. Name: The name of the menu.
+b. Associated Brand: The brand associated with the menu. UrbanPiper allows
+you to run multiple brands out of the same portal. You can choose any one of
+these brands while creating the menu. Note that if you want to run the same
+menu on two different brands, you need to duplicate the menu and
+associate it with the other brand.
+c. Description: A thorough description of the menu.
+d. Cover Image: An image representing the menu.
+3. Fill in the rest of the attributes:
+
+a. For this example, we will call this a regular menu, a menu which the
+restaurant runs on a day-to-day basis.
+b. Provide a thorough description for it.
+c. Upload a cover image.
+4. Once all the details are filled, click on Submit to create the menu.
+5. To further proceed, you can either start with creating your first section or copy
+another menu.
+And that's it! That's how you create a menu on UrbanPiper.
+
+Configuring your Menu
+{% embed url="https://urbanpiper.portal.trainn.co/share/oDc5q9lCcWv0jtQcs5vB4A" %}
+
+How to Add Items and Sections to your Menu
+In this guide, we'll walk through the steps to add items and sections to your menu. Follow
+along to easily manage your menu items.
+Step 1: Select the Menu
+First, navigate to the menu you want to modify. In this example, we'll use the regular menu
+associated with the Piper Pizza brand.
+Step 2: Create a New Menu Section
+Next, choose to create a new menu section. This will prompt you to enter the details of
+your first section.
+•
+•
+•
+
+Name the section (e.g., "Pizzas").
+Associate a schedule.
+Optional: Add a description and cover image.
+
+Once you've created your first section, you can continue to add more sections by clicking
+on the "Create Section" button. For example, add another section for "Appetizers" and then
+click on submit.
+
+Step 3: Add Items to a Section
+Now, let's add items to the "Pizzas" section:
+•
+•
+•
+
+Go to the "Pizzas" section and click on "Add Items".
+Associate the pizzas from your base items.
+Click "Save" to complete the associations.
+
+Step 4: Create Subsections
+Let's create a subsection under "Appetizers":
+•
+•
+•
+
+Go to "Appetizers" and create a subsection.
+Name the first subsection (e.g., "Garlic Bread").
+Associate the items (e.g., two types of garlic bread) to this subsection.
+
+To add another subsection, follow the same steps. For example, create a subsection
+called "Fries". If you don't have any fries in your items, you can create a new item on the fly
+and save it.
+Step 5: Edit Item Attributes
+You can also edit attributes such as item name and price. For instance, you can associate
+an image to an item for better visual representation.
+
+Conclusion
+And that's it! You've successfully created sections and items on your menu. Easy as that.
+
+Adding Modifier Groups and Modifiers
+{% embed
+url="https://urbanpiper.portal.trainn.co/share/slUFNxGGHTfebTm7EnQmXA" %}
+
+How to Add Modifier Groups and Modifiers to Your Menu
+In this video, let's see how to add modifier groups and modifiers to your menu. Before we
+get into the details of how to go about this, let's first learn about the different kinds of
+modifier groups on Urban Piper.
+
+Types of Modifier Groups on Urban Piper
+There are two types of modifier groups on Urban Piper:
+•
+•
+
+Add-ons: Optional modifications such as extra onion or extra chicken.
+Variants: Mandatory selections that you want an end user to make while buying an
+item. For example, size is a mandatory selection in a lot of restaurants, it has to be
+one of regular, medium, or large.
+
+So, the modifier group size is a modifier group of type variants, while toppings are a
+modifier group of type add-ons.
+
+Associating Modifier Groups and Modifiers to the Menu
+Now that we have understood the types of modifier groups, let's move forward and
+understand how to associate these on the menu. Follow these steps:
+1. Open the regular menu and select the item you want to modify, for example, an 8inch golden corn pizza.
+2. Click on the update button in the modifier group tab.
+3. Associate the modifier group size to this pizza. Since size is a modifier group, you
+will also have to associate the modifiers belonging to size.
+4. If you want to create new modifiers, click on the button to enter the details and
+save. However, in this case, we will associate the existing ones.
+5. To change the price of a modifier, simply go and change the default sales price. For
+example, if it costs 100 rupees for a regular pizza, edit the default sales price to 100
+and save it.
+6. Similarly, you can edit the prices of the medium and large pizzas too.
+And that's it! That's how you associate modifier groups and modifiers to a menu.
+
+Importing your Menus
+{% embed url="https://urbanpiper.portal.trainn.co/share/58DqFYSuncT3xFQeAbEp4w" %}
+
+How to Import a Menu from a POS System
+In this video, we will learn how to import a menu from a POS system. If you have a live POS
+integration on Urban Piper, you can make menu changes on the POS and import them to
+be published on the DSPs directly. This allows you to manage your menu from a single
+platform, which is your POS in this case.
+
+Steps to Import the Menu from the POS
+1. Head to Atlas and click on Menu Management.
+2. Click on Menus. The screen will show you the active menu for your business.
+3. Click on Import Menu.
+4. Select the location from where you want to publish the menu.
+5. Click on Import. A menu pull request will be triggered, and the menu will be
+updated from the POS.
+6. You can also import the menu directly from the POS by clicking on the menu and
+selecting the menu.
+Your menu import is in progress. It usually takes 2 to 5 minutes for the menu to be
+updated. Once the menu is pulled from the POS, you can make the necessary changes and
+publish the menu on the DSPs.
+
+Publishing your Menu
+{% embed
+url="https://urbanpiper.portal.trainn.co/share/Vt3JQbQUmm2Dtz6e6PkK4w" %}
+
+How to Publish Your Menu on Urban Piper
+In this video, let's see how to publish your menu on Urban Piper.
+
+Types of Publishes
+Let's start with learning about the different kinds of publishes you can do on Urban Piper:
+•
+
+•
+
+Regular On-Demand Publish: When you do an on-demand publish by clicking on
+Publish Now, we start the process of updating your menu as soon as you confirm
+that you want to publish your changes.
+Scheduled Publish: This option is used to update the menu at a later point in the
+future.
+
+Ways to Publish a Menu
+Now that you've understood the difference between the two, let me show you the different
+ways in which you can publish a menu on Urban Piper:
+1. Through the Menus List
+If you have made your changes already and simply want to publish the menu, click on
+Publish Now or Scheduled Publish button on the menus list to publish your menu.
+2. Within a Menu
+You can also publish a menu within the menu itself:
+•
+•
+
+Publish Now or Schedule Publish: Use the Publish button in the menu.
+Preview Menu: To do this, select the location and platform whose menu you want
+to preview. Our internal verification engine runs checks on your menu. If there are
+no errors or warnings, the menu is ready to publish. Once you've verified your menu,
+you can click on Publish.
+
+Publishing Steps
+1. Select the locations you want to publish to.
+2. Select the platforms you want to publish to.
+3. Click on Publish.
+
+Scheduled Publish Steps
+1. Click on the Scheduled Publish button.
+
+2. Select locations and platforms in a similar way to a regular publish.
+3. Our internal validation checks for errors and warnings on the menu.
+4. Select the date and time.
+5. Clicking on Submit confirms the schedule for a later point of time.
+
+Canceling a Scheduled Publish
+If you have set up a schedule, you can cancel it using the same flow as scheduling a
+publish. You'll see a Cancel Scheduled Publish button instead in that case.
+And that's about it. That's how you publish a menu on Urban Piper.
+
+Viewing your Orders
+{% embed url="https://urbanpipersupport.portal.trainn.co/share/c9H3wMiP34fZOGDFAzeOoQ" %}
+
+Keeping a track of your Orders
+In this video, we explore how to effectively manage orders using the Urban Piper Business
+Manager. This tool empowers you to oversee all orders processed across various locations
+and platforms, complementing the day-to-day order management by operators and
+cashiers using the Order Tracker tool.
+{% hint style="warning" %} This section will move under the 'Analytics' section in the near
+future. {% endhint %}
+
+Viewing your Orders
+1. Login: Visit login.urbanpiper.com and log in using your credentials.
+2. Access Orders: Click on the 'Orders' section to view a list of orders processed
+across different locations and platforms for your business.
+Order List View
+•
+
+Order ID: Unique identifier for each order.
+
+•
+
+Platform IDs: Identifiers for the platforms where orders were placed.
+
+•
+•
+
+Date and Time: When the order was placed.
+Location: The location for which the order was placed.
+
+•
+•
+•
+•
+
+Customer Details: Quick view of the customer information.
+Payment Mode: The method of payment used by the customer.
+Order Status: Current status of the order.
+Amount: Total amount for the order.
+
+Order Details
+To view detailed information about an order, click on the respective tab. This will display:
+•
+•
+•
+•
+
+Order Summary: List of items in the order, including any add-ons or
+customizations.
+Special Instructions: Any specific instructions provided by the customer.
+Delivery Info: Details about the delivery.
+Customer Info: Additional customer information.
+
+Order Lifecycle
+To acknowledge your orders and manage its delivery states, we recommend using our
+Store Manager.
+
+User Access
+{% embed url="https://urbanpiper.portal.trainn.co/share/e4oUhGbfTtJqgWnaq7VsAA" %}
+
+User Access in Atlas
+Navigation
+Let's begin by navigating to the User Access section:
+1. In the Navigation panel, click on the Settings tab.
+2. From the drop-down, select the User Access tab.
+Note: This section is visible only to users with Admin LOL.
+
+Inviting a New Employee
+To invite a new employee to join your team on Atlas:
+1. Click on the Invite button.
+2. Add the employee's email address.
+3. Assign a role to the employee based on their responsibilities within your
+organization.
+Access to various sections on Atlas is limited by user roles. For example, you can give
+access only to sections related to Marketing and Support roles for a specific user.
+
+Sending the Invite
+Once you've set up the invite:
+1. An email invite will be sent to the employee's email address.
+2. If the invite is not immediately visible, search your inbox with the subject line: Your
+Atlas invite has arrived.
+3. Click on the Join Team button in the invite.
+
+Completing the Profile
+Upon accepting the invite, the employee will be prompted to:
+1. Complete their profile with details like first name, last name, and phone number.
+2. Validate their phone number with a one-time password.
+3. Pick a unique username and set a password.
+4. Enter their email address to create a new user account.
+Once completed, the employee can log in to Atlas using their new username and
+password.
+
+Tracking Invites
+While waiting for staff to accept their invites, you can track them:
+1. Go to the Invites tab to see all pending invites.
+2. You have the option to resend or cancel an invite.
+
+Understanding User Roles
+Navigate to the Roles tab to view all user roles on Atlas:
+•
+•
+
+Admin: Provides unfettered access across the entire Atlas portal.
+Default: The role with the least access, allowing users to view catalogs and
+locations only.
+
+To assign a role:
+1. Click on the name of the role to view its details and permissions.
+2. Click on the Users tab to view users associated with this role.
+3. To assign a role to a new user, click on the Update button and select the user.
+
+Updating User Roles
+To update a user's role:
+1. Go to the Users tab and click on the name of a user.
+2. Update the role and click on the Save button.
+
+Conclusion
+This concludes the User Access section. We covered navigation, inviting new employees,
+tracking invites, understanding user roles, and updating user roles.
+Thank you for watching!
+
+Understanding Standard Roles in Prime &
+Atlas
+Easily assign roles to your employees based on their responsibilities within your
+organization. This ensures your team has the right access to efficiently manage your
+business on both Prime and Atlas.
+
+Standard Roles in Prime
+Prime offers 6 standard roles, primarily for managing your in-store operations. You can
+also assign roles with limited access based on specific locations.
+•
+
+•
+•
+•
+•
+•
+
+Captain: Perfect for your front-of-house team. Captains take customer orders,
+especially for dine-in. Please note, they cannot settle bills; that's handled by
+Cashiers. This role is exclusively available on the Prime app (mobile/tablet).\
+Online Order Processor: This role is all about managing online orders. They handle
+tasks like printing bills/KOTs (Kitchen Order Tickets) and updating order statuses.\
+Online Order Supervisor: Beyond an Online Order Processor's duties, Supervisors
+can also manage your store's availability (open/close) and update outlet stock.\
+Cashier: Your counter expert! Cashiers manage operational shifts using registers,
+process bills, and complete settlements.\
+Manager: Managers oversee your store's daily operations. They handle inventory
+transactions and review important reports and analytics\
+Administrator: Typically, the store owner, Administrators have full access to Prime.
+They are responsible for critical functions like adding new stores and managing
+users.\
+
+Custom Roles in Prime
+Prime gives you the flexibility to create custom roles tailored to your specific needs. With
+custom roles, you can assign very specific permissions, giving you granular control over
+what each team member can do. This feature is exclusive to Prime.
+
+Standard Roles in Atlas
+Atlas provides a range of standard roles for managing your broader business operations
+and data. The location-level access is not available in Atlas
+•
+
+Admin: The most powerful role in Atlas. An Admin has complete control over the
+platform, managing user accounts, system configurations, and all operational
+settings. This role is ideal for owners or top-level managers.
+
+•
+
+•
+
+•
+
+•
+
+•
+
+•
+
+•
+
+•
+
+•
+
+Hub: Focuses on the central setup and crucial store-level configurations in Atlas.
+Hub users can view and update foundational settings, ensuring your business
+functions correctly within the platform.
+Catalogue: Manages all your product and service listings within Atlas. Users with
+this role can view, create, and update categories, items, modifiers, taxes, and
+charges, keeping your digital offerings accurate.
+Marketing: Equips your team to run promotions and engage customers in Atlas. This
+role allows users to view and create campaigns, manage customer segments, and
+implement discount strategies, driving sales and loyalty.
+Billing: Provides oversight of all financial transactions and credit management in
+your Atlas account. Billing users can access detailed transaction records and
+invoices, and initiate credit purchases.\
+Sales Analytics: Designed for in-depth analysis of your sales performance in Atlas.
+Users can access comprehensive reports on orders and revenue, helping them
+identify trends and make data-driven decisions.\
+Operation Analytics: Offers critical insights into the efficiency of your operations
+managed through Atlas. This role allows users to monitor order status metrics and
+analyze workflows to pinpoint areas for improvement.\
+Support: Tailored for customer service and feedback handling in Atlas. Support
+users can access customer details, manage feedback, and analyze NPS (Net
+Promoter Scores), crucial for enhancing customer satisfaction.
+Non-HQ Analytics: Provides access to analytics data, but strictly limited to specific
+locations. Users cannot download full business data or reports without a location
+filter, ensuring localized data security.\
+Non-HQ Report: Similar to Non-HQ Analytics, this role limits report access to
+designated locations only. Users cannot download reports that cover the entire
+business or access data for unauthorized locations.
+
+How to Reset Your Password ?
+{% embed url="https://urbanpiper.portal.trainn.co/share/ms29SQxkXPuI5lY3DcpR9g" %}
+People often forget their user ID and password when logging into our platform. Here's a
+simple guide to updating your password.
+
+Step-by-Step Guide
+1. Visit login.urbanpiper.com.
+2. Enter your registered phone number or email address.
+3. Your user ID will be your registered email address or phone number.
+4. Click Continue.
+5. Select the Forgot Password option.
+6. Check your registered phone number or email for an OTP.
+7. Kindly input the OTP.
+8. Create a new password. Please make sure your password is strong and unique.
+9. Click on Reset Password.
+10. Wait a moment. Your password has been reset successfully.
+You can use this password for future logins. Thank you.
+
+How to Reset PIN for Store Operations?
+{% embed
+url="https://urbanpiper.portal.trainn.co/share/AOpBX1DvonfOYM3gHO0znw" %}
+
+Steps to Reset the PIN
+1. Navigate to All Apps.
+2. Click on Settings.
+3. Proceed to Users.
+4. Search for the user name.
+5. Locate your user account.
+6. Open the user profile.
+7. Select Edit access.
+8. Scroll down to find the PIN section.
+9. Enter the new PIN and save the changes.
+10. Wait a moment for the changes to take effect.
+
+How to Archive/Delete, or Restore Atlas or
+Prime User?
+{% embed url="https://urbanpiper.portal.trainn.co/share/wCi4QMOkbt609c4BYiGefA" %}
+This guide will walk you through the simple steps to manage user accounts in Atlas,
+including how to archive, delete, and restore users. We do not delete a user completely on
+Atlas.
+
+Steps to Archive a User
+Archiving a user allows you to retain their historical data for records while revoking their
+active access to Atlas.
+1. Go to All Apps in your Atlas dashboard.
+2. Select Settings.
+3. Navigate to the Users tab.
+4. Choose the user you want to archive.
+5. Click the Archive button.
+6. Check the box to confirm "Proceed with archiving the user."
+7. Click Archive to finalize the process.
+You'll see a "User archiving completed successfully" confirmation. All archived users are
+listed under the Archived status tab, allowing you to easily view them.
+
+Restoring an Archived User
+If you need to grant an archived user access to Atlas again, you can easily restore their
+account.
+1. Navigate to the Users tab within Settings.
+2. Change the status filter to Archived to view all archived users.
+3. Select the user you wish to restore.
+
+Click on the Reactivate user button (or Restore).
+

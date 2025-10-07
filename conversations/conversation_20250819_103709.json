@@ -1,0 +1,28 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-08-19T10:37:10.366531",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते, मैं ट्रायोटेक की सेल्स असिस्टेंट हूँ। मैं आपकी किस प्रकार मदद कर सकती हूँ?",
+      "timestamp": "2025-08-19T10:37:11.253189",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "I am anurag from techtalk india",
+      "timestamp": "2025-08-19T10:37:27.793221",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते अनुराग जी!  टेकटॉक इंडिया से आपका स्वागत है।  आप किस प्रकार की सहायता चाहते हैं?  क्या आप किसी खास उत्पाद या सेवा के बारे में जानना चाहते हैं, या कोई और सवाल है?",
+      "timestamp": "2025-08-19T10:37:28.785510",
+      "source": "cartesia_tts"
+    }
+  ]
+}

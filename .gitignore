@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+# runtime artifacts
+archive/
+node_modules/
+venv/
+*$py.class
+
+# Virtual environments
+venv/
+.env
+
+# Jupyter
+*.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs and temp
+*.log
+*.tmp
+*.bak
+
+# ChromaDB and other large data
+model/chroma_db/

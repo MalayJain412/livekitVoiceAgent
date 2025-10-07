@@ -1,0 +1,34 @@
+{
+  "conversation": [
+    {
+      "role": "agent",
+      "content": "नमस्ते, मेरा नाम फ्राइडे है, आपका निजी सहायक, मैं आपकी कैसे मदद कर सकती हूँ?",
+      "timestamp": "2025-08-18T13:05:29.998424",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Friday. How are you?",
+      "timestamp": "2025-08-18T13:05:40.237598",
+      "source": "deepgram_stt"
+    },
+    {
+      "role": "agent",
+      "content": "मैं बहुत अच्छी हूँ, साहब, और आप?",
+      "timestamp": "2025-08-18T13:05:40.894147",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "बढ़िया हूं. अच्छा मेरे को trial तक भोपाल के बारे में",
+      "timestamp": "2025-08-18T13:05:49.910779",
+      "source": "deepgram_stt"
+    },
+    {
+      "role": "agent",
+      "content": "जी बॉस, मैं अभी भोपाल के बारे में जानकारी इकट्ठा करूँगी।",
+      "timestamp": "2025-08-18T13:05:50.666471",
+      "source": "cartesia_tts"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-08-27T18:31:23.047580",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Namaste! Main Triotech ki Sales Assistant hoon.  Main aapki kis tarah help kar sakti hoon?",
+      "timestamp": "2025-08-27T18:31:24.116804",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "xeny ke bare me batao",
+      "timestamp": "2025-08-27T18:31:44.062276",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Ji haan, Xeny ke bare mein bataati hoon.  Xeny, Triotech ka ek powerful AI-powered platform hai jo aapke business ke liye intelligent automation solutions deta hai. Isse aap apne workflows ko automate kar sakte hain,  data analysis ko improve kar sakte hain, aur customer experience ko behtar bana sakte hain.\n\nXeny ke kuch key features hain:  robust automation capabilities,  predictive analytics,  customizable dashboards, aur seamless integrations.  Isse aap apne business processes ko streamline karke productivity badha sakte hain aur cost-effectiveness improve kar sakte hain.\n\nAapko Xeny mein aur kya jaanna hai?  Shayad aapko demo dekhna chahiye ya pricing jaan na chahiye?  Aapke business ke liye kaise Xeny helpful ho sakta hai, wo bhi discuss kar sakte hain.",
+      "timestamp": "2025-08-27T18:31:46.033262",
+      "source": "cartesia_tts"
+    }
+  ]
+}

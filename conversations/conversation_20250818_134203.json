@@ -1,0 +1,106 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-08-18T13:42:04.995474",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "न",
+      "timestamp": "2025-08-18T13:42:05.694401",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते, मेरा नाम फ्राइडे है, आपका नि",
+      "timestamp": "2025-08-18T13:42:05.805585",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते, मेरा नाम फ्राइडे है, आपका निजी सहायक, मैं आपकी कैसे मदद कर सकती हूँ?",
+      "timestamp": "2025-08-18T13:42:05.898330",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते, मेरा नाम फ्राइडे है, आपका निजी सहायक, मैं आपकी कैसे मदद कर सकती हूँ?",
+      "timestamp": "2025-08-18T13:42:05.901333",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "Hello?",
+      "timestamp": "2025-08-18T13:42:47.615825",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "न",
+      "timestamp": "2025-08-18T13:42:48.207544",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते, क्या मैं आपकी सहायता कर सकती हूँ?",
+      "timestamp": "2025-08-18T13:42:48.338187",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते, क्या मैं आपकी सहायता कर सकती हूँ?",
+      "timestamp": "2025-08-18T13:42:48.359424",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "भोपाल का temperature बताओ",
+      "timestamp": "2025-08-18T13:43:04.233331",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "जी",
+      "timestamp": "2025-08-18T13:43:04.817536",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "जी बॉस, मैं भोपाल का तापमान अभी प्राप्त कर रही हू",
+      "timestamp": "2025-08-18T13:43:04.930271",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "जी बॉस, मैं भोपाल का तापमान अभी प्राप्त कर रही हूँ।",
+      "timestamp": "2025-08-18T13:43:05.054987",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "जी बॉस, मैं भोपाल का तापमान अभी प्राप्त कर रही हूँ।",
+      "timestamp": "2025-08-18T13:43:05.104977",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "जी",
+      "timestamp": "2025-08-18T13:43:11.510164",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "जी बॉस, भोपाल का तापमान २९ डिग्री सेल्स",
+      "timestamp": "2025-08-18T13:43:11.626136",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "जी बॉस, भोपाल का तापमान २९ डिग्री सेल्सियस है।",
+      "timestamp": "2025-08-18T13:43:11.651112",
+      "source": "google_llm"
+    }
+  ]
+}

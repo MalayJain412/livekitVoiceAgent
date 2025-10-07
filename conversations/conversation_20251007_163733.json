@@ -1,0 +1,100 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-10-07T16:37:34.104271",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Namaste! Main Triotech ki Sales Assistant hoon.\n\nAt Triotech, we specialize in developing AI-powered products designed to drive digital transformation. As a product-based company, we focus on innovative solutions that enhance business operations. Hamari solutions aapko efficiency, smarter decisions aur better customer interaction ke liye help karti hain.\n\nMain aapki kis tarah help kar sakti hoon?",
+      "timestamp": "2025-10-07T16:37:36.114288",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:37:36.731995",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:37:41.849312",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:37:48.326263",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:37:49.014809",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:37:51.684828",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:37:57.905854",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:37:59.669429",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:38:04.413287",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:38:13.243239",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:38:14.942679",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:38:19.642130",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:38:25.940085",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:38:29.044401",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "No it's a nothing",
+      "timestamp": "2025-10-07T16:38:30.335348",
+      "source": "google_llm"
+    }
+  ]
+}

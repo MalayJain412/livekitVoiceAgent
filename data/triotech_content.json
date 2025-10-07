@@ -1,0 +1,63 @@
+{
+  "products": [
+    {
+      "name": "Justtawk",
+      "desc": "AI Virtual Call Center integrating intelligent voice bots, real-time analytics and automation.",
+      "target": "SMBs, BPOs, Enterprises"
+    },
+    {
+      "name": "Convoze",
+      "desc": "AI Speech Analyzer for real-time speech analysis, sentiment detection and topic insights.",
+      "target": "Call centers, support teams"
+    },
+    {
+      "name": "Xeny",
+      "desc": "Conversational AI Voice Bot with real-time talk-back and intelligent responses.",
+      "target": "Customer engagement, onboarding"
+    },
+    {
+      "name": "Fohrce",
+      "desc": "AI-powered HRMS automating HR tasks and providing intelligent insights.",
+      "target": "HR, payroll, workforce management"
+    },
+    {
+      "name": "Ringingo",
+      "desc": "AI Dialer with automated call handling, smart routing, and real-time metrics.",
+      "target": "Sales teams, telemarketing"
+    },
+    {
+      "name": "AI Chat Bot",
+      "desc": "Text-based conversational assistant with topic detection and sentiment analysis.",
+      "target": "Web support, FAQs"
+    },
+    {
+      "name": "AI LMS",
+      "desc": "Personalized learning and upskilling platform with career roadmaps.",
+      "target": "Training, education, enterprises"
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Do you integrate with CRM systems?",
+      "a": "Yes, Triotech integrates with Salesforce, Zoho, and HubSpot."
+    },
+    {
+      "q": "Do you support Hindi and English?",
+      "a": "Yes, all products are bilingual and support Hindi + English."
+    },
+    {
+      "q": "What is your pricing model?",
+      "a": "Pricing depends on team size and features. Our sales team will provide a custom quote."
+    },
+    {
+      "q": "How long does deployment take?",
+      "a": "Cloud deployment can be done in days, on-prem in a few weeks."
+    }
+  ],
+  "differentiators": [
+    "Cloud-native and scalable",
+    "AI-first with predictive analytics",
+    "Mobile-friendly design",
+    "Enterprise-grade security"
+  ]
+}

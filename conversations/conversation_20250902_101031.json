@@ -1,0 +1,22 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-09-02T10:10:32.077320",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Namaste! Main Triotech ki Sales Assistant hoon.  Main aapki kis tarah help kar sakti hoon?",
+      "timestamp": "2025-09-02T10:10:32.416127",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "agent",
+      "content": "Namaste! Main Triotech ki Sales Assistant hoon.  Main aapki kis tarah help kar sakti hoon?",
+      "timestamp": "2025-09-02T10:10:33.055544",
+      "source": "cartesia_tts"
+    }
+  ]
+}

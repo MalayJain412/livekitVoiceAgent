@@ -1,0 +1,107 @@
+# FRIDAY AI: Docker Compose for LiveKit Agent with Conversation Logging
+version: '3.8'
+
+services:
+  friday-ai-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: friday-ai-agent
+    environment:
+      - ENVIRONMENT=production
+      - PYTHONUNBUFFERED=1
+      - LIVEKIT_URL=${LIVEKIT_URL}
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - CARTESIA_API_KEY=${CARTESIA_API_KEY}
+      - DEEPGRAM_API_KEY=${DEEPGRAM_API_KEY}
+    volumes:
+      - ./conversations:/app/conversations
+      - friday-logs:/app/logs
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import config; config.setup_conversation_log(); print('Health check passed')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - friday-network
+
+  # Development version with hot reload
+  friday-ai-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: friday-ai-dev
+    environment:
+      - ENVIRONMENT=development
+      - PYTHONUNBUFFERED=1
+      - LIVEKIT_URL=${LIVEKIT_URL}
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - CARTESIA_API_KEY=${CARTESIA_API_KEY}
+      - DEEPGRAM_API_KEY=${DEEPGRAM_API_KEY}
+    volumes:
+      - .:/app
+      - friday-logs:/app/logs
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+    profiles:
+      - dev
+    networks:
+      - friday-network
+
+  # Optional: Frontend service (placeholder for future development)
+  friday-ai-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: friday-ai-frontend
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=http://friday-ai-agent:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - friday-ai-agent
+    restart: unless-stopped
+    profiles:
+      - frontend
+    networks:
+      - friday-network
+
+  # Optional: Database for advanced conversation storage
+  friday-ai-db:
+    image: postgres:15-alpine
+    container_name: friday-ai-db
+    environment:
+      - POSTGRES_DB=friday_conversations
+      - POSTGRES_USER=${DB_USER:-friday}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-friday_secure_password}
+    volumes:
+      - friday-db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    profiles:
+      - database
+    networks:
+      - friday-network
+
+volumes:
+  friday-logs:
+    driver: local
+  friday-db-data:
+    driver: local
+
+networks:
+  friday-network:
+    driver: bridge

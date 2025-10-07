@@ -1,0 +1,100 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-08-19T11:03:02.254519",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "नमस्ते, मैं ट्रायोटेक की सेल्स असिस्टेंट हूँ। मैं आपकी किस प्रकार मदद कर सकती हूँ?",
+      "timestamp": "2025-08-19T11:03:03.293623",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "mujko xeny ke bare me batao",
+      "timestamp": "2025-08-19T11:03:13.201355",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "क्षमा करें, मुझे \"xeny\" के बारे में जानकारी नहीं है। क्या आप मुझे किसी और चीज़ के बारे में बताना चाहेंगे?  यदि आप Triotech के उत्पादों या सेवाओं के बारे में जानना चाहते हैं, तो मुझे बताएं और मैं आपको अधिक जानकारी प्रदान करूँगा।",
+      "timestamp": "2025-08-19T11:03:14.417722",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "but mere jisab se to xeny triotech ka hi product he?",
+      "timestamp": "2025-08-19T11:03:45.078253",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "मुझे माफ़ करना, लेकिन मेरे डेटाबेस में \"xeny\" नाम का कोई उत्पाद नहीं है। हो सकता है कि आपका ज़िक्र किसी अन्य उत्पाद से हो रहा हो, या नाम में कोई गलती हो।  कृपया मुझे Triotech के किसी विशिष्ट उत्पाद के बारे में और जानकारी दें, ताकि मैं आपकी बेहतर सहायता कर सकूँ।  हमारे उत्पादों की सूची देखने के लिए आप हमारी वेबसाइट पर भी जा सकते हैं।",
+      "timestamp": "2025-08-19T11:03:46.576291",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "but mere jisab se to xeny triotech ka hi product he?",
+      "timestamp": "2025-08-19T11:04:07.422363",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "My apologies for the misunderstanding.  I don't have access to a comprehensive, constantly updated list of all Triotech products.  My knowledge is based on the data I was trained on, and that may not be fully current.\n\nTo get the most accurate and up-to-date information on Triotech products, I recommend visiting the Triotech website directly.  You'll find detailed information there about all our offerings.  Alternatively, you can contact Triotech sales directly, and they'll be happy to answer your questions and provide you with a catalog or other documentation.",
+      "timestamp": "2025-08-19T11:04:09.022726",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "kon kon se products he, english me batao",
+      "timestamp": "2025-08-19T11:04:25.944630",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Okay, I can use Hinglish.  Triotech offers a range of AI-powered products.  To give you the best information, could you tell me what kind of solutions you're interested in? For example, are you looking for something related to customer service, sales, marketing, or something else?  Knowing your needs will help me suggest the most relevant products.",
+      "timestamp": "2025-08-19T11:04:27.217071",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "ok I want to know about convoz",
+      "timestamp": "2025-08-19T11:05:07.909476",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Okay,  Convoz ke baare mein jaanne mein mujhe khushi hogi!  Convoz ek AI-powered virtual contact center hai.  Ismein intelligent voice bots aur real-time analytics features hain jo aapki customer service ko improve karne mein madad karte hain.  Aapko isse kya jaanna hai?  Kya aap features, benefits, pricing, ya kuchh aur jaanna chahte hain?",
+      "timestamp": "2025-08-19T11:05:09.353340",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "aacha mujko Xeny ke bare me batao",
+      "timestamp": "2025-08-19T11:05:40.783396",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "फ़िर से माफ़ी चाहता हूँ, लेकिन मुझे \"Xeny\" नाम का कोई उत्पाद नहीं पता है।  शायद यह कोई अलग नाम है, या फिर यह अभी तक लॉन्च नहीं हुआ है।  क्या आप मुझे Triotech के किसी और उत्पाद के बारे में बता सकते हैं जिसमें आपकी रुचि है? या फिर आप किस तरह के AI समाधान की तलाश में हैं?  ज़्यादा जानकारी से मुझे आपके लिए सही जानकारी ढूँढने में मदद मिलेगी।",
+      "timestamp": "2025-08-19T11:05:42.335884",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "aacha mujko Xeny ke bare me batao",
+      "timestamp": "2025-08-19T11:06:00.349695",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Okay,  mujhe maf karna, lekin mere paas \"Xeny\" ke bare mein information nahin hai.  Shayad yeh product ab available nahin hai ya naam thoda alag hai.\n\nJusttawk ke baare mein baat karein toh, yeh ek AI-powered virtual contact center hai jo intelligent voice bots aur real-time analytics ka use karta hai.  Isse aapke customers ke saath interaction ko improve karne mein, aur aapke business ko automate karne mein madad milti hai.  \n\nKya aap Justtawk ke kisi specific feature ya aspect ke baare mein jaanna chahte hain?  Jaise ki, iske benefits, pricing, integration options, ya kuchh aur?  Mujhe batao, aur main aapki madad karungi.",
+      "timestamp": "2025-08-19T11:06:02.353275",
+      "source": "cartesia_tts"
+    }
+  ]
+}

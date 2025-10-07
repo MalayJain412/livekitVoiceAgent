@@ -1,0 +1,16 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-10-06T15:47:06.316476",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Namaste! Main Triotech ki Sales Assistant hoon. At Triotech, we specialize in developing AI-powered products designed to drive digital transformation. As a product-based company, we focus on innovative solutions that enhance business operations. Hamari solutions aapko efficiency, smarter decisions aur better customer interaction ke liye help karti hain.\n\nMain aapki kis tarah help kar sakti hoon?",
+      "timestamp": "2025-10-06T15:47:08.000636",
+      "source": "cartesia_tts"
+    }
+  ]
+}

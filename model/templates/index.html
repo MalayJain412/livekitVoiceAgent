@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Knowledge Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col h-screen p-6 max-w-3xl mx-auto">
+  <header class="bg-blue-600 text-white text-center py-3 rounded-lg shadow-md mb-4">
+    <h1 class="text-lg font-semibold">Xeny FAQs Chatbot</h1>
+  </header>
+
+  <!-- Chat Container -->
+  <div id="chat-container" 
+       class="flex-1 overflow-y-auto bg-white rounded-lg shadow-md p-4 space-y-3">
+  </div>
+
+  <!-- Input Box -->
+  <div class="mt-4 flex">
+    <input type="text" id="query" 
+           placeholder="Type your question..." 
+           class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+    <button id="send-btn" 
+            class="ml-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
+      Send
+    </button>
+  </div>
+
+  <script>
+    const chatContainer = document.getElementById("chat-container");
+    const queryInput = document.getElementById("query");
+    const sendBtn = document.getElementById("send-btn");
+
+    function formatResponse(text) {
+      // Escape HTML
+      text = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+      // Markdown bold (**text**)
+      text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+      // Line breaks
+      text = text.replace(/\n/g, "<br>");
+
+      return text;
+    }
+
+    function addMessage(text, sender) {
+      const div = document.createElement("div");
+      div.className = `p-3 rounded-lg max-w-[80%] text-sm whitespace-pre-wrap ${
+        sender === "user" 
+          ? "bg-blue-600 text-white ml-auto" 
+          : "bg-gray-200 text-gray-800"
+      }`;
+      div.innerHTML = formatResponse(text);
+      chatContainer.appendChild(div);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    async function sendQuery() {
+      const query = queryInput.value.trim();
+      if (!query) return;
+
+      addMessage(query, "user");
+      queryInput.value = "";
+
+      try {
+        const res = await fetch("/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query })
+        });
+        const data = await res.json();
+
+        if (data.answer) {
+          addMessage(data.answer, "bot");
+        } else if (data.error) {
+          addMessage("Error: " + data.error, "bot");
+        } else {
+          addMessage(JSON.stringify(data, null, 2), "bot");
+        }
+      } catch (err) {
+        addMessage("Error connecting to server.", "bot");
+      }
+    }
+
+    sendBtn.addEventListener("click", sendQuery);
+    queryInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendQuery();
+    });
+  </script>
+</body>
+</html>

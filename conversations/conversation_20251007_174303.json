@@ -1,0 +1,46 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-10-07T17:43:04.520199",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Namaste! Main Triotech ki Sales Assistant hoon. Main aapki kis tarah help kar sakti hoon?\n\nAt Triotech, we specialize in developing AI-powered products designed to drive digital transformation. As a product-based company, we focus on innovative solutions that enhance business operations. Hamari solutions aapko efficiency, smarter decisions aur better customer interaction ke liye help karti hain.",
+      "timestamp": "2025-10-07T17:43:06.451279",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Hello.",
+      "timestamp": "2025-10-07T17:43:11.080543",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Namaste! Triotech mein aapka swagat hai.\n\nAt Triotech, we specialize in developing AI-powered products designed to drive digital transformation. As a product-based company, we focus on innovative solutions that enhance business operations. Hamari solutions aapko efficiency, smarter decisions aur better customer interaction ke liye help karti hain.\n\nMain Triotech ki Sales Assistant hoon. Aapki kya madat kar sakta hoon?",
+      "timestamp": "2025-10-07T17:43:13.616715",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "मेरे को ज़ैनी के बारे में बताओ",
+      "timestamp": "2025-10-07T17:43:22.466140",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "मेरे को ज़ैनी के बारे में बताओ",
+      "timestamp": "2025-10-07T17:43:23.655291",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Ji, Xeny ek conversational AI Voice Bot hai jo real-time mein baat karta hai aur intelligent responses deta hai. Iska main maqsad customer engagement aur onboarding ko behtar banana hai.\n\nKya aap Xeny ke features ke baare mein aur jaanna chahenge, ya kisi aur product ke baare mein jaan-na hai?",
+      "timestamp": "2025-10-07T17:43:26.871124",
+      "source": "cartesia_tts"
+    }
+  ]
+}

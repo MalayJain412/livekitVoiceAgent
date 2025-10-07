@@ -1,0 +1,82 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-10-07T16:47:04.081647",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Namaste! Main Triotech ki Sales Assistant hoon. Triotech mein, hum AI-powered products banate hain jo digital transformation ko drive karte hain. As a product-based company, hum innovative solutions par focus karte hain jo business operations ko enhance karti hain. Hamari solutions aapko efficiency, smarter decisions aur better customer interaction ke liye help karti hain.\n\nMain aapki kis tarah help kar sakti hoon?",
+      "timestamp": "2025-10-07T16:47:06.600572",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Hello.",
+      "timestamp": "2025-10-07T16:47:09.531078",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Namaste! Main Triotech Bizserve Pvt. Ltd. se aapka Sales & Query Assistant.\n\nAt Triotech, we specialize in developing AI-powered products designed to drive digital transformation. As a product-based company, we focus on innovative solutions that enhance business operations. Hamari solutions aapko efficiency, smarter decisions aur better customer interaction ke liye help karti hain.\n\nAapko kis type ki jaankari chahiye, ya main aapki kis tarah help kar sakta hoon?",
+      "timestamp": "2025-10-07T16:47:11.939502",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "एक minute.",
+      "timestamp": "2025-10-07T16:47:25.927035",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "एक minute.",
+      "timestamp": "2025-10-07T16:47:28.289933",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Ji, bilkul! Main aapse Hindi aur thodi English (Hinglish) mein baat kar sakta hoon.\n\nTriotech mein, hum AI-powered products banate hain jo businesses ko digital transformation mein help karte hain. Hum ek product-based company hain aur hamari solutions aapko efficiency, smarter decisions aur better customer interaction ke liye help karti hain.\n\nAapko kis cheez mein interest hai ya aap kya janna chahte hain?",
+      "timestamp": "2025-10-07T16:47:30.703636",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Ticket.",
+      "timestamp": "2025-10-07T16:47:53.886543",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "Ticket.",
+      "timestamp": "2025-10-07T16:47:54.200835",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Ji, aapka matlab Triotech se hai?\n\nHamari company Triotech Bizserve Pvt. Ltd. Bengaluru, India mein based hai.\n\nAapko Triotech ke baare mein aur kya jaanna hai?",
+      "timestamp": "2025-10-07T16:47:55.562654",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Triotype के products कौन कौन से हैं?",
+      "timestamp": "2025-10-07T16:48:15.170958",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Maaf kijiyega, is waqt mere paas Triotech ke specific products ki list available nahi hai. Lekin, hum AI-powered solutions banate hain jo businesses ko digital transformation mein help karte hain.\n\nKya aapko kisi particular type ke AI solution mein interest hai, jaise ki AI Chatbot, Virtual Call Center, ya Learning Management System? Main aapko unke baare mein bata sakta hoon.\n\nAur agar aap chahen, toh main aapki details hamari sales team ke saath share kar sakta hoon, jo aapko hamare products ke baare mein aur acche se guide kar payenge.",
+      "timestamp": "2025-10-07T16:48:17.892393",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "चलो ठीक है फिर बाद में बात करेंगे अपन. बहुत बढ़िया ऐसा आवाज़.",
+      "timestamp": "2025-10-07T16:48:34.323544",
+      "source": "google_llm"
+    }
+  ]
+}
