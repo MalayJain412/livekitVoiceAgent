@@ -63,6 +63,12 @@ graph TD
 sudo apt update
 sudo apt install -y python3 python3-venv python3-pip
 
+# Create venv
+python3 -m venv venv
+
+# Activate the virtual environment
+source venv/bin/activate
+
 # Install dependencies
 pip install -r requirements.txt
 
