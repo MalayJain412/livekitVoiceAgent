@@ -25,3 +25,4 @@ Thumbs.db
 
 # ChromaDB and other large data
 model/chroma_db/
+sip-livekit/

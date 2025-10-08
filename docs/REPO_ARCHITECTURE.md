@@ -109,7 +109,7 @@ logging:
 # Start services in order
 redis-cli ping                                    # verify Redis
 livekit-server --config livekit.yaml            # start main server
-cd sip && ./livekit-sip --config config.yaml    # start SIP bridge
+cd sip-setup && ./livekit-sip --config config.yaml    # start SIP bridge
 
 # Setup SIP trunk and dispatch
 lk project add friday --url ws://192.168.109.66:7880 --api-key APIntavBoHTqApw --api-secret pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
@@ -404,7 +404,7 @@ redis-cli ping                               # Should return PONG
 livekit-server --config livekit.yaml        # Port 7880
 
 # 3. Start SIP bridge (separate terminal)
-cd sip && ./livekit-sip --config config.yaml # Port 5060
+cd sip-setup && ./livekit-sip --config config.yaml # Port 5060
 
 # 4. Setup SIP routing (one-time)
 lk project add friday --url ws://192.168.109.66:7880 --api-key APIntavBoHTqApw --api-secret pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM

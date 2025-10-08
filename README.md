@@ -68,7 +68,7 @@ python model/build_db.py
 # SIP telephony setup (requires Redis running)
 redis-cli ping  # verify Redis is running
 livekit-server --config livekit.yaml  # start main server
-cd sip && ./livekit-sip --config config.yaml  # start SIP bridge
+cd sip-setup && ./livekit-sip --config config.yaml  # start SIP bridge
 
 # Setup SIP routing (one-time)
 lk project add friday --url ws://192.168.109.66:7880 --api-key APIntavBoHTqApw --api-secret pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
@@ -126,7 +126,7 @@ python test_lead_detection.py
 
 5. **LiveKit Configuration**
    - Configure `livekit.yaml` with Redis connection
-   - Configure `sip/config.yaml` with identical API keys
+   - Configure `sip-setup/config.yaml` with identical API keys
    - Ensure ports 5060 (SIP), 7880 (LiveKit), 6379 (Redis) are available
 
 6. **Build Knowledge Base**
@@ -146,7 +146,7 @@ python test_lead_detection.py
 # Start the complete SIP telephony stack
 redis-server                                 # Start Redis message bus
 livekit-server --config livekit.yaml        # Start LiveKit server
-cd sip && ./livekit-sip --config config.yaml # Start SIP bridge
+cd sip-setup && ./livekit-sip --config config.yaml # Start SIP bridge
 python cagent.py                             # Start voice agent
 
 # Configure Zoiper or SIP client:
@@ -192,13 +192,13 @@ ss -tulnp | grep -E "5060|7880|6379"
 - `config.py` — Path helpers and shared utilities
 - `model/build_db.py` & `model/runapi.py` — RAG system build and runtime
 - `backup_plugin_modifications/` — Modified LiveKit plugin stubs
-- `sip/config.yaml` & `livekit.yaml` — SIP bridge and server configuration
+- `sip-setup/config.yaml` & `livekit.yaml` — SIP bridge and server configuration
 - `docs/REPO_ARCHITECTURE.md` — Complete system architecture documentation
 - `docs/Comprehensive Setup Guide_ Integrating a SIP Client with a Self-Hosted LiveKit Environment.md` — SIP setup guide
 
 ### End-to-End Files
 - **Backend**: `cagent.py`, `generate_livekit_token.py`, `tools.py`, `model/runapi.py`
-- **SIP Integration**: `sip/config.yaml`, `sip/inbound_trunk.json`, `sip/sip_dispatch.json`
+- **SIP Integration**: `sip-setup/config.yaml`, `sip-setup/inbound_trunk.json`, `sip-setup/sip_dispatch.json`
 - **Frontend**: `friday-frontend/src/app/api/livekit/token/route.ts`, `friday-frontend/src/components/voice-assistant.tsx`
 - **Plugins**: `backup_plugin_modifications/google_llm_modified.py`, `backup_plugin_modifications/cartesia_tts_modified.py`
 
@@ -210,10 +210,10 @@ ss -tulnp | grep -E "5060|7880|6379"
 5. Test SIP integration with phone calls for voice features
 
 ### SIP Configuration Changes
-- **Trunk Setup**: Modify `sip/inbound_trunk.json` for authentication credentials
-- **Room Routing**: Update `sip/sip_dispatch.json` for call routing rules
+- **Trunk Setup**: Modify `sip-setup/inbound_trunk.json` for authentication credentials
+- **Room Routing**: Update `sip-setup/sip_dispatch.json` for call routing rules
 - **Agent Room**: Ensure `cagent.py` joins the same room as SIP dispatch (`friday-assistant-room`)
-- **API Keys**: Keep `livekit.yaml` and `sip/config.yaml` API keys synchronized
+- **API Keys**: Keep `livekit.yaml` and `sip-setup/config.yaml` API keys synchronized
 
 ### Plugin Modifications
 - Modified plugins stored in `backup_plugin_modifications/`
@@ -365,7 +365,7 @@ EOF
 
 # Create SIP bridge config
 mkdir -p sip
-cat > sip/config.yaml << EOF
+cat > sip-setup/config.yaml << EOF
 api_key: APIntavBoHTqApw
 api_secret: pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
 ws_url: ws://${VM_IP}:7880
@@ -379,7 +379,7 @@ logging:
 EOF
 
 # Create SIP trunk config
-cat > sip/inbound_trunk.json << 'EOF'
+cat > sip-setup/inbound_trunk.json << 'EOF'
 {
   "trunk": {
     "name": "Production Inbound Trunk",
@@ -390,7 +390,7 @@ cat > sip/inbound_trunk.json << 'EOF'
 EOF
 
 # Create SIP dispatch config (update after creating trunk)
-cat > sip/sip_dispatch.json << 'EOF'
+cat > sip-setup/sip_dispatch.json << 'EOF'
 {
   "dispatch_rule": {
     "name": "Production Dispatch Rule",
@@ -545,9 +545,9 @@ sleep 10
 
 # Setup LiveKit project and SIP routing
 lk project add friday --url ws://${VM_IP}:7880 --api-key APIntavBoHTqApw --api-secret pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
-TRUNK_ID=$(lk sip inbound create --project friday sip/inbound_trunk.json | grep "SIPTrunkID:" | awk '{print $2}')
-sed -i "s/REPLACE_WITH_TRUNK_ID/$TRUNK_ID/g" sip/sip_dispatch.json
-lk sip dispatch create --project friday sip/sip_dispatch.json
+TRUNK_ID=$(lk sip inbound create --project friday sip-setup/inbound_trunk.json | grep "SIPTrunkID:" | awk '{print $2}')
+sed -i "s/REPLACE_WITH_TRUNK_ID/$TRUNK_ID/g" sip-setup/sip_dispatch.json
+lk sip dispatch create --project friday sip-setup/sip_dispatch.json
 
 # Start agent services
 sudo systemctl start friday-agent
@@ -622,7 +622,7 @@ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 ## Security Notes
 
-- **SIP Security**: API keys in `livekit.yaml` and `sip/config.yaml` must be identical; protect from unauthorized access
+- **SIP Security**: API keys in `livekit.yaml` and `sip-setup/config.yaml` must be identical; protect from unauthorized access
 - **Network Security**: Use firewalls to restrict SIP (5060) and RTP (10000-20000) ports to trusted networks
 - **PII Protection**: Leads and conversation logs contain sensitive customer data
 - **Token Management**: Use atomic writes or file locks for concurrent processes accessing leads/logs

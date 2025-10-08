@@ -106,7 +106,7 @@ The services must be started in the correct order.
   - **Verification:** Check the logs for "connecting to redis" and "starting LiveKit server".
 
 3. **Start the SIP Service:**
-  - **Path:** `/mnt/c/Users/int10281/Desktop/Github/Friday - Copy/sip/`
+  - **Path:** `/mnt/c/Users/int10281/Desktop/Github/Friday - Copy/sip-setup/`
   - **Start Command:**
 
     ```bash
@@ -153,7 +153,7 @@ The CLI needs to know which project to work with.
 This trunk defines the credentials Zoiper will use to authenticate.
 
 1. **Create the file `inbound_trunk.json`:**
-  - **Path:** `/mnt/c/Users/int10281/Desktop/Github/Friday - Copy/sip/`
+  - **Path:** `/mnt/c/Users/int10281/Desktop/Github/Friday - Copy/sip-setup/`
   - **Content:**
 
     ```json

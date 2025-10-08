@@ -1,0 +1,7 @@
+{
+  "trunk": {
+    "name": "Zoiper Local Inbound",
+    "auth_username": "1001",
+    "auth_password": "1001"
+  }
+}

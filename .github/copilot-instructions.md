@@ -20,7 +20,7 @@ python model/runapi.py
 # SIP telephony setup (requires Redis running)
 redis-cli ping  # verify Redis is running
 livekit-server --config livekit.yaml  # start main server
-cd sip && ./livekit-sip --config config.yaml  # start SIP bridge
+cd sip-setup && ./livekit-sip --config config.yaml  # start SIP bridge
 
 # run tests (project uses simple python test scripts)
 python test_triotech_assistant.py
