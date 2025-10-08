@@ -89,7 +89,7 @@ Run in dev mode with API keys:
 livekit-server --dev --keys "APIntavBoHTqApw: pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM"
 ```
 
-### SIP Bridge Config (`sip/config.yaml`)
+### SIP Bridge Config (`sip-setup/config.yaml`)
 ```yaml
 log_level: debug
 
@@ -174,7 +174,7 @@ livekit-server --dev --keys "APIntavBoHTqApw: pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2Zk
 
 ### 2. Start SIP Bridge
 ```bash
-cd sip
+cd sip-setup
 ./livekit-sip --config config.yaml
 ```
 
@@ -282,4 +282,4 @@ Ensure bot joins "friday-assistant-room" to receive SIP calls.
 - [LiveKit Documentation](https://docs.livekit.io/)
 - [LiveKit SIP Bridge](https://github.com/livekit/livekit-sip)
 - Friday AI Copilot Instructions: `.github/copilot-instructions.md`
-- SIP Bridge README: `sip/README.md`
+- SIP Bridge README: `sip-setup/README.md`

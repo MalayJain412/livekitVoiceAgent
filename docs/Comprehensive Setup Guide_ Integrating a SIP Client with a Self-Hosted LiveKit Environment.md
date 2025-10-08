@@ -187,7 +187,7 @@ This trunk defines the credentials Zoiper will use to authenticate.
 This rule routes authenticated calls from the trunk to a specific LiveKit room.
 
 1. **Create the file `sip_dispatch.json`:**
-  - **Path:** `/mnt/c/Users/int10281/Desktop/Github/Friday - Copy/sip/`
+  - **Path:** `/mnt/c/Users/int10281/Desktop/Github/Friday - Copy/sip-setup/`
   - **Content:** Replace `ST_EmMmjttJHZHP` with the Trunk ID you saved.
 
     ```json

@@ -365,7 +365,7 @@ go build -o livekit-sip ./cmd/livekit-sip
 sudo mv livekit-sip /usr/local/bin/
 
 # Create SIP configuration directory
-sudo mkdir -p /opt/sip
+sudo mkdir -p /opt/sip-setup
 ```
 
 ### SIP Configuration
@@ -374,7 +374,7 @@ sudo mkdir -p /opt/sip
 VM_B_PRIVATE_IP="YOUR_VM_B_PRIVATE_IP"
 VM_C_PUBLIC_IP="YOUR_VM_C_PUBLIC_IP"
 
-cat > /opt/sip/config.yaml << EOF
+cat > /opt/sip-setup/config.yaml << EOF
 api_key: APIntavBoHTqApw
 api_secret: pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
 ws_url: ws://$VM_B_PRIVATE_IP:7880
@@ -388,7 +388,7 @@ logging:
 EOF
 
 # Create SIP trunk configuration
-cat > /opt/sip/inbound_trunk.json << 'EOF'
+cat > /opt/sip-setup/inbound_trunk.json << 'EOF'
 {
   "trunk": {
     "name": "Production Inbound Trunk",
@@ -399,7 +399,7 @@ cat > /opt/sip/inbound_trunk.json << 'EOF'
 EOF
 
 # Create SIP dispatch configuration template
-cat > /opt/sip/sip_dispatch.json << 'EOF'
+cat > /opt/sip-setup/sip_dispatch.json << 'EOF'
 {
   "dispatch_rule": {
     "name": "Production Dispatch Rule",
@@ -426,8 +426,8 @@ Wants=network-online.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/opt/sip
-ExecStart=/usr/local/bin/livekit-sip --config /opt/sip/config.yaml
+WorkingDirectory=/opt/sip-setup
+ExecStart=/usr/local/bin/livekit-sip --config /opt/sip-setup/config.yaml
 Restart=always
 RestartSec=5
 LimitNOFILE=65536
@@ -465,7 +465,7 @@ lk project add friday --url ws://$VM_B_PRIVATE_IP:7880 --api-key APIntavBoHTqApw
 lk project set-default friday
 
 # Create SIP inbound trunk
-cd /opt/sip
+cd /opt/sip-setup
 TRUNK_ID=$(lk sip inbound create --project friday inbound_trunk.json | grep "SIPTrunkID:" | awk '{print $2}')
 echo "Created trunk with ID: $TRUNK_ID"
 

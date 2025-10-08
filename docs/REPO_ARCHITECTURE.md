@@ -90,7 +90,7 @@ redis:
   db: 0
 ```
 
-**SIP Service** (`sip/config.yaml`):
+**SIP Service** (`sip-setup/config.yaml`):
 ```yaml
 api_key: APIntavBoHTqApw
 api_secret: pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
@@ -301,7 +301,7 @@ flowchart TD
 - `LIVEKIT_API_KEY`/`LIVEKIT_API_SECRET`: For LiveKit tokens
 - `LLM_MODEL`: Configurable model (default: "gemini-2.5-flash")
 
-**SIP Configuration** (`sip/inbound_trunk.json`):
+**SIP Configuration** (`sip-setup/inbound_trunk.json`):
 ```json
 {
   "trunk": {
@@ -312,7 +312,7 @@ flowchart TD
 }
 ```
 
-**SIP Dispatch** (`sip/sip_dispatch.json`):
+**SIP Dispatch** (`sip-setup/sip_dispatch.json`):
 ```json
 {
   "dispatch_rule": {
@@ -374,7 +374,7 @@ Friday - Copy/
 │   └── conversation_20251007_164256.json    # Complete call transcript
 ├── leads/
 │   └── lead_20251007_164608.json           # Extracted lead data
-├── sip/
+├── sip-setup/
 │   ├── config.yaml                         # SIP bridge config
 │   ├── inbound_trunk.json                  # SIP trunk definition
 │   └── sip_dispatch.json                   # Call routing rules
@@ -440,7 +440,7 @@ lk room participants --room friday-assistant-room
 
 **Common Issues**:
 - **"sip not connected"**: Redis not accessible to both LiveKit server and SIP bridge
-- **API key mismatch**: `livekit.yaml` and `sip/config.yaml` must have identical keys
+- **API key mismatch**: `livekit.yaml` and `sip-setup/config.yaml` must have identical keys
 - **RTP audio issues**: Firewall blocking UDP ports 10000-20000
 - **Agent not responding**: Verify agent joined correct room name
 

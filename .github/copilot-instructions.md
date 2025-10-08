@@ -35,7 +35,7 @@ python test_lead_detection.py
 - `config.py` — conversation log path helpers and helpers used across tests/plugins.
 - `model/build_db.py` and `model/runapi.py` — RAG build & runtime (Chroma DB, embeddings, API key rotation).
 - `backup_plugin_modifications/` — modified LiveKit plugin stubs (`google_llm_modified.py`, `cartesia_tts_modified.py`) and `docker_scripts/` for applying them.
-- `sip/config.yaml` and `livekit.yaml` — SIP bridge and server config (must have identical API keys).
+- `sip-setup/config.yaml` and `livekit.yaml` — SIP bridge and server config (must have identical API keys).
 - `Comprehensive Setup Guide_ Integrating a SIP Client with a Self-Hosted LiveKit Environment.md` — complete SIP setup walkthrough.
 
 ## Key repository conventions (must follow exactly)
@@ -56,7 +56,7 @@ python test_lead_detection.py
 - Plugins: `backup_plugin_modifications/` holds patched stubs; `docker_scripts/apply_modifications.py` and `verify_modifications.py` apply/verify patches.
 - LiveKit: Token handling critical (frontend: `friday-frontend/src/app/api/livekit/token/route.ts`).
 - RAG runtime: `model/runapi.py` handles embeddings, key rotation, queries to `model/chroma_db/`.
-- SIP setup: Create trunks via `lk sip inbound create` + dispatch rules via `lk sip dispatch create`. JSON configs in `sip/inbound_trunk.json` and `sip/sip_dispatch.json`.
+- SIP setup: Create trunks via `lk sip inbound create` + dispatch rules via `lk sip dispatch create`. JSON configs in `sip-setup/inbound_trunk.json` and `sip-setup/sip_dispatch.json`.
 
 ## Debugging & tests
 - Tests are small Python scripts (not pytest) — run directly.
@@ -67,7 +67,7 @@ python test_lead_detection.py
 ## Security & operations notes
 - Keep `LIVEKIT_API_SECRET` only where tokens are minted; prefer backend as canonical token authority.
 - Leads and conversations contain PII — protect filesystem or move to secure DB; prefer atomic writes or file locks for concurrent processes.
-- SIP security: API keys in `livekit.yaml` and `sip/config.yaml` must be identical. RTP ports 10000-20000 need firewall access.
+- SIP security: API keys in `livekit.yaml` and `sip-setup/config.yaml` must be identical. RTP ports 10000-20000 need firewall access.
 
 ## When changing behavior
 - Add unit tests that exercise the `@function_tool()` functions and the lead creation/validation paths.
