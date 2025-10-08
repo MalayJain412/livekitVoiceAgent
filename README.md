@@ -59,6 +59,10 @@ graph TD
 ## Quick Start (PowerShell)
 
 ```powershell
+# Make sure Python and venv are installed
+sudo apt update
+sudo apt install -y python3 python3-venv python3-pip
+
 # Install dependencies
 pip install -r requirements.txt
 
