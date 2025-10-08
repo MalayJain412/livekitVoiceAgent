@@ -48,7 +48,8 @@ librosa
 
 # SIP/Telephony Support
 pyaudio
-webrtcvad
+# webrtcvad - commented out due to Windows build issues, alternative: use speech_recognition or install via conda
+# Alternative: pip install webrtcvad-wheels (pre-compiled wheels)
 
 # Production & Monitoring
 redis

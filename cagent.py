@@ -5,7 +5,10 @@ import asyncio
 
 from livekit import agents
 from livekit.agents import AgentSession, Agent, RoomInputOptions, RoomOutputOptions, JobContext
-from livekit.plugins import google, cartesia, deepgram, noise_cancellation, silero
+from livekit.plugins import deepgram, noise_cancellation, silero
+
+# FRIDAY AI: Import plugins at module level to register them on main thread
+from livekit.plugins import google, cartesia
 
 from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
 from tools import get_weather, search_web, triotech_info, create_lead, detect_lead_intent
@@ -21,9 +24,12 @@ LLM_MODEL = os.environ.get("LLM_MODEL", "gemini-2.5-flash")
 
 class Assistant(Agent):
     def __init__(self):
+        # FRIDAY AI: Use Google LLM directly
+        llm_instance = google.LLM(model=LLM_MODEL, temperature=0.8)
+            
         super().__init__(
             instructions=AGENT_INSTRUCTION,
-            llm=google.LLM(model=LLM_MODEL, temperature=0.8),
+            llm=llm_instance,
             tools=[get_weather, search_web, triotech_info, create_lead, detect_lead_intent],
         )
 
@@ -34,14 +40,18 @@ async def entrypoint(ctx: JobContext):
     
     agent = Assistant()
 
+    # FRIDAY AI: Use plugins directly
+    llm_instance = google.LLM(model=LLM_MODEL, temperature=0.8)
+    tts_instance = cartesia.TTS(
+        model="sonic-2",
+        language="hi",
+        voice="f91ab3e6-5071-4e15-b016-cde6f2bcd222",
+    )
+
     session = AgentSession(
         stt=deepgram.STT(model="nova-3", language="multi"),
-        llm=google.LLM(model=LLM_MODEL, temperature=0.8),
-        tts=cartesia.TTS(
-            model="sonic-2",
-            language="hi",
-            voice="f91ab3e6-5071-4e15-b016-cde6f2bcd222",
-        ),
+        llm=llm_instance,
+        tts=tts_instance,
         vad=silero.VAD.load(),
     )
 

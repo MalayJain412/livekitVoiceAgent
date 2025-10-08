@@ -1,0 +1,118 @@
+{
+  "conversation": [
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-10-08T15:49:26.803914",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "Hello.",
+      "timestamp": "2025-10-08T15:49:29.552417",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Hello! At Triotech, we specialize in developing AI-powered products designed to drive digital transformation. As a product-based company, we focus on innovative solutions that enhance business operations. Hamari solutions aapko efficiency, smarter decisions aur better customer interaction ke liye help karti hain.\n\nAapko kis type ki jaankari chahiye, ya main aapki kis tarah help kar sakta hoon?",
+      "timestamp": "2025-10-08T15:49:31.060124",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Okay. Wait.",
+      "timestamp": "2025-10-08T15:49:41.248874",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Ji, theek hai. Main yahaan hoon jab aap ready hon.",
+      "timestamp": "2025-10-08T15:49:42.655403",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Okay. Wait.",
+      "timestamp": "2025-10-08T15:49:44.055481",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-10-08T15:49:45.392664",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": "Zani.",
+      "timestamp": "2025-10-08T15:49:46.378261",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Maaf kijiye, main aapka sawal samajh nahi paya. \"Zani\" ke baare mein aap kya janna chahte hain? Kya aapka matlab Triotech ke kisi product se hai ya kisi aur cheez se?",
+      "timestamp": "2025-10-08T15:49:47.539285",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Just tell me about Zanny.",
+      "timestamp": "2025-10-08T15:49:57.655330",
+      "source": "google_llm"
+    },
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-10-08T15:49:58.743393",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "I apologize, but I'm not able to find any information about \"Zanny\" in our system. Perhaps there was a misunderstanding. Could you please spell it out for me or provide more context?",
+      "timestamp": "2025-10-08T15:49:59.932100",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "X e n y",
+      "timestamp": "2025-10-08T15:50:14.647166",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Ah, Xeny! Got it.",
+      "timestamp": "2025-10-08T15:50:16.308215",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": ".",
+      "timestamp": "2025-10-08T15:50:18.913971",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "Xeny ek Conversational AI Voice Bot hai jo real-time talk-back aur intelligent responses ke saath kaam karta hai. Iska main target customer engagement aur onboarding ko behtar banana hai.\n\nKya aap Xeny ke baare mein aur kuch janna chahte hain, jaise ki iske features ya yeh aapke business mein kaise help kar sakta hai?",
+      "timestamp": "2025-10-08T15:50:19.991977",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Okay. Stop.",
+      "timestamp": "2025-10-08T15:50:26.851785",
+      "source": "google_llm"
+    },
+    {
+      "role": "agent",
+      "content": "The previous answer was: \"Xeny ek Conversational AI Voice Bot hai jo real-time talk-back aur intelligent responses ke saath customer engagement aur onboarding ke liye design kiya gaya hai. Iske baare mein aur kuch janna chahenge?\"\n\nI understand you'd like me to stop there. Is there anything else I can help you with regarding Xeny or any other Triotech product?",
+      "timestamp": "2025-10-08T15:50:27.923106",
+      "source": "cartesia_tts"
+    },
+    {
+      "role": "user",
+      "content": "Okay. Goodbye. Thank you.",
+      "timestamp": "2025-10-08T15:50:29.475210",
+      "source": "google_llm"
+    }
+  ]
+}
