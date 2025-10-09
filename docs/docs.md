@@ -57,28 +57,69 @@ sudo apt install -y curl wget git build-essential redis-server
 
 ### 2. Install LiveKit Server
 ```bash
+# Method 1: Latest release
 wget https://github.com/livekit/livekit/releases/latest/download/livekit-server_Linux_x86_64.tar.gz
 tar -xzf livekit-server_Linux_x86_64.tar.gz
+sudo mv livekit-server /usr/local/bin/
+
+# Method 2: Specific version (for reproducible deployments)
+wget https://github.com/livekit/livekit/releases/download/v1.9.1/livekit-server_1.9.1_linux_amd64.tar.gz
+tar -xzf livekit-server_1.9.1_linux_amd64.tar.gz
 sudo mv livekit-server /usr/local/bin/
 ```
 
 ### 3. Install LiveKit CLI
 ```bash
+# Method 1: Package manager (latest stable)
 curl -sSL https://get.livekit.io/cli | sudo bash
+
+# Method 2: Specific version (reproducible deployments)
+CLI_VERSION="1.5.2"
+wget -q https://github.com/livekit/livekit-cli/releases/download/v${CLI_VERSION}/livekit-cli_${CLI_VERSION}_linux_amd64.tar.gz
+tar -xzf livekit-cli_${CLI_VERSION}_linux_amd64.tar.gz
+sudo mv livekit-cli /usr/local/bin/
+sudo chmod +x /usr/local/bin/livekit-cli
+
+# Create convenient alias
+echo 'alias lk="livekit-cli"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ### 4. Install LiveKit SIP Bridge
 ```bash
+# Method 1: Build from source (recommended for development)
 git clone https://github.com/livekit/livekit-sip.git
 cd livekit-sip
 go build -o livekit-sip ./cmd/livekit-sip
 sudo mv livekit-sip /usr/local/bin/
+
+# Method 2: Download precompiled binary (faster for production)
+wget https://github.com/livekit/livekit-sip/releases/download/v1.9.1/livekit-sip_1.9.1_linux_amd64.tar.gz
+tar -xzf livekit-sip_1.9.1_linux_amd64.tar.gz
+sudo mv livekit-sip /usr/local/bin/
+sudo chmod +x /usr/local/bin/livekit-sip
+```
+
+### 5. Start Services (using screen)
+```bash
+# Start LiveKit Server in a detached screen session
+screen -dmS livekit-server livekit-server --config /path/to/sip-setup/livekit.yaml
+
+# Start SIP bridge (after LiveKit started)
+screen -dmS sip-bridge livekit-sip --config /path/to/sip-setup/config.yaml
+
+# Start agent (from project root)
+screen -dmS friday-agent bash -c "cd /path/to/project && source ainvenv/bin/activate && python cagent.py"
 ```
 
 ### 5. Start Redis
 ```bash
 sudo systemctl enable redis-server
 sudo systemctl start redis-server
+sudo systemctl status redis-server --no-pager
+
+# Verify Redis is working
+redis-cli ping  # Should return PONG
 ```
 
 ## Configuration
@@ -183,14 +224,42 @@ cd sip-setup
 python cagent.py dev
 ```
 
-### 4. Verify Ports
+### Verify Ports
 ```bash
 ss -tulnp | grep -E "7880|7881|5060"
+# OR using netstat
+sudo netstat -tunlp | grep -E "7880|7881|5060"
 ```
 Expected output:
 - 7880: LiveKit WebSocket
 - 7881: LiveKit TCP
 - 5060: SIP signaling
+
+### Version Verification
+```bash
+echo "✅ Installed versions:"
+livekit-server --version
+livekit-sip --version
+livekit-cli --version
+redis-cli --version
+```
+
+### Alternative: Screen Session Management
+```bash
+# Install screen for session management
+sudo apt install -y screen
+
+# Start services in detached screen sessions
+screen -dmS livekit-server bash -c "livekit-server --config /path/to/livekit.yaml"
+screen -dmS sip-bridge bash -c "livekit-sip --config /path/to/config.yaml"
+screen -dmS friday-agent bash -c "cd /path/to/project && python cagent.py"
+
+# List running sessions
+screen -ls
+
+# Attach to a session (Ctrl+A, then D to detach)
+screen -r livekit-server
+```
 
 ## Testing and Verification
 
@@ -216,6 +285,46 @@ livekit-cli join-room \
 - SIP Bridge: "processing invite", "SIP invite authentication successful"
 - LiveKit: Worker registered, room join events.
 - Bot: Conversation logging in `conversations/`.
+
+### Automated SIP Configuration
+
+Instead of manually creating JSON files, you can generate them programmatically:
+
+```bash
+# Create inbound trunk configuration
+cat <<EOF > inbound_trunk.json
+{
+  "name": "Zoiper Local Inbound",
+  "authUsername": "1001", 
+  "authPassword": "1001",
+  "mediaEncryption": "SIP_MEDIA_ENCRYPT_DISABLE"
+}
+EOF
+
+# Create trunk and capture ID
+TRUNK_ID=$(lk sip inbound create --project friday inbound_trunk.json | grep "SIPTrunkID:" | awk '{print $2}')
+echo "Created trunk with ID: $TRUNK_ID"
+
+# Create dispatch rule with captured trunk ID
+cat <<EOF > sip_dispatch.json
+{
+  "name": "Zoiper Individual Dispatch Rule",
+  "trunk_ids": ["$TRUNK_ID"],
+  "rule": {
+    "dispatchRuleIndividual": {
+      "roomPrefix": "call-"
+    }
+  }
+}
+EOF
+
+# Create dispatch rule
+lk sip dispatch create --project friday sip_dispatch.json
+
+# Verify configuration
+lk sip inbound-trunk list
+lk sip dispatch list
+```
 
 ## Integration with Voice Bot
 

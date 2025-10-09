@@ -27,6 +27,110 @@ graph TD
 
 ---
 
+## **1.5️⃣ Prerequisites and Installation Methods**
+
+Before configuring the services, you need to install the required binaries. Choose the method that best fits your deployment scenario:
+
+### **Option 1: Download Precompiled Binaries (Recommended for Production)**
+
+**LiveKit Server:**
+```bash
+# Download specific version for reproducible deployments
+wget https://github.com/livekit/livekit/releases/download/v1.9.1/livekit-server_1.9.1_linux_amd64.tar.gz
+tar -xzf livekit-server_1.9.1_linux_amd64.tar.gz
+sudo mv livekit-server /usr/local/bin/
+```
+
+**LiveKit SIP Bridge:**
+```bash
+# Download precompiled SIP bridge
+wget https://github.com/livekit/livekit-sip/releases/download/v1.9.1/livekit-sip_1.9.1_linux_amd64.tar.gz
+tar -xzf livekit-sip_1.9.1_linux_amd64.tar.gz
+sudo mv livekit-sip /usr/local/bin/
+sudo chmod +x /usr/local/bin/livekit-sip
+```
+
+### **Option 2: Build from Source (For Development/Customization)**
+
+**Install Go (if not already installed):**
+```bash
+# Method 1: Using wget
+wget -q https://go.dev/dl/go1.24.3.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.24.3.linux-amd64.tar.gz
+
+# Method 2: Using curl (alternative)
+curl -sSfL https://go.dev/dl/go1.24.3.linux-amd64.tar.gz -o go1.24.3.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.24.3.linux-amd64.tar.gz
+
+# Add Go to PATH
+export PATH=$PATH:/usr/local/go/bin
+echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+```
+
+**Build LiveKit SIP Bridge:**
+```bash
+git clone https://github.com/livekit/livekit-sip.git
+cd livekit-sip
+go build -o livekit-sip ./cmd/livekit-sip
+sudo mv livekit-sip /usr/local/bin/
+sudo chmod +x /usr/local/bin/livekit-sip
+```
+
+### **Option 3: Package Manager (Latest Stable)**
+```bash
+# Install LiveKit server and CLI via package manager
+curl -sSL https://get.livekit.io | bash
+curl -sSL https://get.livekit.io/cli | sudo bash
+
+# Create convenient alias for CLI
+echo 'alias lk="livekit-cli"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### **Automated Setup Script Approach**
+
+For fully automated deployments, you can use version variables:
+
+```bash
+# Set versions for reproducible deployments
+LIVEKIT_VERSION="1.9.1" 
+SIP_VERSION="1.5.1"
+CLI_VERSION="1.5.2"
+
+# Update system and install dependencies
+sudo apt update && sudo apt install -y curl wget unzip tar screen git redis-server
+
+# Enable and verify Redis
+sudo systemctl enable redis-server
+sudo systemctl start redis-server
+redis-cli ping || { echo "❌ Redis not responding"; exit 1; }
+
+# Install binaries with version control
+cd /tmp
+wget -q https://github.com/livekit/livekit/releases/download/v${LIVEKIT_VERSION}/livekit-server_${LIVEKIT_VERSION}_linux_amd64.tar.gz
+tar -xzf livekit-server_${LIVEKIT_VERSION}_linux_amd64.tar.gz
+sudo mv livekit-server /usr/local/bin/
+sudo chmod +x /usr/local/bin/livekit-server
+
+wget -q https://github.com/livekit/livekit-sip/releases/download/v${SIP_VERSION}/livekit-sip_${SIP_VERSION}_linux_amd64.tar.gz
+tar -xzf livekit-sip_${SIP_VERSION}_linux_amd64.tar.gz
+sudo mv livekit-sip /usr/local/bin/
+sudo chmod +x /usr/local/bin/livekit-sip
+
+wget -q https://github.com/livekit/livekit-cli/releases/download/v${CLI_VERSION}/livekit-cli_${CLI_VERSION}_linux_amd64.tar.gz
+tar -xzf livekit-cli_${CLI_VERSION}_linux_amd64.tar.gz
+sudo mv livekit-cli /usr/local/bin/
+sudo chmod +x /usr/local/bin/livekit-cli
+
+# Verify installations
+echo "✅ Versions:"
+livekit-server --version
+livekit-sip --version
+livekit-cli --version
+```
+
+---
+
 ## **2️⃣ Core Server Configuration**
 
 The first step is to ensure both the main server and the SIP service are configured correctly. A mismatch in this foundational step was the source of several issues.
@@ -90,30 +194,54 @@ The services must be started in the correct order.
   - **Verification Command:**
 
     ```bash
-    redis-cli ping
+    sudo systemctl enable redis-server
+    sudo systemctl start redis-server
+    redis-cli ping  # Should return PONG
     ```
-
-  - **Expected Output:** PONG
 
 2. **Start the LiveKit Server:**
-  - **Path:** `/mnt/c/Users/int10281/Desktop/Github/Friday - Copy/`
-  - **Start Command:**
+  - **Start Command (detached session using screen):**
 
     ```bash
-    livekit-server --config livekit.yaml
+    # Start LiveKit Server (recommended: versioned binary)
+    screen -dmS livekit-server livekit-server --config sip-setup/livekit.yaml
     ```
 
-  - **Verification:** Check the logs for "connecting to redis" and "starting LiveKit server".
+  - **Verification:** Check the logs or attach to the screen session: `screen -r livekit-server` and watch for "connecting to redis" and "starting LiveKit server".
 
-3. **Start the SIP Service:**
-  - **Path:** `/mnt/c/Users/int10281/Desktop/Github/Friday - Copy/sip-setup/`
-  - **Start Command:**
+3. **Start the SIP Service (after LiveKit is running):**
+  - **Start Command (detached session using screen):**
 
     ```bash
-    ./livekit-sip --config config.yaml
+    screen -dmS sip-bridge livekit-sip --config sip-setup/config.yaml
     ```
 
-  - **Verification:** Check the logs for "connecting to redis" and "sip signaling listening on".
+  - **Verification:** Attach to the session or inspect logs: `screen -r sip-bridge` and look for "connecting to redis" and "sip signaling listening on".
+
+### **Alternative: Screen Session Management**
+
+For development or environments without systemd, you can use screen sessions:
+
+```bash
+# Install screen if not available
+sudo apt install -y screen
+
+# Start services in detached screen sessions
+screen -dmS livekit-server bash -c "livekit-server --config livekit.yaml"
+screen -dmS sip-bridge bash -c "cd sip-setup && ./livekit-sip --config config.yaml"
+screen -dmS friday-agent bash -c "python cagent.py"
+
+# List running screen sessions
+screen -ls
+
+# Attach to a session (use Ctrl+A, then D to detach)
+screen -r livekit-server
+
+# Wait for services to start and verify ports
+sleep 5
+echo "🔍 Checking running ports:"
+sudo netstat -tunlp | grep -E '7880|5060|6379'
+```
 
 ---
 
@@ -152,6 +280,8 @@ The CLI needs to know which project to work with.
 
 This trunk defines the credentials Zoiper will use to authenticate.
 
+**Method 1: Manual JSON creation**
+
 1. **Create the file `inbound_trunk.json`:**
   - **Path:** `/mnt/c/Users/int10281/Desktop/Github/Friday - Copy/sip-setup/`
   - **Content:**
@@ -166,13 +296,26 @@ This trunk defines the credentials Zoiper will use to authenticate.
     }
     ```
 
+**Method 2: Automated JSON creation (Recommended)**
+
+```bash
+# Create inbound trunk configuration programmatically
+cat <<EOF > inbound_trunk.json
+{
+  "name": "Zoiper Local Inbound",
+  "authUsername": "1001",
+  "authPassword": "1001", 
+  "mediaEncryption": "SIP_MEDIA_ENCRYPT_DISABLE"
+}
+EOF
+```
+
 2. **Run the creation command:**
 
   ```bash
-  lk sip inbound create --project friday inbound_trunk.json
+  TRUNK_ID=$(lk sip inbound create --project friday inbound_trunk.json | grep "SIPTrunkID:" | awk '{print $2}')
+  echo "Created trunk with ID: $TRUNK_ID"
   ```
-
-  - **Expected Output:** `SIPTrunkID: ST_EmMmjttJHZHP` (Your ID will be different). **Save this ID.**
 
 3. **Verification Command:**
 
@@ -185,6 +328,8 @@ This trunk defines the credentials Zoiper will use to authenticate.
 ### **Step 4.3: Create the SIP Dispatch Rule**
 
 This rule routes authenticated calls from the trunk to a specific LiveKit room.
+
+**Method 1: Manual creation with saved Trunk ID**
 
 1. **Create the file `sip_dispatch.json`:**
   - **Path:** `/mnt/c/Users/int10281/Desktop/Github/Friday - Copy/sip-setup/`
@@ -204,6 +349,23 @@ This rule routes authenticated calls from the trunk to a specific LiveKit room.
     }
     ```
 
+**Method 2: Automated creation using captured Trunk ID (Recommended)**
+
+```bash
+# Create dispatch rule with the captured trunk ID
+cat <<EOF > sip_dispatch.json
+{
+  "name": "Zoiper Individual Dispatch Rule",
+  "trunk_ids": ["$TRUNK_ID"],
+  "rule": {
+    "dispatchRuleIndividual": {
+      "roomPrefix": "call-"
+    }
+  }
+}
+EOF
+```
+
 2. **Run the creation command:**
 
   ```bash
@@ -211,6 +373,23 @@ This rule routes authenticated calls from the trunk to a specific LiveKit room.
   ```
 
   - **Expected Output:** `SIPDispatchRuleID: SDR_z8poRnoYDZPB` (Your ID will be different).
+
+3. **Verification Commands:**
+
+  ```bash
+  # Verify all configurations
+  lk sip inbound-trunk list
+  lk sip dispatch list
+  
+  # Check network ports
+  sudo netstat -tunlp | grep -E '7880|5060|6379'
+  
+  # Verify service versions
+  echo "✅ Service versions:"
+  livekit-server --version
+  livekit-sip --version
+  livekit-cli --version
+  ```
 
 ---
 

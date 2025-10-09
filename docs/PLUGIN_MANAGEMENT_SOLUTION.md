@@ -166,3 +166,18 @@ ls backup_plugin_modifications/
 ## Summary
 
 This solution provides a robust, maintainable way to ensure conversation logging works regardless of how the environment is set up. It automatically adapts to different scenarios and provides tools for easy maintenance.
+
+### Local Dev & SIP Automation (cross-reference)
+
+For quick local development and SIP provisioning the canonical `README.md` includes the recommended commands:
+
+1. Start services in detached `screen` sessions (LiveKit server, SIP bridge, backend agent).
+2. Automate SIP trunk creation and dispatch with the `lk` CLI and `jq`/`sed` to avoid manual ID copy/paste:
+
+```bash
+TRUNK_ID=$(lk sip inbound create --project friday sip-setup/inbound_trunk.json | jq -r '.sip_trunk_id')
+sed -i "s/REPLACE_WITH_TRUNK_ID/$TRUNK_ID/g" sip-setup/sip_dispatch.json
+lk sip dispatch create --project friday sip-setup/sip_dispatch.json
+```
+
+Refer to `README.md` for exact paths and additional verification steps.

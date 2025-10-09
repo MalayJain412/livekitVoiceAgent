@@ -354,15 +354,29 @@ sudo apt update && sudo apt upgrade -y
 
 # Install Go for building SIP bridge
 sudo apt install -y golang-go git wget curl
+
+# Alternative: Install specific Go version
+wget -q https://go.dev/dl/go1.24.3.linux-amd64.tar.gz
+# OR using curl
+curl -sSfL https://go.dev/dl/go1.24.3.linux-amd64.tar.gz -o go1.24.3.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.24.3.linux-amd64.tar.gz
+echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ### LiveKit SIP Bridge Installation
 ```bash
-# Build SIP bridge from source
+# Method 1: Build from source (recommended for customization)
 git clone https://github.com/livekit/livekit-sip.git /tmp/livekit-sip
 cd /tmp/livekit-sip
 go build -o livekit-sip ./cmd/livekit-sip
 sudo mv livekit-sip /usr/local/bin/
+
+# Method 2: Download precompiled binary (faster deployment)
+wget https://github.com/livekit/livekit-sip/releases/download/v1.9.1/livekit-sip_1.9.1_linux_amd64.tar.gz
+tar -xzf livekit-sip_1.9.1_linux_amd64.tar.gz
+sudo mv livekit-sip /usr/local/bin/
+sudo chmod +x /usr/local/bin/livekit-sip
 
 # Create SIP configuration directory
 sudo mkdir -p /opt/sip-setup
@@ -385,6 +399,21 @@ rtp_port: 10000-20000
 use_external_ip: true
 logging:
   level: info
+
+### Automating SIP Trunk & Dispatch creation
+
+For scripted or repeatable deployments, use the `lk` CLI to create SIP trunks and parse the returned JSON with `jq`. Example (run from a machine that has `lk` configured with your LiveKit project):
+
+```bash
+# Create inbound trunk and capture its ID
+TRUNK_ID=$(lk sip inbound create --project friday sip-setup/inbound_trunk.json | jq -r '.sip_trunk_id')
+
+# Inject the trunk ID into the dispatch JSON and create the dispatch rule
+sed -i "s/REPLACE_WITH_TRUNK_ID/$TRUNK_ID/g" sip-setup/sip_dispatch.json
+lk sip dispatch create --project friday sip-setup/sip_dispatch.json
+```
+
+This avoids manual ID copy/paste and aligns with the canonical instructions in `README.md`.
 EOF
 
 # Create SIP trunk configuration
@@ -457,25 +486,64 @@ sudo ufw allow 10000:20000/udp # RTP media ports
 curl -sSL https://get.livekit.io/cli | sudo bash
 ```
 
+### LiveKit CLI Installation
+```bash
+# Method 1: Package manager (latest)
+curl -sSL https://get.livekit.io/cli | sudo bash
+
+# Method 2: Specific version download
+CLI_VERSION="1.5.2"
+wget -q https://github.com/livekit/livekit-cli/releases/download/v${CLI_VERSION}/livekit-cli_${CLI_VERSION}_linux_amd64.tar.gz
+tar -xzf livekit-cli_${CLI_VERSION}_linux_amd64.tar.gz
+sudo mv livekit-cli /usr/local/bin/
+sudo chmod +x /usr/local/bin/livekit-cli
+
+# Create convenient alias
+echo 'alias lk="livekit-cli"' >> ~/.bashrc
+source ~/.bashrc
+```
+
 ### Create LiveKit Project and SIP Resources
 ```bash
 # Configure LiveKit project
 VM_B_PRIVATE_IP="YOUR_VM_B_PRIVATE_IP"
-lk project add friday --url ws://$VM_B_PRIVATE_IP:7880 --api-key APIntavBoHTqApw --api-secret pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
+lk project add --name friday --url ws://$VM_B_PRIVATE_IP:7880 --api-key APIntavBoHTqApw --api-secret pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
 lk project set-default friday
 
-# Create SIP inbound trunk
-cd /opt/sip-setup
-TRUNK_ID=$(lk sip inbound create --project friday inbound_trunk.json | grep "SIPTrunkID:" | awk '{print $2}')
+# Create SIP inbound trunk with programmatic JSON creation
+cat <<EOF > /opt/sip-setup/inbound_trunk.json
+{
+  "name": "Production Inbound Trunk",
+  "authUsername": "1001",
+  "authPassword": "1001",
+  "mediaEncryption": "SIP_MEDIA_ENCRYPT_DISABLE"
+}
+EOF
+
+TRUNK_ID=$(lk sip inbound create --project friday /opt/sip-setup/inbound_trunk.json | grep "SIPTrunkID:" | awk '{print $2}')
 echo "Created trunk with ID: $TRUNK_ID"
 
-# Update dispatch rule with trunk ID
-sed -i "s/REPLACE_WITH_TRUNK_ID/$TRUNK_ID/g" sip_dispatch.json
+# Create dispatch rule with trunk ID
+cat <<EOF > /opt/sip-setup/sip_dispatch.json
+{
+  "name": "Production Dispatch Rule",
+  "trunk_ids": ["$TRUNK_ID"],
+  "rule": {
+    "dispatchRuleIndividual": {
+      "roomPrefix": "friday-"
+    }
+  }
+}
+EOF
 
 # Create dispatch rule
-lk sip dispatch create --project friday sip_dispatch.json
+lk sip dispatch create --project friday /opt/sip-setup/sip_dispatch.json
 
 # Verify setup
+echo "✅ Verifying setup:"
+livekit-server --version
+livekit-sip --version
+livekit-cli --version
 lk sip inbound-trunk list
 lk sip dispatch list
 ```
@@ -519,6 +587,18 @@ lk room list  # Should show empty list or existing rooms
 
 # Check if agent joined the room (after a test call)
 lk room participants --room friday-assistant-room
+
+# Verify network ports are listening
+sudo netstat -tunlp | grep -E '5060|7880|6379'
+# OR using ss (newer alternative)
+sudo ss -tunlp | grep -E '5060|7880|6379'
+
+# Check service versions
+echo "✅ Installed versions:"
+livekit-server --version
+livekit-sip --version  
+livekit-cli --version
+redis-cli --version
 ```
 
 #### Monitor Logs
@@ -660,6 +740,21 @@ sudo apt install sngrep && sudo sngrep
 # Check room status
 lk room list
 lk room participants --room friday-assistant-room
+
+# Alternative: Screen session management (instead of systemd)
+# Install screen if not available
+sudo apt install -y screen
+
+# Start services in screen sessions
+screen -dmS livekit-server bash -c "livekit-server --config /opt/livekit.yaml"
+screen -dmS sip-bridge bash -c "livekit-sip --config /opt/sip-setup/config.yaml" 
+screen -dmS friday-agent bash -c "cd /opt/friday-ai && source venv/bin/activate && python cagent.py"
+
+# List screen sessions
+screen -ls
+
+# Attach to a session (use Ctrl+A, then D to detach)
+screen -r livekit-server
 ```
 
 This completes the multi-VM deployment setup for Friday AI with production-ready configuration, monitoring, and troubleshooting procedures.

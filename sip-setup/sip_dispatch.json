@@ -1,11 +1,9 @@
 {
-  "dispatch_rule": {
-    "name": "Zoiper to Assistant Room Rule",
-    "trunk_ids": ["ST_EmMmjttJHZHP"],
-    "rule": {
-      "dispatchRuleDirect": {
-        "roomName": "friday-assistant-room"
-      }
+  "name": "Zoiper Individual Dispatch Rule",
+  "trunk_ids": ["ST_dVmaTbNmckqD"],
+  "rule": {
+    "dispatchRuleIndividual": {
+      "roomPrefix": "call-"
     }
   }
 }

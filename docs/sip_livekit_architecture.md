@@ -39,3 +39,4 @@ flowchart LR
     style Agent_Worker fill:#E2EFDA,stroke:#000,stroke-width:1px
     style LiveKit_World fill:#FFF2CC,stroke:#000,stroke-width:1px
 ```
+Note: For exact local startup commands (livekit-server, livekit-sip, and agent) and the automated SIP trunk/dispatch creation workflow using `lk` + `jq` + `sed`, see the project's `README.md` which contains the canonical quick-start and automation examples.

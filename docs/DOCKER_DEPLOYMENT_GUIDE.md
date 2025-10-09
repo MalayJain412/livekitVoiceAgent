@@ -93,6 +93,21 @@ ENVIRONMENT=production
 LOG_LEVEL=INFO
 ```
 
+### Automating SIP Trunk & Dispatch creation
+
+If you're provisioning SIP resources from automation or scripts (outside Docker), use the `lk` CLI and parse its JSON output to avoid manual copy/paste. Example (run from project root where `sip-setup/` lives):
+
+```bash
+# Create inbound trunk and capture its ID
+TRUNK_ID=$(lk sip inbound create --project friday sip-setup/inbound_trunk.json | jq -r '.sip_trunk_id')
+
+# Replace placeholder in dispatch JSON and create the dispatch rule
+sed -i "s/REPLACE_WITH_TRUNK_ID/$TRUNK_ID/g" sip-setup/sip_dispatch.json
+lk sip dispatch create --project friday sip-setup/sip_dispatch.json
+```
+
+This mirrors the canonical quick-start in `README.md` and reduces human error when creating trunks and dispatch rules.
+
 ### Volume Mounts
 
 - **`./conversations:/app/conversations`** - Persistent conversation logs

@@ -120,6 +120,31 @@ lk sip dispatch create --project friday sip_dispatch.json
 python cagent.py
 ```
 
+### Automating SIP Trunk & Dispatch creation
+
+To avoid manual copy/paste when creating SIP trunks and dispatch rules, use the `lk` CLI and parse its JSON output with `jq`. Example (run from repository root where `sip-setup/` lives):
+
+```bash
+# Create inbound trunk and capture its ID
+TRUNK_ID=$(lk sip inbound create --project friday sip-setup/inbound_trunk.json | jq -r '.sip_trunk_id')
+
+# Replace placeholder in dispatch JSON and create the dispatch rule
+sed -i "s/REPLACE_WITH_TRUNK_ID/$TRUNK_ID/g" sip-setup/sip_dispatch.json
+lk sip dispatch create --project friday sip-setup/sip_dispatch.json
+```
+
+This follows the canonical pattern in `README.md` and prevents human error during provisioning.
+
+### Start services (development)
+
+For local development, use `screen` to run services detached. For production prefer systemd or container orchestration.
+
+```bash
+screen -dmS livekit-server livekit-server --config sip-setup/livekit.yaml
+screen -dmS sip-bridge livekit-sip --config sip-setup/config.yaml
+screen -dmS friday-agent bash -c "source ainvenv/bin/activate && python cagent.py"
+```
+
 ## 3. Voice Agent Core (cagent.py)
 
 The voice agent is the central component that connects to LiveKit rooms and processes conversations.

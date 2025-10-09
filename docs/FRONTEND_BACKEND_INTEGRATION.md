@@ -164,6 +164,23 @@ Recommendations for token management:
    - Unit test token minting (both frontend Next route and backend `generate_livekit_token.py`), test that tokens decode and include expected claims.
    - Integration test: run a local LiveKit instance or use a test environment, verify that browser and agent can join the same room and audio flows.
 
+   ### Quick local startup (cross-reference)
+
+   For local development we recommend using the canonical `README.md` commands to start services and provision SIP resources. This keeps behavior consistent across the project:
+
+   ```bash
+   screen -dmS livekit-server livekit-server --config sip-setup/livekit.yaml
+   screen -dmS sip-bridge livekit-sip --config sip-setup/config.yaml
+   screen -dmS friday-agent bash -c "source ainvenv/bin/activate && python cagent.py"
+
+   # Automated trunk & dispatch creation
+   TRUNK_ID=$(lk sip inbound create --project friday sip-setup/inbound_trunk.json | jq -r '.sip_trunk_id')
+   sed -i "s/REPLACE_WITH_TRUNK_ID/$TRUNK_ID/g" sip-setup/sip_dispatch.json
+   lk sip dispatch create --project friday sip-setup/sip_dispatch.json
+   ```
+
+   Refer to `README.md` for exact paths and additional verification steps.
+
 ---
 
 ## Recommended architecture diagram (final-state, Pattern A)

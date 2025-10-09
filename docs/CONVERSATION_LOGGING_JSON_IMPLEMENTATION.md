@@ -352,6 +352,18 @@ python cagent.py dev
 - **Filename**: `conversation_20250818_143022.json` (timestamp-based)
 - **Format**: UTF-8 encoded JSON with proper indentation
 
+### Local startup (cross-reference)
+
+When running locally for integration tests, follow the project's canonical `README.md` for starting LiveKit, the SIP bridge, and the agent. Example (screen-based):
+
+```bash
+screen -dmS livekit-server livekit-server --config sip-setup/livekit.yaml
+screen -dmS sip-bridge livekit-sip --config sip-setup/config.yaml
+screen -dmS friday-agent bash -c "source ainvenv/bin/activate && python cagent.py"
+```
+
+For SIP provisioning use the `lk` CLI automation described in `README.md` to create trunks and dispatch rules (captures via `jq` and `sed`).
+
 ---
 
 ## Best Practices & Notes
