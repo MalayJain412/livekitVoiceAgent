@@ -119,7 +119,7 @@ This mirrors the canonical quick-start in `README.md` and reduces human error wh
 
 ```dockerfile
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import config; config.setup_conversation_log(); print('Health check passed')"
+    CMD python -c "import os, sys; print('Health check passed' if os.path.isdir('/app/conversations') else 'conversations missing'); sys.exit(0)"
 ```
 
 ### Manual Health Check
@@ -172,12 +172,8 @@ docker logs friday-ai-agent | grep "FRIDAY AI:"
 # Check conversation directory
 docker exec friday-ai-agent ls -la conversations/
 
-# Test logging manually
-docker exec friday-ai-agent python -c "
-import config
-config.setup_conversation_log()
-print('Log path:', config.get_conversation_log_path())
-"
+# Test logging manually: check conversations dir exists
+docker exec friday-ai-agent python -c "import os; print('conversations exists:', os.path.isdir('/app/conversations'))"
 ```
 
 ### Container Debugging

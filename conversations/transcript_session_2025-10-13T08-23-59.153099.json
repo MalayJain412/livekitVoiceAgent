@@ -1,0 +1,430 @@
+{
+  "items": [
+    {
+      "id": "item_12a5e0455be8",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Namaste! Main Triotech ki Sales Assistant hoon. At Triotech, we specialize in developing AI-powered products designed to drive digital transformation. As a product-based company, we focus on"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_1cf58b28f0f6",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Hello?"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.87524414
+    },
+    {
+      "id": "item_fce27b52c8ce",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Hello! Kaise hain aap? Main aapki kis prakar sahayata kar sakti hoon aaj?"
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_83031e6644c5",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "मेरे को क्या आप just talk के बारे में बता सकते"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9916992
+    },
+    {
+      "id": "item_0f88f66b41e3",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "हैं please?"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.951416
+    },
+    {
+      "id": "item_c4f5bb32ccbc/fnc_0",
+      "type": "function_call",
+      "call_id": "function_call_46a8dd127cf2",
+      "arguments": "{\"query\": \"Justtawk\"}",
+      "name": "triotech_info"
+    },
+    {
+      "id": "item_8623089f9d07",
+      "type": "function_call_output",
+      "name": "triotech_info",
+      "call_id": "function_call_46a8dd127cf2",
+      "output": "Justtawk: AI Virtual Call Center integrating intelligent voice bots, real-time analytics and automation. (Target: SMBs, BPOs, Enterprises)",
+      "is_error": false
+    },
+    {
+      "id": "item_0dd5a91e1098",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Ji, Justtawk ek AI-powered Virtual Call Center hai jo intelligent voice bots, real-time analytics aur automation ko integrate karta hai. Yeh SMBs, BPOs, aur Enterprises ke liye banaya gaya hai.\n\nKya aap Justtawk ke features ya benefits ke baare mein aur jaanna chahte hain?"
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_d44db360897b",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Yes. आप just talk details दे सकते"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.6352539
+    },
+    {
+      "id": "item_06732befdf7a",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "हैं थोड़ा सा अच्छे से मेरे को जानना है उसको."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9699707
+    },
+    {
+      "id": "item_d9ae53810dd8/fnc_0",
+      "type": "function_call",
+      "call_id": "function_call_805598d51257",
+      "arguments": "{\"query\": \"Justtawk features and benefits\"}",
+      "name": "triotech_info"
+    },
+    {
+      "id": "item_c84222f8b640",
+      "type": "function_call_output",
+      "name": "triotech_info",
+      "call_id": "function_call_805598d51257",
+      "output": "An internal error occurred",
+      "is_error": true
+    },
+    {
+      "id": "item_0660e59d04b9",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Maaf kariyega, lagta hai kuch technical issue ho gaya hai. Main aapko Justtawk ke baare mein aur details provide karne mein abhi asamarth hoon.\n\nKya aapko kisi aur Triotech product, jaise Convoze, Xeny, Fohrce, Ringingo, AI Chat Bot, ya AI LMS ke baare mein jaanna hai? Ya main dobara Justtawk ki jaankari nikalne ki koshish karoon?"
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_d438b9459e30",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "नहीं एक काम करिए आप मेरे को आपकी sales"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9428711
+    },
+    {
+      "id": "item_a2cc3933821d",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "team के साथ direct कर दीजिए."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9970703
+    },
+    {
+      "id": "item_6720a148f218",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Bilkul! Main aapko apni sales team se connect kar sakti hoon. Uske liye, kya aap apna naam, email, company ka naam, aur kaunsa product mein aap interested hain, share karenge please?"
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_16ebb23c29d2",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Okay. So my name is Malaysia. I am from Invanto"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99658202
+    },
+    {
+      "id": "item_6dae830dfc90",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "plus, uh, I'm interested in Zestock."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99853516
+    },
+    {
+      "id": "item_bec733b88f3c/fnc_0",
+      "type": "function_call",
+      "call_id": "function_call_5520ec9be42b",
+      "arguments": "{\"user_message\": \"Okay. So my name is Malaysia. I am from Invantoplus, uh, I'm interested in Zestock.\"}",
+      "name": "detect_lead_intent"
+    },
+    {
+      "id": "item_7759fccde960",
+      "type": "function_call_output",
+      "name": "detect_lead_intent",
+      "call_id": "function_call_5520ec9be42b",
+      "output": "NO_LEAD_INTENT: Continue normal conversation.",
+      "is_error": false
+    },
+    {
+      "id": "item_ac81f7115445",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "And my mail ID is Malayjan one two three four at the rate Gmail dot com."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9970703
+    },
+    {
+      "id": "item_ea06a4e0b1d3",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "And"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.98828125
+    },
+    {
+      "id": "item_cacc54befa1d",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "that's it."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.986084
+    },
+    {
+      "id": "item_88b5d5291a88",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Anything else?"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99902344
+    },
+    {
+      "id": "item_437ad3165b12",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Thank you, Malaysia ji from Invantoplus! Aapka email ID Malayjan1234@gmail.com hai.\n\nAapne 'Zestock' mention kiya hai, lekin hamare products mein Justtawk, Convoze, Xeny, Fohrce, Ringingo, AI Chat Bot, aur AI LMS shamil hain. Kya aap Justtawk mein interested hain?\n\nAur kya aap apna phone number aur budget bhi share kar sakte hain, taaki hamari sales team aapse"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_783de5316870",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Yes."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.71240234
+    },
+    {
+      "id": "item_bd6d84e36135",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "मेरा phone number है nine double two five eight double two nine six nine."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99902344
+    },
+    {
+      "id": "item_22d7d20a6e9f",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "And I think my budget is around five to seven crores."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99902344
+    },
+    {
+      "id": "item_b5cb467adef9",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Great! Toh aapki details hain:\nName: Malaysia\nCompany: Invantoplus\nEmail: Malayjan1234@gmail.com\nPhone Number: 9225822969\nInterested Product: Justtawk\nBudget: 5 to 7 Crores\n\nKya main yeh details hamari sales team ke saath share kar doon?"
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_235e82fb0af1",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Okay. Thank you. You can do that, please."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9970703
+    },
+    {
+      "id": "item_cc7e510d9b0c/fnc_0",
+      "type": "function_call",
+      "call_id": "function_call_fe550253f6d0",
+      "arguments": "{\"name\": \"Malaysia\", \"company\": \"Invantoplus\", \"interest\": \"Justtawk\", \"budget\": \"5 to 7 Crores\", \"email\": \"Malayjan1234@gmail.com\", \"phone\": \"9225822969\"}",
+      "name": "create_lead"
+    },
+    {
+      "id": "item_c4bbbac55dfd",
+      "type": "function_call_output",
+      "name": "create_lead",
+      "call_id": "function_call_fe550253f6d0",
+      "output": "धन्यवाद Malaysia! आपकी जानकारी सुरक्षित कर ली गई है। हमारी सेल्स टीम जल्द ही Invantoplus के लिए Justtawk के बारे में आपसे संपर्क करेगी।",
+      "is_error": false
+    },
+    {
+      "id": "item_eeb88db12f74",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Shukriya! Hamari sales team aapse jaldi contact karegi. Agar aapko aur koi jaankari chahiye,"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_ac9d57822e44",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "One more thing."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9880371
+    },
+    {
+      "id": "item_ea9b07f7fd19",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "My name is not Malaysia. My name is Malaysia."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99902344
+    },
+    {
+      "id": "item_57cb0bb988fc",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Maaf kariyega, meri galti ho gayi! Aapka naam Malaysia hai."
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_7d9d9eaa1686",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Malayed gene, m a l e y g e a n."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.96533203
+    },
+    {
+      "id": "item_6b7e377f0d9c",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Meri galti ke liye main maafi chahti hoon, Malaygean"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_dfcf6e8dadc9",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "J a I n. J a I n."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9951172
+    },
+    {
+      "id": "item_6cde06c9219a",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Thank you for the correction. So, your full name is Malaygean Jain. I will make sure this is noted for our sales team.\n\nKya aap aur kuch"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_171bcc494f15",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Okay. Thanks."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99609375
+    },
+    {
+      "id": "item_bfc573adad50",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Aapka swagat hai! Agar aapko future mein Triotech ke products ya services ke baare mein aur kuch jaanna ho, toh zaroor batana."
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_a6fb921b0f54",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Please send the call."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9428711
+    },
+    {
+      "id": "item_c5c359c0dbae",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Ji, aapka matlab hai ki aap chat end karna chahte hain, ya sales team ko aapki details bhej di gayi hain, uski confirmation chahte hain? Main bas clarify kar rahi thi."
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_268972890ee8",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "No. Nothing. End the call."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99316406
+    },
+    {
+      "id": "item_68cb1b7cfec8",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Theek hai, aapka din shubh ho! Goodbye."
+      ],
+      "interrupted": false
+    }
+  ]
+}

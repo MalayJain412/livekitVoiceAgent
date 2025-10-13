@@ -1,0 +1,61 @@
+{
+  "items": [
+    {
+      "id": "item_e75afca41880",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Namaste! Main Triotech ki Sales Assistant hoon. Main aapki kis tarah help kar sakti hoon?\n\nAt Triotech, we specialize in developing AI-powered products designed to drive digital transformation. As a product-based company, we focus on innovative solutions that enhance business operations. Hamari solutions aapko efficiency, smarter decisions aur better customer interaction ke liye help karti hain."
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_0b351d1ec960",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Hello?"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.7973633
+    },
+    {
+      "id": "item_f633f4452dcd",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Hello! Main yahan aapki Triotech ke"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_5cff09bb6ac5",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Can you tell me about करता हूं?"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9404297
+    },
+    {
+      "id": "item_5d43bb26a68a",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Ji, main samajh nahi pa rahi hoon. Kya aap 'karta hoon' ko clear"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_7f657deb8402",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Focus stop."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.80810547
+    }
+  ]
+}

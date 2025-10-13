@@ -1,166 +1,157 @@
 # FRIDAY AI: Plugin Management Solution
 
-## Problem
+## Problem (Historical)
 When doing `pip install` or reinstalling dependencies, the modified LiveKit plugins in the venv get overwritten with the original versions, losing the conversation logging functionality.
 
-## Solution Overview
-We've implemented a **hybrid approach** that:
-1. **Uses modified plugins** if they exist in the venv
-2. **Applies runtime patches** if original plugins are detected
-3. **Provides backup and restore utilities** for easy maintenance
+## Current Solution (Recommended)
+**Agent-Level Logging** - No plugin modifications required:
 
-## Files Created
+1. **Realtime JSONL Logging**: `transcript_logger.py` provides a background worker that writes conversation events to `conversations/transcripts.jsonl` as they happen.
+2. **Agent Instrumentation**: `cagent.py` uses LiveKit Agent API hooks to capture STT chunks via `transcription_node()` and session items via background watcher.
+3. **Session Snapshots**: Job shutdown callback writes pretty JSON snapshots to `conversations/transcript_session_<timestamp>.json`.
+4. **Zero Plugin Edits**: No modifications to files in the virtual environment required.
 
-### 1. `modified_plugins.py`
-- **Purpose**: Main interface for creating LLM and TTS instances with conversation logging
-- **Usage**: Import `create_llm()` and `create_tts()` instead of using original plugins directly
+## Deprecated Approach (Archived)
+The repository previously included a hybrid plugin-patching approach (runtime patching + backup/restore) to add conversation logging into third-party plugins. **This approach is deprecated** due to fragility and upgrade issues.
+
+## Current Architecture Files
+
+### 1. `transcript_logger.py`
+- **Purpose**: Background JSONL writer for realtime conversation logging
+- **Usage**: Called by agent hooks to log STT chunks and conversation items
 - **Features**: 
-  - Automatically detects if plugins are already modified
-  - Falls back to runtime patching if needed
-  - Provides clean API for the rest of the application
+  - Non-blocking queue-based writer
+  - Appends to `conversations/transcripts.jsonl`
+  - Defensive error handling to never break agent pipeline
 
-### 2. `plugin_patcher.py`
-- **Purpose**: Runtime patching system for original plugins
-- **Usage**: Automatically called by `modified_plugins.py` when needed
-- **Features**:
-  - Patches Google LLM to log user input
-  - Patches Cartesia TTS to log agent responses
-  - Non-invasive - doesn't modify files on disk
+### 2. `cagent.py`
+- **Purpose**: Main voice agent with integrated logging hooks
+- **Features**: 
+  - `transcription_node()` captures streaming STT chunks
+  - Background watcher polls `session.history` and logs committed items
+  - Shutdown callback writes session snapshot and flushes logger
+  - Uses standard LiveKit plugins directly (google, cartesia)
 
-### 3. `setup_plugins.py`
-- **Purpose**: Maintenance script for plugin management
-- **Usage**: Run after `pip install` to restore modifications
-- **Features**:
-  - Backs up current modifications
-  - Restores from backup when needed
-  - Can be run manually or in build scripts
-
-### 4. Updated `cagent.py`
-- **Purpose**: Main application using the new plugin system
-- **Changes**: 
-  - Imports `create_llm()` and `create_tts()` from `modified_plugins`
-  - No longer directly imports original plugins
-  - Automatically gets conversation logging
+### 3. `config.py`
+- **Purpose**: Minimal helper for conversations directory setup
+- **Changes**: No longer creates legacy conversation files
+- **Usage**: Ensures `conversations/` directory exists
 
 ## Usage Instructions
 
 ### For Regular Development
-Just use the application normally:
-```python
-# This now automatically includes conversation logging
+Just use the application normally - logging is automatic:
+```powershell
+# Realtime logging happens automatically
 python cagent.py
 ```
 
 ### After pip install / requirements.txt update
-Run the setup script:
-```powershell
-python setup_plugins.py
-```
+No action required. The agent-level logging mechanism works without patching vendor packages.
 
 ### For Docker Deployment
-Use the existing `docker_scripts/apply_modifications.py` which applies the backup files.
+Use the existing `docker_scripts/apply_modifications.py` which applies the backup plugin files if needed for reference.
 
 ## How It Works
 
-### 1. Plugin Detection
+### 1. Agent-Level Hooks
 ```python
-from modified_plugins import create_llm, create_tts
-
-# These functions automatically:
-# 1. Check if plugins are already modified
-# 2. Apply runtime patches if needed
-# 3. Return instances with conversation logging
+# cagent.py uses LiveKit Agent API directly
+async def transcription_node(self, text, model_settings):
+    async for chunk in text:
+        # Log STT chunks as they arrive
+        log_user_message(content, source="transcription_node", meta=meta)
+        yield chunk
 ```
 
-### 2. Runtime Patching
-If original plugins are detected, the system:
-- Patches `google.LLM.LLMStream._run()` to log user input
-- Patches `cartesia.TTS.ChunkedStream._run()` and `SynthesizeStream._run()` to log agent responses
-- Applies patches at runtime without modifying files
+### 2. Background Logging
+The logging system:
+- Runs a background thread with queue-based JSONL writer
+- Captures STT chunks via `transcription_node()` 
+- Watches `session.history` for committed conversation items
+- Never blocks the agent pipeline
 
-### 3. Backup Management
-The backup system:
-- Stores modified plugins in `backup_plugin_modifications/`
-- Can restore modifications after pip installs
-- Preserves conversation logging functionality
+### 3. Session Management
+On job shutdown:
+- Agent saves final session snapshot as pretty JSON
+- Background logger is flushed and stopped gracefully
+- All conversation data preserved in two formats (JSONL + snapshot)
 
 ## Integration with Existing Code
 
-### Before
+### Current Approach (Agent-Level)
 ```python
 from livekit.plugins import google, cartesia
+from transcript_logger import log_user_message, log_event
 
+# Use plugins directly - no wrappers needed
 llm = google.LLM(model="gemini-2.5-flash", temperature=0.8)
 tts = cartesia.TTS(model="sonic-2", language="hi", voice="...")
-```
 
-### After
-```python
-from modified_plugins import create_llm, create_tts
-
-llm = create_llm(model="gemini-2.5-flash", temperature=0.8)
-tts = create_tts(model="sonic-2", language="hi", voice="...")
+# Logging happens via agent hooks, not plugin modifications
 ```
 
 ## Maintenance Workflow
 
 ### 1. Development
-- Just code normally - conversation logging is automatic
-- No need to manually modify plugin files
+- Just code normally - conversation logging is automatic via agent hooks
+- Check `conversations/transcripts.jsonl` for realtime events
+- Check `conversations/transcript_session_*.json` for session snapshots
 
 ### 2. After Dependencies Update
 ```powershell
 pip install -r requirements.txt
-python setup_plugins.py  # Restore conversation logging
+# No additional steps required - agent-level logging is dependency-independent
 ```
 
 ### 3. Docker Deployment
 ```bash
-# Use existing docker script
-python docker_scripts/apply_modifications.py
+# Standard deployment - no special plugin handling needed
+# Optional: use docker_scripts/apply_modifications.py for backup plugin reference
 ```
 
 ## Benefits
 
-1. **Automatic**: No manual file editing required
-2. **Persistent**: Survives pip installs when using setup script
-3. **Flexible**: Works with runtime patching as fallback
-4. **Clean**: Doesn't clutter the main application code
-5. **Maintainable**: Single point of control for plugin modifications
+1. **Zero Dependencies**: No plugin modifications or backup/restore scripts needed
+2. **Upgrade-Safe**: Survives any pip installs or LiveKit version updates automatically  
+3. **Non-Invasive**: Uses official LiveKit Agent API hooks only
+4. **Realtime**: JSONL streaming provides immediate visibility into conversations
+5. **Maintainable**: All logging code in repo, no external file dependencies
 
 ## Files to Keep in Version Control
 
-- ✅ `modified_plugins.py`
-- ✅ `plugin_patcher.py` 
-- ✅ `setup_plugins.py`
-- ✅ `backup_plugin_modifications/` (entire folder)
-- ❌ Don't commit modified venv files
+- ✅ `transcript_logger.py` (realtime JSONL writer) 
+- ✅ `cagent.py` (agent entrypoint and logging hooks)
+- ✅ `docs/` and `backup_plugin_modifications/` for historical reference
+- ✅ `conversations/` directory (auto-created, contains logs)
 
 ## Testing
 
 Test the system works:
-```python
-# Test that conversation logging is available
-from modified_plugins import check_plugins_already_modified
-google_modified, cartesia_modified = check_plugins_already_modified()
-print(f"Google: {google_modified}, Cartesia: {cartesia_modified}")
+```powershell
+# Start agent and check logging
+python cagent.py
+
+# In another terminal, check realtime logging
+Get-Content conversations\transcripts.jsonl -Wait
 ```
 
 ## Troubleshooting
 
-### Issue: "No conversation logging after pip install"
-**Solution**: Run `python setup_plugins.py`
+### Issue: "No conversation logging visible"
+**Solution**: Check that `conversations/transcripts.jsonl` is being written to and agent hooks are registered
 
-### Issue: "ImportError when creating LLM/TTS"
+### Issue: "ImportError when starting agent"
 **Solution**: Check that LiveKit plugins are installed:
 ```powershell
-pip install livekit-plugins-google livekit-plugins-cartesia
+pip install livekit-plugins-google livekit-plugins-cartesia livekit-plugins-deepgram livekit-plugins-silero
 ```
 
-### Issue: "Patches not applying"
-**Solution**: Check if backup files exist:
+### Issue: "JSONL file not updating"
+**Solution**: Check transcript_logger background thread:
 ```python
-ls backup_plugin_modifications/
+from transcript_logger import get_log_path
+print(get_log_path())  # Should show conversations/transcripts.jsonl path
 ```
 
 ## Summary

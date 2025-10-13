@@ -83,13 +83,13 @@ flowchart TD
 ### File Structure
 ```
 Friday-Copy/
-├── config.py                    # Centralized log path management
-├── cagent.py                    # Main agent with logging setup
+├── config.py                    # Centralized helpers (ensures conversations/ exists)
+├── cagent.py                    # Main agent with logging setup (transcription_node + watcher)
+├── transcript_logger.py         # Background JSONL writer (conversations/transcripts.jsonl)
 ├── conversations/               # Auto-created log directory
-│   └── conversation_YYYYMMDD_HHMMSS.json
-└── venv/Lib/site-packages/livekit/plugins/
-    ├── cartesia/tts.py          # Modified with TTS logging
-    └── deepgram/stt.py          # Modified with STT logging
+│   ├── transcripts.jsonl        # Streaming JSONL of events (STT chunks + committed items)
+│   └── transcript_session_<ts>.json  # Pretty session snapshot written on shutdown
+└── venv/Lib/site-packages/livekit/plugins/  # Unmodified vendor plugins
 ```
 
 ### JSON Structure
@@ -117,53 +117,27 @@ Friday-Copy/
 ## Code Implementation
 
 ### 1. `config.py`
-**Purpose:** Centralized management of conversation log file path with JSON initialization.
+**Purpose:** Minimal helpers for conversation logging. `setup_conversation_log()` ensures the `conversations/` directory exists. `transcript_logger.py` is responsible for writing events.
 
 ```python
 import os
-import datetime
-
-_conversation_log_path = None
-
-def set_conversation_log_path(path: str):
-    global _conversation_log_path
-    _conversation_log_path = path
-
-def get_conversation_log_path() -> str:
-    if _conversation_log_path is None:
-        raise RuntimeError("Conversation log path not set!")
-    return _conversation_log_path
 
 def setup_conversation_log():
-    """Setup conversation log file path and create directory if needed"""
+    """Ensure conversations directory exists and return its path."""
     log_dir = os.path.join(os.getcwd(), "conversations")
     os.makedirs(log_dir, exist_ok=True)
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_path = os.path.join(log_dir, f"conversation_{timestamp}.json")
-    set_conversation_log_path(log_path)
-    
-    # Initialize empty conversation file
-    import json
-    with open(log_path, "w", encoding="utf-8") as f:
-        json.dump({"conversation": []}, f, ensure_ascii=False, indent=2)
-    
-    return log_path
+    return log_dir
 ```
 
 ---
 
 ### 2. `cagent.py`
-**Purpose:** Initialize conversation logging system at script start.
+**Purpose:** Initialize agent and wire logging nodes.
 
-```python
-import config
-
-async def entrypoint(ctx: JobContext):
-    # Setup conversation logging
-    config.setup_conversation_log()
-    
-    # Rest of agent setup...
-```
+Key responsibilities:
+- Start `AgentSession` and register `transcription_node` to stream STT chunks into `transcripts.jsonl`.
+- Start a small watcher that appends committed `session.history` items into the same JSONL in realtime.
+- Register a job shutdown callback that writes a pretty JSON snapshot (`transcript_session_<ts>.json`).
 
 **Key Changes:**
 - Added `import config`
@@ -342,15 +316,16 @@ python cagent.py dev
 ```
 
 ### Expected Behavior:
-1. **Startup**: Creates `conversations/conversation_YYYYMMDD_HHMMSS.json`
-2. **User Speech**: Logs to console as `[USER] message` and JSON file
-3. **Agent Response**: Logs to console as `[AGENT] message` and JSON file
-4. **File Updates**: JSON file updated in real-time after each message
+1. **Startup**: Agent hooks register and background logger starts
+2. **User Speech**: STT chunks logged to `conversations/transcripts.jsonl` in realtime
+3. **Agent Response**: Committed conversation items logged to JSONL stream
+4. **Shutdown**: Final session snapshot saved as `conversations/transcript_session_<timestamp>.json`
 
-### File Location:
+### File Locations:
 - **Directory**: `conversations/` (auto-created in project root)
-- **Filename**: `conversation_20250818_143022.json` (timestamp-based)
-- **Format**: UTF-8 encoded JSON with proper indentation
+- **Realtime Log**: `transcripts.jsonl` (streaming JSONL format)
+- **Session Snapshot**: `transcript_session_2025-10-07T16-42-56.json` (pretty JSON)
+- **Format**: UTF-8 encoded with proper formatting
 
 ### Local startup (cross-reference)
 
@@ -420,11 +395,17 @@ For SIP provisioning use the `lk` CLI automation described in `README.md` to cre
 import config
 print(config.get_conversation_log_path())
 
-# Verify JSON file structure
+# Verify JSONL realtime log
 import json
-with open("conversations/conversation_XXXXXX.json", "r") as f:
-    data = json.load(f)
-    print(json.dumps(data, indent=2))
+with open("conversations/transcripts.jsonl", "r") as f:
+    for line in f:
+        event = json.loads(line.strip())
+        print(f"{event['timestamp']} [{event['role']}]: {event['content']}")
+
+# Verify session snapshot
+with open("conversations/transcript_session_XXXXXX.json", "r") as f:
+    session = json.load(f)
+    print(json.dumps(session, indent=2))
 ```
 
 ---

@@ -76,9 +76,6 @@ source ainvenv/bin/activate
 
 # Install Python dependencies
 pip3 install -r requirements.txt
-
-# Optional: run plugin modification script if present
-python setup_plugins.py || true
 ```
 
 ### Step 4: Install LiveKit Components

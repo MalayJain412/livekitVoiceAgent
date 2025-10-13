@@ -172,7 +172,7 @@ flowchart TD
 - **Agent Session**: Manages LiveKit connection, room participation, and audio processing
 - **STT/TTS Plugins**: Deepgram for speech-to-text, Cartesia for text-to-speech (Hindi voice)
 - **Function Tools**: Business logic tools registered with `@function_tool()` decorator
-- **Conversation Logging**: All interactions saved to `conversations/conversation_YYYYMMDD_HHMMSS.json`
+- **Conversation Logging**: Realtime events are appended to `conversations/transcripts.jsonl`, and a final session snapshot is written to `conversations/transcript_session_<timestamp>.json`
 
 ### Agent Configuration
 ```python
@@ -280,17 +280,25 @@ flowchart TD
 ## 6. Data Models and Storage
 
 ### Conversation Logging
-**Format**: `conversations/conversation_YYYYMMDD_HHMMSS.json`
+**Realtime Format**: `conversations/transcripts.jsonl` (streaming events)
+```jsonl
+{"role": "user", "content": "Hello", "timestamp": "2025-10-07T16:42:56.532626Z", "source": "transcription_node"}
+{"role": "assistant", "content": "Namaste! Main Triotech ki assistant hoon.", "timestamp": "2025-10-07T16:42:58.123456Z", "source": "agent"}
+```
+
+**Session Snapshot Format**: `conversations/transcript_session_<timestamp>.json`
 ```json
 {
-  "conversation": [
+  "session_id": "friday-assistant-room",
+  "items": [
     {
-      "role": "user|agent",
+      "role": "user|agent", 
       "content": "message text",
       "timestamp": "2025-10-07T16:42:56.532626",
-      "source": "google_llm|cartesia_tts"
+      "id": "item_123"
     }
-  ]
+  ],
+  "saved_at": "2025-10-07T16:45:12.789Z"
 }
 ```
 
@@ -396,7 +404,8 @@ sequenceDiagram
 ```
 Friday - Copy/
 ├── conversations/
-│   └── conversation_20251007_164256.json    # Complete call transcript
+│   ├── transcripts.jsonl                     # Streaming events (STT chunks + committed items)
+│   └── transcript_session_2025-10-07T16-42-56.json  # Complete call snapshot
 ├── leads/
 │   └── lead_20251007_164608.json           # Extracted lead data
 ├── sip-setup/
@@ -569,7 +578,7 @@ python cagent.py                             # Test agent locally
    - User-facing strings in Hinglish
    - Lead JSON keys in English only
    - Function tools use `@function_tool()` decorator
-   - Conversation logs: `conversation_YYYYMMDD_HHMMSS.json`
+   - Conversation logs: `transcripts.jsonl` + `transcript_session_<timestamp>.json`
    - Lead files: `lead_YYYYMMDD_HHMMSS.json`
 
 ### Adding New Features

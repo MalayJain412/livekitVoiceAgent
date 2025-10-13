@@ -16,13 +16,5 @@ def setup_conversation_log():
     """Setup conversation log file path and create directory if needed"""
     log_dir = os.path.join(os.getcwd(), "conversations")
     os.makedirs(log_dir, exist_ok=True)
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_path = os.path.join(log_dir, f"conversation_{timestamp}.json")
-    set_conversation_log_path(log_path)
-    
-    # Initialize empty conversation file
-    import json
-    with open(log_path, "w", encoding="utf-8") as f:
-        json.dump({"conversation": []}, f, ensure_ascii=False, indent=2)
-    
-    return log_path
+    # Keep behavior minimal: ensure directory exists and return directory path.
+    return log_dir

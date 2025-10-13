@@ -13,29 +13,15 @@ def test_tvenv_plugins():
     print("FRIDAY AI: tvenv Plugin Verification")
     print("=" * 40)
     
-    # Test imports
+    # Check environment essentials for logging
+    print("Checking agent-level logging components...")
+    status = True
     try:
-        from modified_plugins import check_plugins_already_modified, create_llm, create_tts
-        print("SUCCESS: Plugin management functions imported")
-    except ImportError as e:
-        print(f"ERROR: Could not import plugin functions: {e}")
-        return False
-    
-    # Check plugin modifications
-    try:
-        google_modified, cartesia_modified = check_plugins_already_modified()
-        print(f"Google LLM has conversation logging: {google_modified}")
-        print(f"Cartesia TTS has conversation logging: {cartesia_modified}")
-        
-        if google_modified and cartesia_modified:
-            print("SUCCESS: Both plugins have conversation logging!")
-            status = True
-        else:
-            print("WARNING: Not all plugins have conversation logging")
-            status = False
+        from transcript_logger import get_log_path
+        print("SUCCESS: transcript_logger available")
     except Exception as e:
-        print(f"ERROR: Could not check plugin modifications: {e}")
-        return False
+        print(f"ERROR: transcript_logger not importable: {e}")
+        status = False
     
     # Test plugin file locations
     print("\nPlugin File Verification:")
@@ -45,12 +31,11 @@ def test_tvenv_plugins():
     google_path = venv_path / "Lib" / "site-packages" / "livekit" / "plugins" / "google" / "llm.py"
     cartesia_path = venv_path / "Lib" / "site-packages" / "livekit" / "plugins" / "cartesia" / "tts.py"
     
-    # Check Google LLM
+    # Check Google LLM (presence only)
     if google_path.exists():
         with open(google_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        has_friday_ai = "FRIDAY AI:" in content
-        print(f"Google LLM: File exists, FRIDAY AI mods: {has_friday_ai}")
+        print(f"Google LLM: File exists")
     else:
         print("Google LLM: File not found")
         status = False
@@ -59,19 +44,18 @@ def test_tvenv_plugins():
     if cartesia_path.exists():
         with open(cartesia_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        has_friday_ai = "FRIDAY AI:" in content
-        print(f"Cartesia TTS: File exists, FRIDAY AI mods: {has_friday_ai}")
+        print(f"Cartesia TTS: File exists")
     else:
         print("Cartesia TTS: File not found")
         status = False
     
     print("\nTest Summary:")
     if status:
-        print("SUCCESS: tvenv is properly configured with conversation logging!")
+        print("SUCCESS: tvenv appears correctly configured. transcript_logger available and plugins present.")
         print("Your Friday AI system is ready to use with the new environment.")
     else:
         print("ISSUE: Some problems were found with the tvenv setup.")
-        print("You may need to run: python setup_plugins.py")
+        print("Please ensure the required packages are installed and transcript_logger.py is present.")
     
     return status
 

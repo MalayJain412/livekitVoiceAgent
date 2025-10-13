@@ -10,7 +10,7 @@ This document lists the current Python import structure and the new import struc
 ```
 from tools import get_weather, search_web, triotech_info, create_lead, detect_lead_intent
 from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
-from config import setup_conversation_log
+# Use `config.setup_conversation_log()` to ensure `conversations/` exists (no legacy file is created)
 from livekit.plugins.google import LLM
 from livekit.plugins.cartesia import TTS
 ```

@@ -1,0 +1,119 @@
+{
+  "items": [
+    {
+      "id": "item_8b783d79f38b",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Namaste!"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_aad2d572316d",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Hello, hello."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.8557129
+    },
+    {
+      "id": "item_fb8e832621cb",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Namaste! Triotech mein aapka swagat hai. Main Triotech Bizserve Pvt."
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_e55c86dc48f1",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Tell me about signing."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99902344
+    },
+    {
+      "id": "item_64e749fd6243/fnc_0",
+      "type": "function_call",
+      "call_id": "function_call_5fcc2fbf2a8b",
+      "arguments": "{\"query\": \"signing\"}",
+      "name": "search_web"
+    },
+    {
+      "id": "item_002a714bae02",
+      "type": "function_call_output",
+      "name": "search_web",
+      "call_id": "function_call_5fcc2fbf2a8b",
+      "output": "An error occurred while searching the web for 'signing'.",
+      "is_error": false
+    },
+    {
+      "id": "item_02b2002e8198",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Maaf kijiye, main aapki baat puri tarah se samajh"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_2277cd10055a",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "I want to know about your solution XENY x e n y."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.97509766
+    },
+    {
+      "id": "item_2450e6053b35/fnc_0",
+      "type": "function_call",
+      "call_id": "function_call_d66bce65a002",
+      "arguments": "{\"query\": \"Xeny\"}",
+      "name": "triotech_info"
+    },
+    {
+      "id": "item_58fdcf0a4092",
+      "type": "function_call_output",
+      "name": "triotech_info",
+      "call_id": "function_call_d66bce65a002",
+      "output": "Xeny: Conversational AI Voice Bot with real-time talk-back and intelligent responses. (Target: Customer engagement, onboarding)",
+      "is_error": false
+    },
+    {
+      "id": "item_7c48e2ab7bd8",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Ji, Xeny ek advanced Conversational AI Voice Bot hai. Yeh real-time"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_2c0fb95351b7",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Okay. Thanks. Just stop."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9506836
+    },
+    {
+      "id": "item_b4f6c81f3589",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Aapka swagat hai! Kya aapko Xeny ya Triotech ke kisi aur product ke baare mein kuch aur jaanna hai?"
+      ],
+      "interrupted": false
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "items": [
+    {
+      "id": "item_73bf8000be64",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Hello. Hello."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9645996
+    },
+    {
+      "id": "item_17ca07546698",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Hello! 👋 Triotech mein aapka"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_2ea19292714b",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Okay. Thanks."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.91259766
+    }
+  ]
+}

@@ -51,7 +51,7 @@ graph TD
 ### Key Conventions
 - **Language**: User-facing content in Hinglish; internal data (leads, logs) in English
 - **Lead Fields**: `name`, `email`, `company`, `interest`, `phone`, `budget` (English only)
-- **Log Naming**: `conversations/conversation_YYYYMMDD_HHMMSS.json`
+- **Log Naming**: `conversations/transcripts.jsonl` + `transcript_session_<timestamp>.json`
 - **RAG Settings**: Chunk size 1500, overlap 200
 - **Tools Pattern**: All functions use `@function_tool()` decorator
 - **SIP Room**: All calls route to `friday-assistant-room` in LiveKit
