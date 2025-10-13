@@ -2,8 +2,19 @@
 
 ## Quick Start
 
-### 1. Environment Variables
-Create a `.env` file in the project root or set these environment variables:
+### 1. Environment Setup
+Copy the environment template and configure your settings:
+
+```bash
+# Copy template to create your environment file
+cp .env.example .env
+
+# Edit .env with your actual values
+# Or use the pre-configured values below for the current Atlas cluster
+```
+
+### 2. Environment Variables
+Add these variables to your `.env` file:
 
 ```bash
 # MongoDB Atlas Configuration
@@ -15,9 +26,9 @@ MONGODB_TIMEOUT=10000
 USE_MONGODB=true
 ```
 
-### 2. Install Dependencies
+### 3. Install Dependencies
 ```bash
-pip install pymongo dnspython
+pip install pymongo dnspython python-dotenv
 ```
 
 ### 3. Test Connection

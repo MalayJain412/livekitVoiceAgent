@@ -10,6 +10,12 @@ venv/
 # Virtual environments
 venv/
 .env
+.env.local
+.env.production
+
+# MongoDB data backups (if any)
+*.bson
+*.dump
 
 # Jupyter
 *.ipynb_checkpoints/

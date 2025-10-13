@@ -1,0 +1,62 @@
+##########################
+# Friday AI - Requirements
+# Environment: Windows / venv
+##########################
+
+# --- LiveKit Core & Voice Processing ---
+livekit
+livekit-api
+livekit-agents[openai,deepgram,cartesia,silero,turn_detector,google]
+livekit-plugins-noise-cancellation
+
+# --- Core AI & LLMs ---
+openai
+google-generativeai
+mem0ai
+
+# --- LangChain Ecosystem ---
+langchain
+langchain-community
+langchain-core
+langchain-chroma
+langchain-google-genai
+langchain-text-splitters
+
+# --- Web Framework & API ---
+Flask
+Flask-Cors
+gunicorn
+requests
+python-dotenv
+
+# --- Database Layer ---
+pymongo
+dnspython
+
+# --- Search, Parsing, and Data Processing ---
+duckduckgo-search
+unstructured
+pypdf
+sentence-transformers
+chromadb
+
+# --- Audio / Speech Processing ---
+pydub
+soundfile
+librosa
+
+# --- Production & Monitoring ---
+redis
+psutil
+schedule
+
+# --- API Rate Limiting & Retry Logic ---
+slowapi
+backoff
+
+# --- Environment Management ---
+python-decouple
+
+# --- Development & Testing ---
+pytest
+pytest-asyncio
