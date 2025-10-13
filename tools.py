@@ -17,27 +17,53 @@ from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 
-# Lead utilities (inline to avoid import issues)
+# Lead utilities (MongoDB + JSON fallback)
 LEADS_DIR = os.path.join(os.getcwd(), "leads")
 os.makedirs(LEADS_DIR, exist_ok=True)
 
+# MongoDB integration with fallback
+USE_MONGODB = os.getenv("USE_MONGODB", "true").lower() == "true"
+
+try:
+    if USE_MONGODB:
+        from db_config import LeadsDB
+        MONGODB_AVAILABLE = True
+        logging.info("MongoDB integration enabled for leads")
+    else:
+        MONGODB_AVAILABLE = False
+        logging.info("MongoDB integration disabled - using file storage")
+except ImportError as e:
+    MONGODB_AVAILABLE = False
+    logging.warning(f"MongoDB not available, using file storage fallback: {e}")
+
 def save_lead(lead: dict) -> str:
-    """Save lead as JSON file. Returns the saved file path."""
-    ts = time.strftime("%Y%m%d_%H%M%S")
-    filename = f"lead_{ts}.json"
-    path = os.path.join(LEADS_DIR, filename)
-    
+    """Save lead to MongoDB or JSON file fallback. Returns the saved identifier."""
     lead_data = {
         "timestamp": datetime.now().isoformat(),
-        "source": "Friday AI Assistant",
+        "source": "Friday AI Assistant", 
         "status": "new",
         **lead
     }
     
+    # Try MongoDB first if available
+    if MONGODB_AVAILABLE:
+        try:
+            lead_id = LeadsDB.create_lead(lead_data)
+            if lead_id:
+                logging.info(f"FRIDAY AI: Lead saved to MongoDB with ID: {lead_id}")
+                return f"mongodb:{lead_id}"
+        except Exception as e:
+            logging.error(f"Failed to save lead to MongoDB: {e}")
+    
+    # Fallback to JSON file storage
+    ts = time.strftime("%Y%m%d_%H%M%S")
+    filename = f"lead_{ts}.json"
+    path = os.path.join(LEADS_DIR, filename)
+    
     with open(path, "w", encoding="utf-8") as f:
         json.dump(lead_data, f, indent=2, ensure_ascii=False)
     
-    logging.info(f"FRIDAY AI: Lead saved to {path}")
+    logging.info(f"FRIDAY AI: Lead saved to file: {path}")
     return path
 
 def is_valid_lead(lead: dict) -> bool:

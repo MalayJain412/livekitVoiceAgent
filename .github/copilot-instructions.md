@@ -23,9 +23,7 @@ livekit-server --config livekit.yaml  # start main server
 cd sip-setup && ./livekit-sip --config config.yaml  # start SIP bridge
 
 # run tests (project uses simple python test scripts)
-python test_triotech_assistant.py
-python test_dummy_plugins.py
-python test_lead_detection.py
+python test_tvenv_plugins.py
 ```
 
 ## What to read first (fast path)
@@ -45,6 +43,7 @@ python test_lead_detection.py
 - Tools: all user-facing tools follow the decorator pattern: `@function_tool()`.
 - Conversation logging: streaming JSONL at `conversations/transcripts.jsonl` + session snapshots at `conversations/transcript_session_<timestamp>.json`.
 - RAG chunk settings: chunk_size=1500, overlap=200 (see `model/build_db.py`).
+- Environment config: Use `LLM_MODEL` env var to switch between Gemini models without code changes.
 
 ## Architecture & data flows
 - Hybrid system: Fast JSON lookup in `data/` for basic queries → RAG fallback via `model/runapi.py` for deep queries (keywords: features/how to/api/integrate).
@@ -57,7 +56,7 @@ python test_lead_detection.py
 ## Patterns & integration points
 - Agent instrumentation: `cagent.py` uses `transcription_node()` for STT capture and background watcher for session history logging.
 - Plugin references: `backup_plugin_modifications/` holds patched stubs; `docker_scripts/apply_modifications.py` and `verify_modifications.py` apply/verify patches.
-- LiveKit: Token handling critical (frontend: `friday-frontend/src/app/api/livekit/token/route.ts`).
+- LiveKit: Token handling via `generate_livekit_token.py` for backend service integration.
 - RAG runtime: `model/runapi.py` handles embeddings, key rotation, queries to `model/chroma_db/`.
 - SIP setup: Create trunks via `lk sip inbound create` + dispatch rules via `lk sip dispatch create`. JSON configs in `sip-setup/inbound_trunk.json` and `sip-setup/sip_dispatch.json`.
 
@@ -67,17 +66,20 @@ python test_lead_detection.py
 - After editing knowledge files, run `python model/build_db.py` to rebuild embeddings.
 - SIP debugging: Use `sngrep` for SIP traffic inspection, check Redis connection with `redis-cli ping`, verify room participants with `lk room participants --room friday-assistant-room`.
 
-## Security & operations notes
-- Keep `LIVEKIT_API_SECRET` only where tokens are minted; prefer backend as canonical token authority.
-- Leads and conversations contain PII — protect filesystem or move to secure DB; prefer atomic writes or file locks for concurrent processes.
-- SIP security: API keys in `livekit.yaml` and `sip-setup/config.yaml` must be identical. RTP ports 10000-20000 need firewall access.
+
 
 ## When changing behavior
 - Add unit tests that exercise the `@function_tool()` functions and the lead creation/validation paths.
 - If you change RAG knowledge, rebuild DB and add a small integration test hitting `model/runapi.py`.
 
+## Repository cleanup & maintenance notes
+- Keep `LIVEKIT_API_SECRET` only where tokens are minted; prefer backend as canonical token authority.
+- Leads and conversations contain PII — protect filesystem or move to secure DB; prefer atomic writes or file locks for concurrent processes.
+- SIP security: API keys in `livekit.yaml` and `sip-setup/config.yaml` must be identical. RTP ports 10000-20000 need firewall access.
+
 ## Files to inspect when working end-to-end
-- Frontend: `friday-frontend/src/app/api/livekit/token/route.ts`, `friday-frontend/src/components/voice-assistant.tsx`
 - Backend: `cagent.py`, `generate_livekit_token.py`, `tools.py`, `model/runapi.py`, `backup_plugin_modifications/`
+- SIP Setup: `sip-setup/config.yaml`, `livekit.yaml`, trunk/dispatch JSON configs
+- Knowledge Base: `data/triotech_content.json`, `data/triotech_knowledge.txt`
 
 When in doubt: prefer the backend as the canonical token service and add a read-only backend endpoint to surface leads if the frontend needs them.

@@ -56,6 +56,10 @@ redis
 psutil
 schedule
 
+# MongoDB Database
+pymongo
+dnspython
+
 # API Rate Limiting & Retry Logic
 slowapi
 backoff
