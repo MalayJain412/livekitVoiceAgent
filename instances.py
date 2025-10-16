@@ -67,7 +67,7 @@ def get_tts_instance(provider, language, voice):
         )
     elif provider == "elevenlabs":
         return elevenlabs.TTS(
-            voice_id="ODq5zmih8GrVes37Dizd",
+            voice_id="kiaJRdXJzloFWi6AtFBf", # Tarini
             model="eleven_multilingual_v2"
         )
     elif provider == "sarvam":
