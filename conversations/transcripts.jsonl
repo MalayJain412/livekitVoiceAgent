@@ -81,3 +81,4 @@
 {"role": "user", "content": "aste", "timestamp": "2025-10-15T06:41:11.407530Z", "source": "transcription_node"}
 {"role": "user", "content": "!", "timestamp": "2025-10-15T06:41:11.408531Z", "source": "transcription_node"}
 {"role": "assistant", "content": "Hello world", "timestamp": "2025-10-15T12:00:00Z", "source": "session_history", "item_type": "message", "raw": {"id": "item_test", "type": "message", "role": "assistant", "content": ["Hello world"], "interrupted": false, "transcript_confidence": null, "created_at": 1234567890}}
+{"type": "persona_loaded_from_api", "dialed_number": "8655701159", "persona_name": "piperbot", "source": "api_fallback"}

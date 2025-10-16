@@ -1,0 +1,229 @@
+{
+  "_id": {
+    "$oid": "68f0c124e82fa4c9d54071be"
+  },
+  "session_id": "session_20251016_095249_d7b0c941",
+  "start_time": {
+    "$date": "2025-10-16T09:55:48.438Z"
+  },
+  "end_time": {
+    "$date": "2025-10-16T09:55:48.438Z"
+  },
+  "items": [
+    {
+      "id": "item_125967f976f3",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Namaste! Main Zeny hoon. Main aapki kaise madad kar sakti hoon?"
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_f788b7e93f6c",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "आप बताइए आप मेरी किस किस विषय में मदद कर सकते हैं?"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99609375
+    },
+    {
+      "id": "item_8e526fdcfe57",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Mai aapki lead generate karne aur appointment schedule karne mein madad kar sakti hoon. Kya aapko"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_99e9b243d798",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Yep."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.6970215
+    },
+    {
+      "id": "item_5d732e5146fd",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Great!"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_2e82de9e1184",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "अच्छा मुझको आपकी sales के साथ एक appointment schedule करना है. कुछ आपका जो five कहते just ok उसके regarding."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9489746166666667
+    },
+    {
+      "id": "item_2d5d6cb1db33",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Ji bilkul! Sales team ke saath appointment schedule karne ke liye, kya aap mujhe apna naam, email aur phone number bata sakti hain?"
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_0c80ba8eb2a6",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "हां ok so मेरा नाम अनिकेत कुमार मुश्रा है. मेरा email is अनिकेत at the rate Gmail dot com."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.932495125
+    },
+    {
+      "id": "item_b1d8ae259bed",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "And my phone number is double two five eight double two nine six nine."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99121094
+    },
+    {
+      "id": "item_94abc4a74801",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Shukriya Aniket ji! Main aapki details sales team ko bhej deti hoon. Kya aapki company ka naam aur aapki job title bhi bata sakti hain, agar aap chahein toh? Isse humein aapki behtar madad karne mein asaani hogi."
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_7df23ba3d227",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "अच्छा ठीक है. मेरा company का नाम है सिर्फ़न है. And my job title is product manager there."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9682210466666666
+    },
+    {
+      "id": "item_78e47d62c592",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Theek hai Aniket ji. Main aapki appointment Triotech sales team ke saath schedule kar deti hoon. Aapka naam Aniket Kumar Mishra, email aniket@gmail.com, phone number 225822969, company Sirfan aur job title Product Manager hai.\n\nKya main Triotech mein aapki kis interest ke baare mein jaana chahti hain, jaise ki AI voice bot, ya kuch aur? Isse hum sahi sales representative"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_14889a073693",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Actually company का नाम Inventor है क्या?"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9460449
+    },
+    {
+      "id": "item_7e3a6d5c4f03",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "ठीक है? और मैं Just Talk के बारे में जानना चाहता हूं जो कि basically आपका analysis platform है, right?"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9950086833333334
+    },
+    {
+      "id": "item_e92b90eaa854",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Ji bilkul, Aniket ji. Aapki company ka naam Inventor hai, main isse theek kar deti hoon.\n\nAap 'Just Talk' analytics platform ke baare mein jaanna chahte hain, theek hai. Main yeh saari jaankari sales team ko de deti hoon.\n\n"
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_e92b90eaa854/fnc_0",
+      "type": "function_call",
+      "call_id": "function_call_12a5bf2273ce",
+      "arguments": "{\"job_title\": \"Product Manager\", \"name\": \"Aniket Kumar Mishra\", \"company\": \"Inventor\", \"interest\": \"Just Talk analytics platform\", \"email\": \"aniket@gmail.com\", \"phone\": \"225822969\"}",
+      "name": "create_lead"
+    },
+    {
+      "id": "item_13ef993d6113",
+      "type": "function_call_output",
+      "name": "create_lead",
+      "call_id": "function_call_12a5bf2273ce",
+      "output": "धन्यवाद Aniket Kumar Mishra! आपकी जानकारी सुरक्षित कर ली गई है। हमारी सेल्स टीम जल्द ही Inventor के लिए Just Talk analytics platform के बारे में आपसे संपर्क करेगी।",
+      "is_error": false
+    },
+    {
+      "id": "item_06fdf1797dc1",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Dhanyavaad, Aniket ji. Aapki"
+      ],
+      "interrupted": true
+    },
+    {
+      "id": "item_738462570a75",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Okay. Thanks a lot."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9902344
+    },
+    {
+      "id": "item_f7371c4365ea",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Aapka swagat hai! Kya main aapki kisi aur tarah se madad kar sakti hoon?"
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_d0b960ad6087",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "No. Thanks. That's it."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9946289
+    },
+    {
+      "id": "item_a61cc43ae8dd",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Theek hai, Aniket ji. Aapka din shubh ho!"
+      ],
+      "interrupted": false
+    }
+  ],
+  "total_items": 22,
+  "duration_seconds": 0,
+  "lead_generated": true,
+  "metadata": {},
+  "created_at": {
+    "$date": "2025-10-16T09:55:48.464Z"
+  },
+  "updated_at": {
+    "$date": "2025-10-16T09:55:48.464Z"
+  }
+}

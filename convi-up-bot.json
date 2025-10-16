@@ -1,0 +1,158 @@
+{
+  "_id": {
+    "$oid": "68f0bf271a14609f820fabb6"
+  },
+  "session_id": "session_20251016_094424_9f7aee44",
+  "start_time": {
+    "$date": "2025-10-16T09:47:19.743Z"
+  },
+  "end_time": {
+    "$date": "2025-10-16T09:47:19.743Z"
+  },
+  "items": [
+    {
+      "id": "item_1b3e03dca86e",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Namaste! Main Urban Piper se piperbot bol rahi hoon. main aapki kaise madad kar sakti hoon?"
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_ef7f340b21ff",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "आप बता सकते हैं आप मेरी क्या क्या help कर सकते"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9941406
+    },
+    {
+      "id": "item_5107a411b8a8",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "हैं?"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9355469
+    },
+    {
+      "id": "item_f62d5ef75bae",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Mai aapko Urban Piper se jude sawaalon mein madad kar sakti hoon, jaise naya user account banana, password reset karna, store ko online/offline karna, ya onboarding se jude mudde."
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_639117bb15a4",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "अच्छा तो आप मुझको बता सकते हैं कि जो store मेरा जैसे कोई store है उसको मैं"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99511718
+    },
+    {
+      "id": "item_ff2cbb7459fd",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "online कैसे कर सकता हूं?"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99902344
+    },
+    {
+      "id": "item_707a8b11698e",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Bilkul! Apne store ko online karne ke liye yeh steps follow karein:\n\n1.  Prime mein login karein.\n2.  \"More\" par click karein.\n3.  Platform Toggle open karein.\n4.  Apna store chunein.\n5.  Jude hue platforms dekhein.\n6.  Pause/Unpause toggle karein aur confirm karein."
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_4f5de2e0ae3e",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Ok, thanks sir. अच्छा. और हां एक और चीज़ यह पूछनी थी कि मैं अपना login account का pass"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9237060500000001
+    },
+    {
+      "id": "item_1c2874cb3d71",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "कैसे reset कर सकता हूं?"
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9980469
+    },
+    {
+      "id": "item_c10f29c92f12",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Apna password reset karne ke liye:\n\n1.  Prime App kholein, Login par tap karein, apna email daalein aur Continue karein.\n2.  Forgot Password par tap karein, email par aaya one-time PIN daalein aur Verify karein.\n3.  Ek naya password set karein aur confirm karein, phir Reset Password par tap karein.\n4.  Apne naye password ke saath login karein."
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_c418c6565152",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "Okay. Thanks a lot."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.99316406
+    },
+    {
+      "id": "item_d3b460058848",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Khushi hai ki main aapki madad kar paayi. Kya aapko aur koi jaankari chahiye?"
+      ],
+      "interrupted": false
+    },
+    {
+      "id": "item_99df31477372",
+      "type": "message",
+      "role": "user",
+      "content": [
+        "No. Thanks."
+      ],
+      "interrupted": false,
+      "transcript_confidence": 0.9975586
+    },
+    {
+      "id": "item_206877c7e2eb",
+      "type": "message",
+      "role": "assistant",
+      "content": [
+        "Dhanyavaad! Aapka din shubh ho."
+      ],
+      "interrupted": false
+    }
+  ],
+  "total_items": 14,
+  "duration_seconds": 0,
+  "lead_generated": false,
+  "metadata": {},
+  "created_at": {
+    "$date": "2025-10-16T09:47:19.773Z"
+  },
+  "updated_at": {
+    "$date": "2025-10-16T09:47:19.773Z"
+  }
+}

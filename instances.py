@@ -19,7 +19,7 @@ from config import (
 )
 
 
-def get_llm_instance(provider="google", temperature=0.8):
+def get_llm_instance(provider):
     """Get LLM instance based on provider"""
     if provider == "azure":
         return openai.LLM.with_azure(
@@ -28,15 +28,15 @@ def get_llm_instance(provider="google", temperature=0.8):
             api_key=AZURE_OPENAI_API_KEY,
             azure_deployment=AZURE_OPENAI_LLM_DEPLOYMENT,
             api_version=OPENAI_API_VERSION,
-            temperature=temperature
+            temperature=1
         )
     elif provider == "google":
-        return google.LLM(model=LLM_MODEL, temperature=temperature)
+        return google.LLM(model=LLM_MODEL, temperature=0.8)
     else:
         raise ValueError(f"Unsupported LLM provider: {provider}")
 
 
-def get_stt_instance(provider="deepgram", language="multi"):
+def get_stt_instance(provider):
     """Get STT instance based on provider"""
     if provider == "azure":
         return openai.STT.with_azure(
@@ -45,18 +45,18 @@ def get_stt_instance(provider="deepgram", language="multi"):
             api_key=AZURE_OPENAI_STT_API_KEY,
             azure_deployment=AZURE_OPENAI_STT_DEPLOYMENT,
             api_version=AZURE_OPENAI_STT_API_VERSION,
-            language=language
+            language="multi"
         )
     elif provider == "deepgram":
         return deepgram.STT(
             model="nova-3", 
-            language=language
+            language="multi"
         )
     else:
         raise ValueError(f"Unsupported STT provider: {provider}")
 
 
-def get_tts_instance(provider="cartesia", language="hi", voice="f91ab3e6-5071-4e15-b016-cde6f2bcd222"):
+def get_tts_instance(provider, language, voice):
     """Get TTS instance based on provider"""
     if provider == "cartesia":
         return cartesia.TTS(
@@ -88,8 +88,8 @@ def get_vad_instance():
 def get_default_instances():
     """Get default configured instances matching original cagent.py setup"""
     return {
-        "llm": get_llm_instance("azure"),  # Original used Azure OpenAI
-        "stt": get_stt_instance("deepgram"),  # Original used Deepgram 
-        "tts": get_tts_instance("cartesia"),  # Original used Cartesia
+        "llm": get_llm_instance("google"),  # Original used Azure OpenAI
+        "stt": get_stt_instance("deepgram"),  # Original used Deepgram
+        "tts": get_tts_instance("cartesia", "hi", "f91ab3e6-5071-4e15-b016-cde6f2bcd222"),  # Original used Cartesia
         "vad": get_vad_instance()  # Original used Silero VAD
     }

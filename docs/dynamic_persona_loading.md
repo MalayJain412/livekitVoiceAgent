@@ -18,6 +18,8 @@ Important note: the JSON returned by this API uses the `mobileNo` field to indic
 
 In other words: when a call is received from the caller number `8655701159`, the agent must call `https://devcrm.xeny.ai/apis/api/public/mobile/8655701159` and load the persona plus full prompt/instruction data from the API response. The API payload includes the `persona` object (voice agent config), `fullConfig`, `messages` (welcome/closing), and `personality` text which should be applied to the running session's instructions.
 
+Important: For Zoiper-based local testing where an actual caller ID may not be present, use the default test number `8655701159`. The agent or webhook should fall back to this number to fetch the persona during development and manual testing.
+
 ---
 
 ## High-level architecture
@@ -52,6 +54,30 @@ def load_persona_for_caller(caller, timeout=5):
         resp = requests.get(url, timeout=timeout)
         resp.raise_for_status()
         data = resp.json()
+        # Example API payload (truncated):
+        # {
+        #   "mobileNo": "8655701159",
+        #   "campaigns": [
+        #     {
+        #       "campaignId": "...",
+        #       "campaignName": "...",
+        #       "voiceAgents": [
+        #         {
+        #           "persona": {
+        #             "_id": "...",
+        #             "name": "piperbot",
+        #             "language": "Hindi",
+        #             "welcomeMessage": "...",
+        #             "closingMessage": "...",
+        #             "personality": "...",
+        #             "conversationStructure": "...",
+        #             "fullConfig": { "messages": { "welcomeMessage": "...", "closingMessage": "..." } }
+        #           }
+        #         }
+        #       ]
+        #     }
+        #   ]
+        # }
         campaigns = data.get("campaigns") or []
         if not campaigns:
             return None
@@ -91,6 +117,7 @@ async def _detect_and_apply_persona():
 
     # fallback for testing
     if not caller:
+        # Use explicit default for Zoiper/local testing when caller metadata is absent
         caller = os.getenv("DEFAULT_CALLER", "8655701159")
 
     setattr(session, "caller_number", caller)
@@ -100,7 +127,8 @@ async def _detect_and_apply_persona():
         setattr(session, "caller_persona", persona)
         # best-effort instruction update
         try:
-            agent.instructions = persona.get("personality") or agent.instructions
+            # Prefer persona.personality -> conversationStructure -> existing agent.instructions
+            agent.instructions = persona.get("personality") or persona.get("conversationStructure") or agent.instructions
         except Exception:
             pass
 

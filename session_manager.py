@@ -202,14 +202,14 @@ class SessionManager:
             self.watch_task = None
     
     def log_persona_applied_event(self, persona_name: str, full_config: Optional[dict], 
-                                  welcome_message: Optional[str], closing_message: Optional[str]):
+                                  session_instructions: Optional[str], closing_message: Optional[str]):
         """Log persona application event for transcript tracking"""
         try:
             log_event({
                 "type": "persona_applied",
                 "persona_name": persona_name,
                 "has_config": full_config is not None,
-                "has_welcome": welcome_message is not None,
+                "has_session_instructions": session_instructions is not None,
                 "has_closing": closing_message is not None,
                 "timestamp": datetime.utcnow().isoformat() + "Z",
             })
