@@ -77,3 +77,7 @@
 {"role": "user", "content": "A", "timestamp": "2025-10-13T08:41:54.452101Z", "source": "transcription_node"}
 {"role": "user", "content": "apka swagat hai! Kya aapko Xeny ya Triotech ke kisi aur", "timestamp": "2025-10-13T08:41:54.660717Z", "source": "transcription_node"}
 {"role": "user", "content": " product ke baare mein kuch aur jaanna hai?", "timestamp": "2025-10-13T08:41:54.885358Z", "source": "transcription_node"}
+{"role": "user", "content": "Nam", "timestamp": "2025-10-15T06:41:11.395529Z", "source": "transcription_node"}
+{"role": "user", "content": "aste", "timestamp": "2025-10-15T06:41:11.407530Z", "source": "transcription_node"}
+{"role": "user", "content": "!", "timestamp": "2025-10-15T06:41:11.408531Z", "source": "transcription_node"}
+{"role": "assistant", "content": "Hello world", "timestamp": "2025-10-15T12:00:00Z", "source": "session_history", "item_type": "message", "raw": {"id": "item_test", "type": "message", "role": "assistant", "content": ["Hello world"], "interrupted": false, "transcript_confidence": null, "created_at": 1234567890}}

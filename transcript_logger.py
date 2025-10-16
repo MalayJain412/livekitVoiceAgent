@@ -43,16 +43,70 @@ def _worker() -> None:
         if item is _STOP:
             break
         try:
-            # Try MongoDB first if available
-            if MONGODB_AVAILABLE and isinstance(item, dict):
+            # Sanitize the item so MongoDB / JSON can encode it
+            def _serialize_value(v):
+                # Primitive passthrough
+                if v is None or isinstance(v, (str, int, float, bool)):
+                    return v
+                # datetimes -> ISO
+                if isinstance(v, datetime):
+                    return v.isoformat()
+                # dicts/lists: recurse
+                if isinstance(v, dict):
+                    return {str(k): _serialize_value(vk) for k, vk in v.items()}
+                if isinstance(v, (list, tuple)):
+                    return [_serialize_value(x) for x in v]
+                # Try common conversions on objects
+                if hasattr(v, "to_dict"):
+                    try:
+                        return _serialize_value(v.to_dict())
+                    except Exception:
+                        pass
+                if hasattr(v, "toJSON"):
+                    try:
+                        raw = v.toJSON()
+                        if isinstance(raw, str):
+                            try:
+                                return json.loads(raw)
+                            except Exception:
+                                return raw
+                        return _serialize_value(raw)
+                    except Exception:
+                        pass
+                if hasattr(v, "to_json"):
+                    try:
+                        raw = v.to_json()
+                        if isinstance(raw, str):
+                            try:
+                                return json.loads(raw)
+                            except Exception:
+                                return raw
+                        return _serialize_value(raw)
+                    except Exception:
+                        pass
+                # Fallback: string representation
                 try:
-                    TranscriptDB.log_event(item, _current_session_id)
+                    return str(v)
+                except Exception:
+                    return repr(v)
+
+            def _sanitize_event(ev):
+                if not isinstance(ev, dict):
+                    return {"value": _serialize_value(ev)}
+                return {str(k): _serialize_value(v) for k, v in ev.items()}
+
+            sanitized = _sanitize_event(item)
+
+            # Try MongoDB first if available
+            if MONGODB_AVAILABLE and isinstance(sanitized, dict):
+                try:
+                    TranscriptDB.log_event(sanitized, _current_session_id)
                 except Exception as e:
                     logging.warning(f"Failed to log to MongoDB: {e}")
-            
-            # Always log to file as backup
+
+            # Always log to file as backup (use sanitized payload)
             with open(_log_path, "a", encoding="utf-8") as f:
-                f.write(json.dumps(item, ensure_ascii=False) + "\n")
+                f.write(json.dumps(sanitized, ensure_ascii=False) + "\n")
         except Exception:
             # swallow errors to avoid crashing host process
             pass
@@ -98,6 +152,18 @@ def log_event(event: dict) -> None:
 
 def flush_and_stop(timeout: float = 2.0) -> None:
     try:
+        # Before stopping, attempt to persist a conversation session using events stored in MongoDB
+        try:
+            if MONGODB_AVAILABLE and _current_session_id:
+                try:
+                    events = TranscriptDB.get_session_events(_current_session_id)
+                    if events:
+                        save_conversation_session(events, metadata={"auto_saved": True})
+                except Exception as e:
+                    logging.warning(f"Failed to auto-save conversation session during flush: {e}")
+        except Exception:
+            pass
+
         _q.put(_STOP)
         _worker_thread.join(timeout=timeout)
     except Exception:
@@ -126,7 +192,20 @@ def generate_session_id() -> str:
 def save_conversation_session(items: list, metadata: Optional[dict] = None) -> Optional[str]:
     """Save complete conversation session to MongoDB and/or file"""
     if not items:
-        return None
+        # If no items were provided, try to pull events from MongoDB transcript_events
+        if MONGODB_AVAILABLE:
+            try:
+                # Use current session id if set
+                sid = _current_session_id or None
+                if sid:
+                    events = TranscriptDB.get_session_events(sid)
+                    if events:
+                        items = events
+                # if still no items, return None
+                if not items:
+                    return None
+            except Exception:
+                return None
     
     session_id = _current_session_id or generate_session_id()
     

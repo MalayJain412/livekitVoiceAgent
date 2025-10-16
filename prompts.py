@@ -71,3 +71,20 @@ Start with: "Namaste! Main Triotech ki Sales Assistant hoon. Main aapki kis tara
 - Always try to guide conversation towards requirement capture.
 - Be professional, helpful, and efficient.
 """
+
+
+def set_agent_instruction(text: str):
+	"""Set agent-level instructions at runtime (best-effort).
+
+	This updates the module-level AGENT_INSTRUCTION string so other modules
+	that import it can pick up the new instructions. It's intentionally
+	minimal and non-blocking; callers should still assign to agent.instances
+	where possible.
+	"""
+	global AGENT_INSTRUCTION
+	try:
+		if text:
+			AGENT_INSTRUCTION = text
+	except Exception:
+		# best-effort: don't raise in production path
+		pass

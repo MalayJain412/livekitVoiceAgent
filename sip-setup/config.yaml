@@ -1,24 +1,5 @@
 # config.yaml (Final, Cleaned Version)
 
-# log_level: debug
-
-# livekit:
-#   ws_url: "ws://192.168.109.66:7880"
-#   api_key: "APIntavBoHTqApw"
-#   api_secret: "pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM"
-
-# redis:
-#   address: 192.168.109.66:6379
-#   db: 0
-
-# health_port: 8080
-# prometheus_port: 9090
-
-# sip:
-#   port: 5060
-#   rtp_port: "10000-20000"
-
-
 api_key: APIntavBoHTqApw
 api_secret: pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
 ws_url: ws://192.168.109.66:7880
