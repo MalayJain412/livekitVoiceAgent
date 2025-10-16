@@ -3,6 +3,36 @@ Persona Handler
 Handles persona loading and configuration from job metadata and CRM API fallback
 """
 
+# TODO: CALL NORMALIZATION IMPLEMENTATION
+# =======================================================
+# Future enhancement: Add call normalization functionality from persona_loader.py
+# 
+# Call normalization standardizes phone numbers for consistent persona lookup:
+# 1. Remove non-digits: "+91 865-570-1159" → "918655701159" 
+# 2. Handle country codes: "918655701159" → "8655701159" (remove 91 prefix if >10 digits)
+# 3. Remove leading zeros: "08655701159" → "8655701159"
+#
+# Implementation approach:
+# def normalize_caller(raw: str) -> str:
+#     """Normalize caller number by removing non-digits and country codes."""
+#     if not raw:
+#         return ""
+#     # strip non-digit characters
+#     s = re.sub(r"\D", "", str(raw))
+#     # if leading country code 91 and length > 10, take last 10 digits
+#     if s.startswith("91") and len(s) > 10:
+#         s = s[-10:]
+#     # if leading zeros, strip
+#     s = s.lstrip("0")
+#     return s
+#
+# Benefits of adding to this file:
+# - Single responsibility: All persona operations in one place
+# - Consistency: All phone number processing centralized
+# - Clean architecture: Eliminates need for persona_loader.py
+# - Better API calls: Normalized numbers for reliable persona lookup
+# =======================================================
+
 import json
 import logging
 import os
@@ -14,6 +44,28 @@ from livekit.agents import JobContext
 
 from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
 from transcript_logger import log_event
+
+# Environment configuration for persona loading mode
+PERSONA_USE = os.getenv("PERSONA_USE", "api").lower()  # Options: "local" or "api"
+
+def should_use_local_persona() -> bool:
+    """Check if we should use local hardcoded prompts instead of API"""
+    return PERSONA_USE == "local"
+
+
+def get_local_persona_config() -> Tuple[str, Optional[str], Optional[str], str, Optional[Dict]]:
+    """
+    Return local hardcoded persona configuration
+    Returns: (agent_instructions, session_instructions, closing_message, persona_name, full_config)
+    """
+    logging.info("Using local hardcoded persona from prompts.py")
+    return (
+        AGENT_INSTRUCTION,      # agent_instructions
+        SESSION_INSTRUCTION,    # session_instructions  
+        None,                   # closing_message
+        "local_default",        # persona_name
+        None                    # full_config
+    )
 
 
 @functools.lru_cache(maxsize=256)
@@ -133,14 +185,23 @@ If the conversation requires it, you can ask for the following data fields for l
 
 async def load_persona_with_fallback(ctx: JobContext) -> Tuple[str, Optional[str], Optional[str], str, Optional[Dict]]:
     """
-    Load persona configuration with fallback strategy:
-    1. Try job metadata first (webhook-provided config)
-    2. Fall back to API call using DEFAULT_CALLER environment variable
+    Load persona configuration with environment-controlled strategy:
+    1. Check PERSONA_USE environment variable
+    2. If "local" - use hardcoded prompts from prompts.py
+    3. If "api" - try job metadata first, then fallback to API
     
     Returns:
         Tuple of (agent_instructions, session_instructions, closing_message, persona_name, full_config)
     """
-    # First try metadata
+    
+    # Check environment variable first
+    if should_use_local_persona():
+        logging.info(f"PERSONA_USE={PERSONA_USE}: Using local hardcoded persona")
+        return get_local_persona_config()
+    
+    logging.info(f"PERSONA_USE={PERSONA_USE}: Using API-based persona loading")
+    
+    # API-based loading: First try metadata
     if ctx.job.metadata:
         logging.info("Attempting to load persona from job metadata")
         result = load_persona_from_metadata(ctx)
@@ -165,13 +226,15 @@ async def load_persona_with_fallback(ctx: JobContext) -> Tuple[str, Optional[str
                 "type": "persona_loaded_from_api",
                 "dialed_number": default_caller,
                 "persona_name": result[3],
-                "source": "api_fallback"
+                "source": "api_fallback",
+                "persona_use_mode": PERSONA_USE
             })
         else:
             log_event({
                 "type": "persona_not_found",
                 "dialed_number": default_caller,
-                "source": "api_fallback"
+                "source": "api_fallback",
+                "persona_use_mode": PERSONA_USE
             })
     except Exception as e:
         logging.warning(f"Failed to log persona loading event: {e}")
