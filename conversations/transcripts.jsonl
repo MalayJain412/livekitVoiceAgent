@@ -82,3 +82,7 @@
 {"role": "user", "content": "!", "timestamp": "2025-10-15T06:41:11.408531Z", "source": "transcription_node"}
 {"role": "assistant", "content": "Hello world", "timestamp": "2025-10-15T12:00:00Z", "source": "session_history", "item_type": "message", "raw": {"id": "item_test", "type": "message", "role": "assistant", "content": ["Hello world"], "interrupted": false, "transcript_confidence": null, "created_at": 1234567890}}
 {"type": "persona_loaded_from_api", "dialed_number": "8655701159", "persona_name": "piperbot", "source": "api_fallback"}
+{"type": "auto_hangup", "reason": "closing_message_no_reply", "room": "testroom", "timestamp": "2025-10-17T10:23:56.963376Z"}
+{"type": "auto_hangup", "reason": "closing_message_no_reply", "room": "testroom", "timestamp": "2025-10-17T10:46:02.175827Z"}
+{"type": "auto_hangup", "reason": "closing_message_no_reply", "room": "testroom", "timestamp": "2025-10-17T10:48:25.773858Z"}
+{"type": "auto_hangup", "reason": "user_request_no_activity", "room": "testroom", "wait_seconds": 0.05, "persona": null, "timestamp": "2025-10-17T10:50:07.549015Z", "success": true}

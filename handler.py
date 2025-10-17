@@ -15,6 +15,7 @@ Architecture:
 import os
 import json
 import logging
+from logging_config import configure_logging
 import requests
 import time
 from typing import Optional, Dict, Any
@@ -39,7 +40,12 @@ WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "")  # Optional webhook validation
 
 # Initialize Flask app and LiveKit client
 app = Flask(__name__)
-logging.basicConfig(level=logging.INFO)
+# Centralized logging config
+try:
+    configure_logging()
+except Exception:
+    # Fallback to basicConfig if centralized config fails for any reason
+    logging.basicConfig(level=logging.INFO)
 
 if LIVEKIT_SDK_AVAILABLE and LIVEKIT_URL and LIVEKIT_API_KEY and LIVEKIT_API_SECRET:
     try:

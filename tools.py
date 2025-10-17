@@ -81,6 +81,8 @@ RAG_DB_PATH = os.path.join(os.path.dirname(__file__), "model", "chroma_db")
 
 # Global RAG chain
 rag_chain = None
+# Flag to indicate if RAG (retrieval-augmented generation) dependencies are available
+RAG_AVAILABLE = False
 
 def _load_triotech_data():
     """Load Triotech knowledge base data."""

@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 import logging
+from logging_config import configure_logging
 import asyncio
 
 from livekit import agents
@@ -20,7 +21,11 @@ from session_manager import SessionManager
 
 
 load_dotenv()
-logging.basicConfig(level=logging.INFO)
+# Centralized logging config
+try:
+    configure_logging()
+except Exception:
+    logging.basicConfig(level=logging.INFO)
 
 
 class Assistant(Agent):
@@ -84,10 +89,12 @@ async def entrypoint(ctx: JobContext):
     
     # Initialize session manager
     session_manager = SessionManager(session)
+    logging.info("SessionManager created successfully")
     
     # Setup session logging and monitoring
     await session_manager.setup_session_logging()
     await session_manager.setup_shutdown_callback()
+    logging.info("SessionManager setup completed")
 
     await session.start(
         room=ctx.room,
@@ -99,8 +106,9 @@ async def entrypoint(ctx: JobContext):
     # Log persona application event
     session_manager.log_persona_applied_event(persona_name, full_config, session_instructions, closing_message)
     
-    # Start background history watcher
+    # Start background history watcher AFTER session starts
     await session_manager.start_history_watcher()
+    logging.info("SessionManager history watcher started")
 
     # Generate initial reply with persona-aware instructions
     if session_instructions:

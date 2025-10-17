@@ -56,24 +56,26 @@ def get_stt_instance(provider):
         raise ValueError(f"Unsupported STT provider: {provider}")
 
 
-def get_tts_instance(provider, language, voice):
+def get_tts_instance(provider):
     """Get TTS instance based on provider"""
     if provider == "cartesia":
         return cartesia.TTS(
             model="sonic-2",
-            language=language,
-            voice=voice,
+            language="hi",
+            voice="f91ab3e6-5071-4e15-b016-cde6f2bcd222",
             api_key=CARTESIA_API_KEY,
         )
     elif provider == "elevenlabs":
         return elevenlabs.TTS(
             voice_id="kiaJRdXJzloFWi6AtFBf", # Tarini
+            # voice_id="1zUSi8LeHs9M2mV8X6YS",
             model="eleven_multilingual_v2"
         )
     elif provider == "sarvam":
         return sarvam.TTS(
             target_language_code="hi-IN",
-            speaker="anushka",
+            speaker="vidya",
+            pace=0.8
         )
     else:
         raise ValueError(f"Unsupported TTS provider: {provider}")
@@ -90,6 +92,7 @@ def get_default_instances():
     return {
         "llm": get_llm_instance("google"),  # Original used Azure OpenAI
         "stt": get_stt_instance("deepgram"),  # Original used Deepgram
-        "tts": get_tts_instance("cartesia", "hi", "f91ab3e6-5071-4e15-b016-cde6f2bcd222"),  # Original used Cartesia
+        "tts": get_tts_instance("cartesia"),  # Original used Cartesia
+        # "tts": get_tts_instance("sarvam"),
         "vad": get_vad_instance()  # Original used Silero VAD
-    }
+    }   
