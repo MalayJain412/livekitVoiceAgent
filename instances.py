@@ -2,7 +2,9 @@
 AI Service Instances Configuration
 Centralized configuration for STT, LLM, and TTS instances
 """
-
+import json
+import os
+from typing import Optional, Dict
 from livekit.plugins import google, cartesia, openai, deepgram, silero, elevenlabs, sarvam
 from config import (
     AZURE_OPENAI_API_KEY, 
@@ -18,8 +20,87 @@ from config import (
     DEEPGRAM_API_KEY
 )
 
+# --- NEW: Helper functions for voice mapping and payload parsing ---
 
-def get_llm_instance(provider):
+def load_voice_data(filepath='./voices/all_voices.json'):
+    """Loads the voice data from the JSON file."""
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"Error: Voice data file not found at {filepath}")
+        return {}
+    except json.JSONDecodeError:
+        print(f"Error: Could not decode JSON from {filepath}")
+        return {}
+
+def find_voice_id(provider, name, all_voices):
+    """
+    Finds the specific voice ID for a given provider and voice name.
+    Handles different structures within the all_voices.json file.
+    """
+    provider_key = provider.lower()
+    
+    if provider_key not in all_voices:
+        print(f"Warning: Provider '{provider_key}' not found in voice data.")
+        return name # Fallback to the name if provider is not in our mapping
+
+    voices_data = all_voices[provider_key]
+
+    if provider_key == "cartesia":
+        # Cartesia has language-specific lists
+        for lang_voices in voices_data.values():
+            for voice in lang_voices:
+                if voice.get("name") == name:
+                    return voice.get("id")
+    elif provider_key == "elevenlabs":
+        # ElevenLabs has a 'speakers' list and names can be complex
+        for speaker in voices_data.get("speakers", []):
+            # Check if the simple name (e.g., "Priyanka") is at the start of the full name
+            if speaker.get("name", "").startswith(name):
+                return speaker.get("id")
+    # For Sarvam and OpenAI, the name is the identifier
+    elif provider_key in ["sarvam", "openai"]:
+        # These providers use the name directly, so we just return it.
+        # This check confirms the name exists in our list.
+        key_map = {"sarvam": "speakers", "openai": "openai_voices"}
+        voice_list_key = key_map[provider_key]
+        for voice in voices_data.get(voice_list_key, []):
+            if voice.get("name") == name:
+                return name # Return the name as it's the identifier
+    
+    print(f"Warning: Voice '{name}' not found for provider '{provider}'. Using name as fallback.")
+    return name # Fallback if no ID is found
+
+def extract_voice_details(payload):
+    """
+    Safely extracts voice details (model, name, language) from the API payload.
+    Returns None if the structure is not as expected.
+    """
+    try:
+        # Navigate through the nested structure
+        details = payload["campaigns"][0]["voiceAgents"][0]["voiceDetails"]
+        provider = details.get("voiceModel")
+        voice_name = details.get("name")
+        language_code = details.get("language", "en").lower() # Default to 'en'
+        
+        # Simple language code mapping
+        lang_map = {
+            "english": "en", "hindi": "hi", "en": "en", "hi": "hi"
+        }
+        language = lang_map.get(language_code.lower(), "en")
+
+        if provider and voice_name:
+            return provider, voice_name, language
+    except (KeyError, IndexError, TypeError):
+        # Handle cases where keys are missing or payload isn't a list/dict
+        print("Error: Could not extract voice details from payload.")
+    return None, None, None
+
+
+# --- MODIFIED: Core instance creation functions ---
+
+def get_llm_instance(provider="google"): # Added default for simplicity
     """Get LLM instance based on provider"""
     if provider == "azure":
         return openai.LLM.with_azure(
@@ -36,7 +117,7 @@ def get_llm_instance(provider):
         raise ValueError(f"Unsupported LLM provider: {provider}")
 
 
-def get_stt_instance(provider):
+def get_stt_instance(provider="deepgram"): # Added default for simplicity
     """Get STT instance based on provider"""
     if provider == "azure":
         return openai.STT.with_azure(
@@ -49,33 +130,42 @@ def get_stt_instance(provider):
         )
     elif provider == "deepgram":
         return deepgram.STT(
-            model="nova-3", 
+            model="nova-2", 
             language="multi"
         )
     else:
         raise ValueError(f"Unsupported STT provider: {provider}")
 
+# MODIFIED get_tts_instance to be fully dynamic
+def get_tts_instance(provider, voice_identifier, language):
+    """Get TTS instance based on provider, voice ID/name, and language."""
+    provider_lower = provider.lower()
+    print(f"Configuring TTS for provider: {provider_lower}, voice: {voice_identifier}, lang: {language}")
 
-def get_tts_instance(provider):
-    """Get TTS instance based on provider"""
-    if provider == "cartesia":
+    if provider_lower == "cartesia":
         return cartesia.TTS(
             model="sonic-2",
-            language="hi",
-            voice="f91ab3e6-5071-4e15-b016-cde6f2bcd222",
+            language=language,
+            voice=voice_identifier, # Use the looked-up ID
             api_key=CARTESIA_API_KEY,
         )
-    elif provider == "elevenlabs":
+    elif provider_lower == "elevenlabs":
         return elevenlabs.TTS(
-            voice_id="kiaJRdXJzloFWi6AtFBf", # Tarini
-            # voice_id="1zUSi8LeHs9M2mV8X6YS",
+            voice_id=voice_identifier, # Use the looked-up ID
             model="eleven_multilingual_v2"
         )
-    elif provider == "sarvam":
+    elif provider_lower == "sarvam":
         return sarvam.TTS(
-            target_language_code="hi-IN",
-            speaker="vidya",
+            target_language_code=f"{language}-IN",
+            speaker=voice_identifier, # Sarvam uses the name
             pace=0.8
+        )
+    elif provider_lower == "openai":
+        # Assuming you will add openai.TTS plugin
+        # This is a placeholder for how it would work
+        return openai.TTS(
+             model="tts-1",
+             voice=voice_identifier.lower() # OpenAI uses lowercase names like 'alloy', 'echo'
         )
     else:
         raise ValueError(f"Unsupported TTS provider: {provider}")
@@ -86,13 +176,49 @@ def get_vad_instance():
     return silero.VAD.load()
 
 
-# Default instances - matching original cagent.py configuration
-def get_default_instances():
-    """Get default configured instances matching original cagent.py setup"""
+# --- NEW: Main function to use with your application ---
+
+def get_instances_from_payload(payload):
+    """
+    Get all configured AI service instances based on the API payload.
+    Falls back to defaults if payload parsing fails.
+    """
+    all_voices = load_voice_data() # Load the voice mappings
+
+    # Extract TTS details from payload
+    tts_provider, tts_voice_name, tts_language = extract_voice_details(payload)
+    
+    if tts_provider and tts_voice_name and all_voices:
+        # Find the specific voice ID or name required by the SDK
+        voice_identifier = find_voice_id(tts_provider, tts_voice_name, all_voices)
+        tts_instance = get_tts_instance(tts_provider, voice_identifier, tts_language)
+    else:
+        # Fallback to a default if payload is invalid or voice data is missing
+        print("Falling back to default TTS configuration.")
+        tts_instance = get_tts_instance("cartesia", "faf0731e-dfb9-4cfc-8119-259a79b27e12", "hi")
+
     return {
-        "llm": get_llm_instance("google"),  # Original used Azure OpenAI
-        "stt": get_stt_instance("deepgram"),  # Original used Deepgram
-        "tts": get_tts_instance("cartesia"),  # Original used Cartesia
-        # "tts": get_tts_instance("sarvam"),
-        "vad": get_vad_instance()  # Original used Silero VAD
-    }   
+        "llm": get_llm_instance("google"),   # Kept static for now
+        "stt": get_stt_instance("deepgram"), # Kept static for now
+        "tts": tts_instance,                 # Dynamically configured
+        "vad": get_vad_instance()
+    }
+
+
+def load_test_payload() -> Optional[Dict]:
+    """
+    Load test payload from local file for testing instance creation logic.
+    Used when TEST_API_RESPONSE_FILE is set.
+    """
+    test_file = os.getenv("TEST_API_RESPONSE_FILE")
+    if test_file:
+        try:
+            print(f"TEST MODE: Loading test payload from local file: {test_file}")
+            with open(test_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            print(f"Successfully loaded test payload from {test_file}")
+            return data
+        except Exception as e:
+            print(f"Failed to load test payload from {test_file}: {e}")
+            return None
+    return None   

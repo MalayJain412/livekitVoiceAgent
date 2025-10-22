@@ -7,6 +7,7 @@ import os
 import sys
 import time
 from datetime import datetime
+import asyncio
 
 # RAG imports
 
@@ -374,3 +375,18 @@ async def detect_lead_intent(user_message: str) -> str:
         return "COMPANY_MENTIONED: User mentioned a company. Explore their needs and collect contact details."
     else:
         return "NO_LEAD_INTENT: Continue normal conversation."
+
+class HangupTool:
+    """A tool to manage the call hangup process."""
+    def __init__(self, hangup_event: asyncio.Event):
+        self._hangup_event = hangup_event
+
+    @function_tool()  # This decorator is the key to making it a valid tool
+    async def end_call(self):
+        """
+        Signals that the conversation is over and the call should be terminated.
+        Use this tool when the user wants to hang up or the conversation's goal is met.
+        """
+        logging.info("end_call tool was called by the agent, setting hangup event.")
+        self._hangup_event.set()
+        return "Call termination sequence has been initiated."

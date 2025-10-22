@@ -1,0 +1,569 @@
+{
+    "cartesia": {
+        "hindi": [
+            {
+                "id": "faf0731e-dfb9-4cfc-8119-259a79b27e12",
+                "name": "Riya",
+                "title": "College Roommate",
+                "language": "Hindi",
+                "style": "Conversational",
+                "description": "Friendly woman for playful conversations",
+                "use": "voice"
+            },
+            {
+                "id": "95d51f79-c397-46f9-b49a-23763d3eaa2d",
+                "name": "Arushi",
+                "title": "Hinglish Speaker",
+                "language": "Hindi",
+                "style": "Conversational",
+                "description": "Hinglish female for bilingual content",
+                "use": "voice"
+            },
+            {
+                "id": "28ca2041-5dda-42df-8123-f58ea9c3da00",
+                "name": "Palak",
+                "title": "Presenter",
+                "language": "Hindi",
+                "style": "Conversational",
+                "description": "Friendly female with a slight English accent for teaching use cases",
+                "use": "voice"
+            },
+            {
+                "id": "9cebb910-d4b7-4a4a-85a4-12c79137724c",
+                "name": "Aarti",
+                "title": "Conversationalist",
+                "language": "Hindi",
+                "style": "Conversational",
+                "description": "Indian accented female for relatable dialogue",
+                "use": "voice"
+            },
+            {
+                "id": "voice_005",
+                "name": "Parvati",
+                "title": "Friendly Supporter",
+                "language": "Hindi",
+                "style": "Conversational",
+                "description": "Friendly female for customer support use cases",
+                "use": "voice"
+            },
+            {
+                "id": "f91ab3e6-5071-4e15-b016-cde6f2bcd222",
+                "name": "Aadhya",
+                "title": "Soother",
+                "language": "Hindi",
+                "style": "Conversational",
+                "description": "Slow female voice for casual conversation",
+                "use": "voice"
+            },
+            {
+                "id": "fd2ada67-c2d9-4afe-b474-6386b87d8fc3",
+                "name": "Ishan",
+                "title": "Ally",
+                "language": "Hindi",
+                "style": "Conversational",
+                "description": "Conversational male for Hinglish sales and customer support",
+                "use": "voice"
+            },
+            {
+                "id": "be79f378-47fe-4f9c-b92b-f02cefa62ccf",
+                "name": "Sunil",
+                "title": "Official Announcer",
+                "language": "Hindi",
+                "style": "Conversational",
+                "category": "Advertising",
+                "description": "Deep male for serious conversations",
+                "use": "voice"
+            },
+            {
+                "id": "9b953e7b-86a8-42f0-b625-1434fb15392b",
+                "name": "Neeraj",
+                "title": "Tour Guide",
+                "language": "Hindi",
+                "style": "Conversational",
+                "category": "Entertainment",
+                "description": "Deep male for excellent storytelling and providing instructions",
+                "use": "voice"
+            },
+            {
+                "id": "bdab08ad-4137-4548-b9db-6142854c7525",
+                "name": "Imran",
+                "title": "Hindi Film Actor",
+                "language": "Hindi",
+                "style": "Conversational",
+                "category": "Entertainment",
+                "description": "Bollywood male artist for serious roles",
+                "use": "voice"
+            },
+            {
+                "id": "393dd459-f8d8-4c3e-a86b-ec43a1113d0b",
+                "name": "Rahul",
+                "title": "Calm Office Guy",
+                "language": "Hindi (Bagheli)",
+                "style": "Conversational",
+                "description": "Approachable adult male voice for casual conversations and everyday interactions",
+                "use": "voice"
+            },
+            {
+                "id": "209d9a43-03eb-40d8-a7b7-51a6d54c052f",
+                "name": "Anita",
+                "title": "Meditation Guide",
+                "language": "Hindi (Bagheli)",
+                "style": "Conversational",
+                "category": "Entertainment",
+                "description": "Soft-spoken adult female voice for casual conversations, meditation, and calming dialogue",
+                "use": "voice"
+            },
+            {
+                "id": "791d5162-d5eb-40f0-8189-f19db44611d8",
+                "name": "Ayush",
+                "title": "Friendly Neighbor",
+                "language": "Hindi",
+                "style": "Conversational",
+                "description": "Confident, young Indian male for delivering demos and instructions",
+                "use": "voice"
+            },
+            {
+                "id": "56e35e2d-6eb6-4226-ab8b-9776515a7094",
+                "name": "Kavita",
+                "title": "Customer Care Agent",
+                "language": "Hindi",
+                "style": "Conversational",
+                "description": "Mature Indian female for customer care use cases",
+                "use": "voice"
+            }
+        ],
+        "english_indian": [
+            {
+                "id": "3b554273-4299-48b9-9aaf-eefd438e3941",
+                "name": "Simi",
+                "title": "Support Specialist",
+                "language": "English",
+                "accent": "Indian",
+                "style": "Conversational",
+                "description": "Firm, young accented female for customer support use cases",
+                "use": "voice"
+            },
+            {
+                "id": "7ea5e9c2-b719-4dc3-b870-5ba5f14d31d8",
+                "name": "Janvi",
+                "title": "Steady Agent",
+                "language": "English",
+                "accent": "Indian",
+                "style": "Conversational",
+                "description": "Calm and neutral female voice with a slow, steady delivery, ideal for customer support scenarios",
+                "use": "voice"
+            },
+            {
+                "id": "638efaaa-4d0c-442e-b701-3fae16aad012",
+                "name": "Sameer",
+                "title": "Problem Solver",
+                "language": "English",
+                "accent": "Indian",
+                "style": "Conversational",
+                "category": "Entertainment",
+                "description": "Friendly male for customer support use cases",
+                "use": "voice"
+            },
+            {
+                "id": "f8f5f1b2-f02d-4d8e-a40d-fd850a487b3d",
+                "name": "Kiara",
+                "title": "Joyful Woman",
+                "language": "English",
+                "accent": "Indian",
+                "style": "Conversational",
+                "category": "Entertainment",
+                "description": "Upbeat, enunciating Indian accented mature adult female for happy conversations",
+                "use": "voice"
+            },
+            {
+                "id": "1259b7e3-cb8a-43df-9446-30971a46b8b0",
+                "name": "Devansh",
+                "title": "Warm Support Agent",
+                "language": "English",
+                "accent": "Indian",
+                "style": "Conversational",
+                "description": "Warm, conversational Indian male adult voice for casual chats, everyday interactions, and friendly user engagement",
+                "use": "voice"
+            },
+            {
+                "id": "f6141af3-5f94-418c-80ed-a45d450e7e2e",
+                "name": "Priya",
+                "title": "Trusted Operator",
+                "language": "English",
+                "accent": "Indian",
+                "style": "Conversational",
+                "description": "Authoritative, adult female for customer support",
+                "use": "voice"
+            },
+            {
+                "id": "39c3388d-6b3f-4cec-88d7-900bd0899e00",
+                "name": "Aarav",
+                "title": "Old Time Storyteller",
+                "language": "English",
+                "accent": "Indian",
+                "style": "Conversational",
+                "category": "Entertainment",
+                "description": "Warm adult male voice with a slight Indian accent and a vintage tone for nostalgic storytelling, retro-style media, and historical narration",
+                "use": "voice"
+            },
+            {
+                "id": "c63361f8-d142-4c62-8da7-8f8149d973d6",
+                "name": "Krishna",
+                "title": "Friendly Pal",
+                "language": "English",
+                "accent": "Indian",
+                "style": "Conversational",
+                "description": "Easygoing adult male voice with a slight Indian accent for casual conversations, approachable dialogue, and friendly interactions",
+                "use": "voice"
+            }
+        ]
+    },
+    "elevenlabs": {
+        "speakers": [
+            {
+                "id": "k2intd1ORm0YUH8etnXg",
+                "name": "Zara – Sweet & Friendly Companion",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "A light, cheerful voice that feels like a genuine friend by your side.",
+                "best_used_for": "Conversational AI, friendly interactions, companion apps"
+            },
+            {
+                "id": "ni6cdqyS9wBvic5LPA7M",
+                "name": "Tara - Expressive Conversational Hindi Voice",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "Tara's English voice has already generated millions of characters. She is a professional actress with extensive acting experience and great potential ahead. You'll hear all those emotions in her voice. Give it a try, and I'm sure you'll love her Hindi voice too.",
+                "best_used_for": "Conversational bots, emotional storytelling, voice assistants"
+            },
+            {
+                "id": "n8agU3KLt1Yttvrx1mYA",
+                "name": "Nara – Tier 2 & 3 Native Indian Girl Tone for Localised Bots",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "Nara has the warm, unfiltered tone of a typical Tier 2 & Tier 3 Indian girl — casual, simple, and effortlessly real.",
+                "best_used_for": "Localised bots, regional content, authentic Indian conversations"
+            },
+            {
+                "id": "FZDpfsjLp5bRzmlwdm0P",
+                "name": "Pratima - Casual Hindi Conversational Voice",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "Pratima is the pen name of a passionate actress. Her voice has been recorded in a very natural, conversational style, making it perfect for all use cases where a raw, authentic voice is needed. Give it a try, and you'll find her voice to be highly relatable.",
+                "best_used_for": "Casual conversations, relatable content, natural interactions"
+            },
+            {
+                "id": "LWFgMHXb8m0uANBUpzlq",
+                "name": "Saavi - Recovery & Payment Reminder Voice Agent Banks, NBFCs & Lending Firms",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "A clear, firm, and polite female voice designed for recovery, payment reminders, and follow-ups.",
+                "best_used_for": "Financial services, payment reminders, banking communications"
+            },
+            {
+                "id": "voices-item-EXTRACTED_ID_6",
+                "name": "Gargi - Girl Next Door",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "Gargi has a raw voice that feels less like AI and more like the girl next door. Her authenticity brings a relatable charm, making every interaction personal and warm. Whether narrating stories or voicing customer support, her tone feels natural and engaging. From educational content to podcasts and interactive assistants, Gargi's voice adds familiarity and trust.",
+                "best_used_for": "Customer support, storytelling, educational content, podcasts"
+            },
+            {
+                "id": "1zUSi8LeHs9M2mV8X6YS",
+                "name": "Priyanka Sogam – Romantic, Polished & Calm",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "A soft, velvety voice dipped in elegance — warm, slow-paced, and effortlessly alluring.",
+                "best_used_for": "Romantic content, polished presentations, calming experiences"
+            },
+            {
+                "id": "RXe6OFmxoC0nlSWpuCDy",
+                "name": "Anika - Soothing Customer Care Agent",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "Anika is a calm, empathetic, and listener-first voice, specially crafted for customer service experiences.",
+                "best_used_for": "Customer care, empathetic interactions, support services"
+            },
+            {
+                "id": "1Z7Y8o9cvUeWq8oLKgMY",
+                "name": "Customer Care Tripti – Calm, Experienced Voice for Hindi AI Bots & Agents",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "A composed and reassuring Hindi voice built for AI-driven customer support, IVRs, and virtual agents.",
+                "best_used_for": "AI customer support, IVR systems, virtual agents"
+            },
+            {
+                "id": "gHu9GtaHOXcSqFTK06ux",
+                "name": "Anjali - Soothing Hindi Voice",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "Anjali's soothing voice is perfect for creating calming and engaging content. You can use it for audiobooks, podcasts, meditation apps, or any project that needs a friendly and reassuring tone.",
+                "best_used_for": "Audiobooks, podcasts, meditation, calming content"
+            },
+            {
+                "id": "aqt45iIXdF98ngoDdgAp",
+                "name": "Uma - Blunt Conversational Voice for Real Talk, Reels & Sarcasm",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "Uma delivers a bold, sarcastic, and brutally honest tone.",
+                "best_used_for": "Real talk, reels, sarcastic content, authentic conversations"
+            },
+            {
+                "id": "TRnaQb7q41oL7sV0w6Bu",
+                "name": "Simran – Bright, Fun, and Friendly BFF Voice for Gen Z Gossip",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "A bubbly, expressive voice that sounds just like your favorite friend spilling tea over texts.",
+                "best_used_for": "Gen Z content, gossip, friendly conversations, social media"
+            },
+            {
+                "id": "DFOZQw3ulRFmiWJtMY5d",
+                "name": "Roopa – Clear & Natural Female Customer Care Agent",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "Roopa's voice is naturally modulated, clear, & emotionally aware—crafted specifically for customer support, IVR flows, & human-sounding bots. Her tone effortlessly balances professionalism with relatability, making her ideal for BFSI, e-commerce, logistics, & edtech sectors.",
+                "best_used_for": "Customer support, IVR, BFSI, e-commerce, logistics, edtech"
+            },
+            {
+                "id": "Ms9OTvWb99V6DwRHZn6q",
+                "name": "Monika Sogam - Friendly Customer Care Agent",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "A warm and approachable voice designed for exceptional customer service.",
+                "best_used_for": "Customer service, friendly interactions, support"
+            },
+            {
+                "id": "qFwAIpwqlpqZbTYpttVi",
+                "name": "Swati S – Young Romantic Female Voice for Podcasts & Voice bots",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "A soft, romantic young female voice with a natural conversational style that feels warm, relatable, and emotionally engaging.",
+                "best_used_for": "Podcasts, voice bots, romantic content, emotional storytelling"
+            },
+            {
+                "id": "iheWwe31xAeFtzyqH38i",
+                "name": "Riya Rao - Hindi Conversational Voice",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "Riya is the pen name of one of the most professional voice-over artists you will ever hear on ElevenLabs. Her voice has already been a part of major conversational bots in the past. Use it for all your professional and conversational needs, such as social media, documentaries, audiobooks, corporate videos, and so on.",
+                "best_used_for": "Professional content, conversational bots, social media, documentaries, audiobooks, corporate videos"
+            },
+            {
+                "id": "ryIIztHPLYSJ74ueXxnO",
+                "name": "Sia – Casual & Comforting Girl Voice for AI Chatbots & Apps",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "A friendly, comforting voice designed for relaxed chats and emotionally aware AI interactions.",
+                "best_used_for": "AI chatbots, casual conversations, comforting interactions"
+            },
+            {
+                "id": "hGb0Exk8cp4vQEnwolxa",
+                "name": "Ayesha - Energetic Hindi Voice",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "Ayesha is the pen name of a very famous and talented voice over artist and singer. Her voice is well-suited for conversational-style ads, podcasts, narrations, e-learning, engaging content, etc. Do give it a try and you will love it.",
+                "best_used_for": "Ads, podcasts, narrations, e-learning, engaging content"
+            },
+            {
+                "id": "ALCIIw5qAlLDox8iBl0U",
+                "name": "Alisha - Soft-Spoken Young female for Customer Care",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "Alisha's gentle, warm voice is ideal for empathetic and friendly customer interactions in Hindi.",
+                "best_used_for": "Customer care, empathetic interactions, friendly support"
+            },
+            {
+                "id": "s6cZdgI3j07hf4frz4Q8",
+                "name": "Arvi – Desi Conversational Voice",
+                "gender": "female",
+                "accent": "Indian",
+                "language": "Hindi",
+                "description": "A lively and authentic Hindi voice designed for casual, everyday conversations with a distinct desi touch.",
+                "best_used_for": "Casual conversations, desi content, authentic Indian interactions"
+            }
+        ]
+    },
+    "sarvam": {
+        "speakers": [
+            {
+                "id": "voice_201",
+                "name": "Anushka",
+                "gender": "Female",
+                "tone": "Clear and Professional",
+                "audio_text": "सरवम एआई की टेक्स्ट-टू-स्पीच सेवा 11 भारतीय भाषाओं में प्राकृतिक और पेशेवर आवाज़ें प्रदान करती है, जो विविध उपयोग मामलों के लिए उपयुक्त हैं।",
+                "best_used_for": [
+                    "Audiobooks",
+                    "Professional Narration",
+                    "Corporate Training"
+                ]
+            },
+            {
+                "id": "voice_202",
+                "name": "Vidya",
+                "gender": "Female",
+                "tone": "Articulate and Precise",
+                "audio_text": "Bulbul model supports 11 Indian languages, offering unmatched clarity, control, and customization.",
+                "best_used_for": [
+                    "Product Demos",
+                    "Instructional Videos",
+                    "IVRs"
+                ]
+            },
+            {
+                "id": "voice_203",
+                "name": "Manisha",
+                "gender": "Female",
+                "tone": "Warm and Friendly",
+                "audio_text": "નમસ્કાર! તમે કેવી રીતે છો? હું અહીં છું તમારા માટે મદદ કરવા માટે. શું તમારું કોઈ પ્રશ્ન છે? ચાલો મળીને જવાબ શોધીયે!",
+                "best_used_for": [
+                    "Customer Support",
+                    "Voice Assistants",
+                    "Conversational Interfaces"
+                ]
+            },
+            {
+                "id": "voice_204",
+                "name": "Arya",
+                "gender": "Female",
+                "tone": "Young and Energetic",
+                "audio_text": "হাই! দেখা হলো বলে ভালো লাগছে! আমি আর্যা। তুমি বলো, কোথা থেকে শুরু করবো?",
+                "best_used_for": [
+                    "EdTech Apps",
+                    "Youth Campaigns",
+                    "Interactive Games"
+                ]
+            },
+            {
+                "id": "voice_205",
+                "name": "Abhilash",
+                "gender": "Male",
+                "tone": "Deep and Authoritative",
+                "audio_text": "Warning. Unusual activity detected in Zone 7. Immediate verification is required to maintain system integrity. Proceed with caution.",
+                "best_used_for": [
+                    "Security Systems",
+                    "Announcements",
+                    "Documentaries"
+                ]
+            },
+            {
+                "id": "voice_206",
+                "name": "Karun",
+                "gender": "Male",
+                "tone": "Natural and Conversational",
+                "audio_text": "ನಿಜವಾದಂತೆ ಮತ್ತು ಮನಸಿಗೆ ಹತ್ತಿಕೊಂಡಂತೆ ಕೇಳಿಸಬಹುದಾದ ಮಾತು ಬೇಕೆ? ಇದನ್ನೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ ನೋಡಿ!",
+                "best_used_for": [
+                    "Podcasts",
+                    "Customer Interactions",
+                    "Mobile Apps"
+                ]
+            },
+            {
+                "id": "voice_207",
+                "name": "Hitesh",
+                "gender": "Male",
+                "tone": "Professional and Engaging",
+                "audio_text": "From virtual assistants to audio books, Sarvam’s TTS powers a range of applications with natural voice output.",
+                "best_used_for": [
+                    "Virtual Assistants",
+                    "Corporate Videos",
+                    "E-Learning"
+                ]
+            }
+        ]
+    },
+    "openai": {
+        "openai_voices": [
+            {
+                "id": "OA001",
+                "name": "Alloy",
+                "tone": "Neutral, professional, and clear",
+                "gender": "Neutral",
+                "category": "Professional",
+                "sample_favorite": true
+            },
+            {
+                "id": "OA002",
+                "name": "Echo",
+                "tone": "Warm, friendly, and engaging",
+                "gender": "Young Male",
+                "category": "Conversational",
+                "sample_favorite": true
+            },
+            {
+                "id": "OA003",
+                "name": "Fable",
+                "tone": "Energetic, expressive, and engaging",
+                "gender": "Young Male",
+                "category": "Narration",
+                "sample_favorite": true
+            },
+            {
+                "id": "OA004",
+                "name": "Onyx",
+                "tone": "Older, mature, and experienced",
+                "gender": "Old Male",
+                "category": "Authoritative",
+                "sample_favorite": true
+            },
+            {
+                "id": "OA005",
+                "name": "Nova",
+                "tone": "Young, energetic, and engaging",
+                "gender": "Young Female",
+                "category": "Conversational",
+                "sample_favorite": true
+            },
+            {
+                "id": "OA006",
+                "name": "Shimmer",
+                "tone": "Lively, vibrant, and dynamic",
+                "gender": "Young Female",
+                "category": "Expressive",
+                "sample_favorite": true
+            },
+            {
+                "id": "OA007",
+                "name": "Ash",
+                "tone": "Enthusiastic, energetic, and lively",
+                "gender": "Young Male",
+                "category": "Expressive",
+                "sample_favorite": true
+            },
+            {
+                "id": "OA009",
+                "name": "Coral",
+                "tone": "Cheerful, friendly, and community-oriented",
+                "gender": "Young Female",
+                "category": "Community",
+                "sample_favorite": true
+            },
+            {
+                "id": "OA010",
+                "name": "Sage",
+                "tone": "Wise, calm, and knowledgeable",
+                "gender": "Young Female",
+                "category": "Educational",
+                "sample_favorite": true
+            }
+        ]
+    }
+}

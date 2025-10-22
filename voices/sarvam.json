@@ -1,0 +1,60 @@
+{
+  "speakers": [
+    {
+      "id": "voice_201",
+      "name": "Anushka",
+      "gender": "Female",
+      "tone": "Clear and Professional",
+      "audio_text": "सरवम एआई की टेक्स्ट-टू-स्पीच सेवा 11 भारतीय भाषाओं में प्राकृतिक और पेशेवर आवाज़ें प्रदान करती है, जो विविध उपयोग मामलों के लिए उपयुक्त हैं।",
+      "best_used_for": ["Audiobooks", "Professional Narration", "Corporate Training"]
+    },
+    {
+      "id": "voice_202",
+      "name": "Vidya",
+      "gender": "Female",
+      "tone": "Articulate and Precise",
+      "audio_text": "Bulbul model supports 11 Indian languages, offering unmatched clarity, control, and customization.",
+      "best_used_for": ["Product Demos", "Instructional Videos", "IVRs"]
+    },
+    {
+      "id": "voice_203",
+      "name": "Manisha",
+      "gender": "Female",
+      "tone": "Warm and Friendly",
+      "audio_text": "નમસ્કાર! તમે કેવી રીતે છો? હું અહીં છું તમારા માટે મદદ કરવા માટે. શું તમારું કોઈ પ્રશ્ન છે? ચાલો મળીને જવાબ શોધીયે!",
+      "best_used_for": ["Customer Support", "Voice Assistants", "Conversational Interfaces"]
+    },
+    {
+      "id": "voice_204",
+      "name": "Arya",
+      "gender": "Female",
+      "tone": "Young and Energetic",
+      "audio_text": "হাই! দেখা হলো বলে ভালো লাগছে! আমি আর্যা। তুমি বলো, কোথা থেকে শুরু করবো?",
+      "best_used_for": ["EdTech Apps", "Youth Campaigns", "Interactive Games"]
+    },
+    {
+      "id": "voice_205",
+      "name": "Abhilash",
+      "gender": "Male",
+      "tone": "Deep and Authoritative",
+      "audio_text": "Warning. Unusual activity detected in Zone 7. Immediate verification is required to maintain system integrity. Proceed with caution.",
+      "best_used_for": ["Security Systems", "Announcements", "Documentaries"]
+    },
+    {
+      "id": "voice_206",
+      "name": "Karun",
+      "gender": "Male",
+      "tone": "Natural and Conversational",
+      "audio_text": "ನಿಜವಾದಂತೆ ಮತ್ತು ಮನಸಿಗೆ ಹತ್ತಿಕೊಂಡಂತೆ ಕೇಳಿಸಬಹುದಾದ ಮಾತು ಬೇಕೆ? ಇದನ್ನೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ ನೋಡಿ!",
+      "best_used_for": ["Podcasts", "Customer Interactions", "Mobile Apps"]
+    },
+    {
+      "id": "voice_207",
+      "name": "Hitesh",
+      "gender": "Male",
+      "tone": "Professional and Engaging",
+      "audio_text": "From virtual assistants to audio books, Sarvam’s TTS powers a range of applications with natural voice output.",
+      "best_used_for": ["Virtual Assistants", "Corporate Videos", "E-Learning"]
+    }
+  ]
+}

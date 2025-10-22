@@ -259,99 +259,101 @@ class SessionManager:
                                         pass
 
                                     # --- Hangup-after-closing detection logic ---
-                                    try:
-                                        # Normalize role string
-                                        r_lower = (role or "").lower()
-
-                                        # Treat user/human/caller/participant roles as activity
-                                        if r_lower in ("user", "human", "caller", "participant"):
-                                            # mark last user activity and cancel any pending hangup
-                                            self.last_user_activity = datetime.utcnow()
-                                            if self.hangup_task is not None:
-                                                try:
-                                                    logging.info("SessionManager: user activity detected — cancelling pending auto-hangup")
-                                                    self.hangup_task.cancel()
-                                                except Exception:
-                                                    pass
-                                                self.hangup_task = None
-                                                self._closing_detected_time = None
-
-                                            # Check for explicit user request to hang up
-                                            try:
-                                                user_text = (content or "").strip().lower()
-                                                logging.info(f"SessionManager: checking user text for hangup phrases: '{user_text}'")
-                                                logging.info(f"SessionManager: configured hangup phrases: {HANGUP_PHRASES}")
-                                                
-                                                # Check against configurable phrase list
-                                                matched_phrase = None
-                                                for phrase in HANGUP_PHRASES:
-                                                    if phrase in user_text:
-                                                        matched_phrase = phrase
-                                                        break
-                                                
-                                                if matched_phrase:
-                                                    logging.info(f"SessionManager: explicit user hangup request detected (matched phrase: '{matched_phrase}') — scheduling immediate hangup wait")
-                                                    
-                                                    # Log hangup scheduling event
-                                                    log_event({
-                                                        "type": "auto_hangup_scheduled",
-                                                        "trigger": "user_request",
-                                                        "matched_phrase": matched_phrase,
-                                                        "wait_seconds": HANGUP_ON_REQUEST_WAIT_SECONDS,
-                                                        "room": getattr(getattr(self.session, "room", None), "name", None),
-                                                        "timestamp": datetime.utcnow().isoformat() + "Z"
-                                                    })
-                                                    
-                                                    # schedule a short wait then hangup
-                                                    t = datetime.utcnow()
-                                                    # cancel any existing hangup task
-                                                    if self.hangup_task is not None:
-                                                        try:
-                                                            self.hangup_task.cancel()
-                                                        except Exception:
-                                                            pass
-                                                    self.hangup_task = asyncio.create_task(self._hangup_wait_and_end(t, wait_seconds=HANGUP_ON_REQUEST_WAIT_SECONDS))
-                                                else:
-                                                    logging.info(f"SessionManager: no hangup phrase found in user text: '{user_text}'")
-                                            except Exception as e:
-                                                logging.error(f"SessionManager: error in hangup phrase detection: {e}")
-                                                # swallow failures in explicit request parsing
-                                                pass
-
-                                        # If assistant/agent/system spoke, check for closing message trigger
-                                        elif r_lower in ("assistant", "agent", "system") and content:
-                                            closing_msg = getattr(self.session, "closing_message", None)
-                                            if closing_msg:
-                                                # simple containment check (case-insensitive)
-                                                try:
-                                                    if closing_msg.strip().lower() in content.strip().lower() or content.strip().lower() in closing_msg.strip().lower():
-                                                        closing_time = datetime.utcnow()
-                                                        self._closing_detected_time = closing_time
-                                                        # cancel any existing hangup_task then start a new one
-                                                        if self.hangup_task is not None:
-                                                            try:
-                                                                logging.info("SessionManager: restarting auto-hangup task due to new closing message")
-                                                                self.hangup_task.cancel()
-                                                            except Exception:
-                                                                pass
-                                                        # start background wait-and-hangup
-                                                        logging.info(f"SessionManager: detected closing message — scheduling auto-hangup in {AUTO_HANGUP_WAIT_SECONDS}s unless user replies")
-                                                        
-                                                        # Log hangup scheduling event
-                                                        log_event({
-                                                            "type": "auto_hangup_scheduled",
-                                                            "trigger": "closing_message",
-                                                            "wait_seconds": AUTO_HANGUP_WAIT_SECONDS,
-                                                            "room": getattr(getattr(self.session, "room", None), "name", None),
-                                                            "persona": getattr(self.session, "persona_name", None),
-                                                            "timestamp": datetime.utcnow().isoformat() + "Z"
-                                                        })
-                                                        
-                                                        self.hangup_task = asyncio.create_task(self._hangup_wait_and_end(closing_time, wait_seconds=AUTO_HANGUP_WAIT_SECONDS))
-                                                except Exception:
-                                                    pass
-                                    except Exception:
-                                        pass
+                                    # COMMENT OUT OR DELETE THIS ENTIRE BLOCK
+                                    # try:
+                                    #     # Normalize role string
+                                    #     r_lower = (role or "").lower()
+                                    #
+                                    #     # Treat user/human/caller/participant roles as activity
+                                    #     if r_lower in ("user", "human", "caller", "participant"):
+                                    #         # mark last user activity and cancel any pending hangup
+                                    #         self.last_user_activity = datetime.utcnow()
+                                    #         if self.hangup_task is not None:
+                                    #             try:
+                                    #                 logging.info("SessionManager: user activity detected — cancelling pending auto-hangup")
+                                    #                 self.hangup_task.cancel()
+                                    #             except Exception:
+                                    #                 pass
+                                    #         self.hangup_task = None
+                                    #         self._closing_detected_time = None
+                                    #
+                                    #         # Check for explicit user request to hang up
+                                    #         try:
+                                    #             user_text = (content or "").strip().lower()
+                                    #             logging.info(f"SessionManager: checking user text for hangup phrases: '{user_text}'")
+                                    #             logging.info(f"SessionManager: configured hangup phrases: {HANGUP_PHRASES}")
+                                    #             
+                                    #             # Check against configurable phrase list
+                                    #             matched_phrase = None
+                                    #             for phrase in HANGUP_PHRASES:
+                                    #                 if phrase in user_text:
+                                    #                 matched_phrase = phrase
+                                    #                 break
+                                    #             
+                                    #             if matched_phrase:
+                                    #                 logging.info(f"SessionManager: explicit user hangup request detected (matched phrase: '{matched_phrase}') — scheduling immediate hangup wait")
+                                    #                 
+                                    #                 # Log hangup scheduling event
+                                    #                 log_event({
+                                    #                     "type": "auto_hangup_scheduled",
+                                    #                     "trigger": "user_request",
+                                    #                     "matched_phrase": matched_phrase,
+                                    #                     "wait_seconds": HANGUP_ON_REQUEST_WAIT_SECONDS,
+                                    #                     "room": getattr(getattr(self.session, "room", None), "name", None),
+                                    #                     "timestamp": datetime.utcnow().isoformat() + "Z"
+                                    #                 })
+                                    #                 
+                                    #                 # schedule a short wait then hangup
+                                    #                 t = datetime.utcnow()
+                                    #                 # cancel any existing hangup task
+                                    #                 if self.hangup_task is not None:
+                                    #                     try:
+                                    #                         self.hangup_task.cancel()
+                                    #                     except Exception:
+                                    #                         pass
+                                    #                 self.hangup_task = asyncio.create_task(self._hangup_wait_and_end(t, wait_seconds=HANGUP_ON_REQUEST_WAIT_SECONDS))
+                                    #             else:
+                                    #                 logging.info(f"SessionManager: no hangup phrase found in user text: '{user_text}'")
+                                    #         except Exception as e:
+                                    #             logging.error(f"SessionManager: error in hangup phrase detection: {e}")
+                                    #             # swallow failures in explicit request parsing
+                                    #             pass
+                                    #
+                                    #     # If assistant/agent/system spoke, check for closing message trigger
+                                    #     elif r_lower in ("assistant", "agent", "system") and content:
+                                    #         closing_msg = getattr(self.session, "closing_message", None)
+                                    #         if closing_msg:
+                                    #             # simple containment check (case-insensitive)
+                                    #             try:
+                                    #                 if closing_msg.strip().lower() in content.strip().lower() or content.strip().lower() in closing_msg.strip().lower():
+                                    #                     closing_time = datetime.utcnow()
+                                    #                     self._closing_detected_time = closing_time
+                                    #                     # cancel any existing hangup_task then start a new one
+                                    #                     if self.hangup_task is not None:
+                                    #                         try:
+                                    #                             logging.info("SessionManager: restarting auto-hangup task due to new closing message")
+                                    #                             self.hangup_task.cancel()
+                                    #                             except Exception:
+                                    #                                 pass
+                                    #                         # start background wait-and-hangup
+                                    #                         logging.info(f"SessionManager: detected closing message — scheduling auto-hangup in {AUTO_HANGUP_WAIT_SECONDS}s unless user replies")
+                                    #                         
+                                    #                         # Log hangup scheduling event
+                                    #                         log_event({
+                                    #                             "type": "auto_hangup_scheduled",
+                                    #                             "trigger": "closing_message",
+                                    #                             "wait_seconds": AUTO_HANGUP_WAIT_SECONDS,
+                                    #                             "room": getattr(getattr(self.session, "room", None), "name", None),
+                                    #                             "persona": getattr(self.session, "persona_name", None),
+                                    #                             "timestamp": datetime.utcnow().isoformat() + "Z"
+                                    #                         })
+                                    #                         
+                                    #                         self.hangup_task = asyncio.create_task(self._hangup_wait_and_end(closing_time, wait_seconds=AUTO_HANGUP_WAIT_SECONDS))
+                                    #             except Exception:
+                                    #                 pass
+                                    # except Exception:
+                                    #     pass
+                                    # --- END OF BLOCK TO REMOVE ---
                                 except Exception:
                                     # individual item failure should not stop the watcher
                                     pass
@@ -415,34 +417,29 @@ class SessionManager:
             # Perform hangup via JobContext API (delete_room)
             try:
                 logging.info(f"SessionManager: no user reply detected for {wait_seconds}s after closing — performing auto-hangup for room {room_name}")
-                job_ctx = get_job_context()
-                if job_ctx is None:
-                    logging.error("SessionManager: job_ctx is None, cannot perform hangup")
-                    return
-
-                logging.debug(f"SessionManager: calling delete_room for {job_ctx.room.name}")
-                # Call delete_room to end the call for all participants
-                await job_ctx.api.room.delete_room(api.DeleteRoomRequest(room=job_ctx.room.name))
+                
+                # Use the same hangup approach as validation.py
+                await self._perform_hangup()
                 
                 # Log structured auto_hangup event
                 log_event({
                     "type": "auto_hangup",
                     "reason": "closing_message_no_reply" if wait_seconds == AUTO_HANGUP_WAIT_SECONDS else "user_request_no_activity",
-                    "room": getattr(job_ctx.room, "name", None),
+                    "room": room_name,
                     "wait_seconds": wait_seconds,
                     "persona": getattr(self.session, "persona_name", None),
                     "timestamp": datetime.utcnow().isoformat() + "Z",
                     "success": True
                 })
                 
-                logging.info(f"SessionManager: auto-hangup completed successfully for room {job_ctx.room.name}")
+                logging.info(f"SessionManager: auto-hangup completed successfully for room {room_name}")
                 
             except Exception as e:
                 # Log failed auto_hangup event
                 log_event({
                     "type": "auto_hangup_failed", 
                     "reason": "api_error",
-                    "room": getattr(job_ctx.room, "name", None) if job_ctx else None,
+                    "room": room_name,
                     "wait_seconds": wait_seconds,
                     "persona": getattr(self.session, "persona_name", None),
                     "error": str(e),
@@ -456,3 +453,44 @@ class SessionManager:
         except Exception:
             # swallow any unexpected exceptions to avoid crashing watcher
             return
+
+    async def _perform_hangup(self):
+        """
+        Perform hangup using the same approach as validation.py hangup_call()
+        """
+        ctx = get_job_context()
+        if ctx is None:
+            logging.warning("SessionManager: No job context available for hangup")
+            return
+        
+        try:
+            # Before ending the room, wait for any active agent speech to finish
+            try:
+                current_speech = getattr(self.session, "current_speech", None)
+                if current_speech is not None:
+                    logging.info("SessionManager: waiting for current speech to finish before hangup")
+                    # Prefer explicit wait_for_playout API if available
+                    if hasattr(current_speech, "wait_for_playout"):
+                        try:
+                            await current_speech.wait_for_playout()
+                        except Exception:
+                            # fallback to awaiting the handle directly
+                            try:
+                                await current_speech
+                            except Exception:
+                                pass
+                    else:
+                        try:
+                            await current_speech
+                        except Exception:
+                            pass
+            except Exception as e:
+                logging.warning(f"SessionManager: failed waiting for speech to finish: {e}")
+
+            logging.debug(f"SessionManager: calling delete_room for {ctx.room.name}")
+            await ctx.api.room.delete_room(api.DeleteRoomRequest(room=ctx.room.name))
+            logging.info("SessionManager: Call hung up successfully")
+            
+        except Exception as e:
+            logging.error(f"SessionManager: Error hanging up call: {e}")
+            raise  # Re-raise to be caught by caller

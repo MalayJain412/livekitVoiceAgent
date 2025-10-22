@@ -73,9 +73,25 @@ def load_persona_from_api(dialed_number: str, timeout: int = 5) -> Optional[Dict
     """
     Synchronous persona fetch from CRM API (cached).
     Used as fallback when job metadata is missing.
+    
+    For testing: If TEST_API_RESPONSE_FILE is set, loads from local file instead of API.
     """
     if not dialed_number:
         return None
+    
+    # Check for test mode - load from local file
+    test_file = os.getenv("TEST_API_RESPONSE_FILE")
+    if test_file:
+        try:
+            logging.info(f"TEST MODE: Loading persona from local file: {test_file}")
+            with open(test_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            logging.info(f"Successfully loaded test data from {test_file}")
+            return data
+        except Exception as e:
+            logging.error(f"Failed to load test data from {test_file}: {e}")
+            return None
+    
     try:
         base = os.getenv("PERSONA_API_BASE", "https://devcrm.xeny.ai/apis/api/public/mobile")
         url = f"{base}/{dialed_number}"
