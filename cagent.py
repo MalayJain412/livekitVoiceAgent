@@ -187,4 +187,10 @@ async def entrypoint(ctx: JobContext):
 
 
 if __name__ == "__main__":
-    agents.cli.run_app(agents.WorkerOptions(entrypoint_fnc=entrypoint))
+    opts = agents.cli.run_app(agents.WorkerOptions
+        (
+        entrypoint_fnc=entrypoint,
+        agent_name="friday-assistant"
+        )
+    )
+    agents.cli.run_app(opts)

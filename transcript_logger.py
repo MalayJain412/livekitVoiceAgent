@@ -8,6 +8,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
 
+# CRM upload integration
+try:
+    from crm_upload import upload_call_data_from_session
+    CRM_UPLOAD_AVAILABLE = True
+    logging.info("CRM upload integration available")
+except ImportError:
+    CRM_UPLOAD_AVAILABLE = False
+    logging.info("CRM upload integration not available")
+
 DEFAULT_DIR = Path(__file__).parent / "conversations"
 DEFAULT_DIR.mkdir(exist_ok=True)
 DEFAULT_FILE = DEFAULT_DIR / "transcripts.jsonl"
@@ -16,6 +25,13 @@ _LOG_PATH_ENV = "FRIDAY_TRANSCRIPT_LOG"
 
 _log_path = Path(os.environ.get(_LOG_PATH_ENV, str(DEFAULT_FILE)))
 _log_path.parent.mkdir(parents=True, exist_ok=True)
+
+# CRM upload configuration
+CRM_AUTO_UPLOAD = os.getenv("CRM_AUTO_UPLOAD", "false").lower() == "true"
+CRM_CAMPAIGN_ID = os.getenv("CRM_CAMPAIGN_ID", "")
+CRM_VOICE_AGENT_ID = os.getenv("CRM_VOICE_AGENT_ID", "")
+CRM_CLIENT_ID = os.getenv("CRM_CLIENT_ID", "")
+CRM_DEFAULT_CALLER_PHONE = os.getenv("CRM_DEFAULT_CALLER_PHONE", "+919876543210")
 
 _q: "queue.Queue[dict | object]" = queue.Queue()
 _STOP = object()
@@ -257,6 +273,51 @@ def save_conversation_session(items: list, metadata: Optional[dict] = None) -> O
             json.dump(session_data, f, indent=2, ensure_ascii=False, default=str)
         
         logging.info(f"Conversation session saved to file: {session_file}")
+        
+        # Auto-upload to CRM if configured
+        if CRM_AUTO_UPLOAD and CRM_UPLOAD_AVAILABLE and all([CRM_CAMPAIGN_ID, CRM_VOICE_AGENT_ID, CRM_CLIENT_ID]):
+            try:
+                # Generate call ID from session
+                call_id = f"CALL-{datetime.utcnow().strftime('%Y%m%d-%H%M%S')}-{session_id[-8:]}"
+                
+                # Try to find associated lead data
+                lead_data = None
+                if session_data.get("lead_generated"):
+                    # Look for recent lead files
+                    leads_dir = Path(__file__).parent / "leads"
+                    if leads_dir.exists():
+                        lead_files = sorted(leads_dir.glob("lead_*.json"), key=lambda x: x.stat().st_mtime, reverse=True)
+                        if lead_files:
+                            try:
+                                with open(lead_files[0], 'r', encoding='utf-8') as f:
+                                    lead_data = json.load(f)
+                                logging.info(f"Found associated lead data: {lead_files[0]}")
+                            except Exception as e:
+                                logging.warning(f"Failed to load lead data: {e}")
+                
+                # Upload to CRM
+                success = upload_call_data_from_session(
+                    campaign_id=CRM_CAMPAIGN_ID,
+                    voice_agent_id=CRM_VOICE_AGENT_ID,
+                    client_id=CRM_CLIENT_ID,
+                    call_id=call_id,
+                    caller_phone=CRM_DEFAULT_CALLER_PHONE,
+                    direction="inbound",
+                    start_time=session_data.get("start_time"),
+                    end_time=session_data.get("end_time"),
+                    status="completed",
+                    transcript_data=session_data,
+                    lead_data=lead_data
+                )
+                
+                if success:
+                    logging.info(f"Successfully uploaded conversation session to CRM: {call_id}")
+                else:
+                    logging.error(f"Failed to upload conversation session to CRM: {call_id}")
+                    
+            except Exception as e:
+                logging.error(f"Error during CRM auto-upload: {e}")
+        
         return str(session_file)
         
     except Exception as e:

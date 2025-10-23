@@ -1,73 +1,78 @@
 # LiveKit Core Dependencies
-livekit-agents
-livekit-agents[openai,deepgram,cartesia,silero,turn_detector,google,sarvam,elevenlabs]~=1.0
-livekit-plugins-noise-cancellation
-livekit-api
-livekit
+livekit==1.0.12
+livekit-agents==1.2.14
+livekit-api==1.0.5
+livekit-plugins-noise-cancellation==0.2.5
+livekit-plugins-openai==1.2.14
+livekit-plugins-deepgram==1.2.14
+livekit-plugins-cartesia==1.2.14
+livekit-plugins-silero==1.2.14
+livekit-plugins-turn-detector==1.2.14
+livekit-plugins-google==1.2.14
+livekit-plugins-sarvam==1.2.14
+livekit-plugins-elevenlabs==1.2.14
 
 # AI & Language Processing
-mem0ai
-openai
-google-generativeai
-langchain
-langchain-community
-langchain-chroma
-langchain-google-genai
-langchain-text-splitters
-langchain-ollama
+mem0ai==0.1.116
+openai==2.3.0
+google-generativeai==0.8.5
+langchain==0.3.27
+langchain-community==0.3.28
+langchain-chroma==0.2.5
+langchain-google-genai==2.0.10
+langchain-text-splitters==0.3.9
+langchain-ollama==0.3.7
 
 # Web Framework & API
-Flask
-Flask-Cors
-gunicorn
-requests
-python-dotenv
+Flask==3.1.2
+flask-cors==6.0.1
+gunicorn==23.0.0
+requests==2.32.5
+python-dotenv==1.1.1
 
 # Search & Data Processing
-duckduckgo-search
-unstructured
+duckduckgo-search==8.1.1
+unstructured==0.18.14
 
 # Vector Database & Embeddings
-chromadb
-sentence-transformers
+chromadb==1.0.20
+sentence-transformers==5.1.0
 
 # Document Processing
-pypdf
-python-docx
-markdown
+pypdf==6.0.0
+python-docx==1.2.0
+Markdown==3.9
 
 # Google Services Integration
-gspread
-google-auth-oauthlib
-google-api-python-client
+gspread==6.2.1
+google-auth-oauthlib==1.2.2
+google-api-python-client==2.179.0
 
 # Audio Processing (for voice features)
-pydub
-soundfile
-librosa
-
-# SIP/Telephony Support
-pyaudio
-# webrtcvad - commented out due to Windows build issues, alternative: use speech_recognition or install via conda
-# Alternative: pip install webrtcvad-wheels (pre-compiled wheels)
+pydub==0.25.1
+soundfile==0.13.1
+librosa==0.11.0
+pyaudio==0.2.14
+# webrtcvad (optional) — install via: pip install webrtcvad-wheels
 
 # Production & Monitoring
-redis
-psutil
-schedule
+redis==6.4.0
+psutil==7.0.0
+schedule==1.2.2
 
 # API Rate Limiting & Retry Logic
-slowapi
-backoff
+slowapi==0.1.9
+backoff==2.2.1
 
 # Environment Management
-python-decouple
+python-decouple==3.8
 
 # Development & Testing
-pytest
-pytest-asyncio
+pytest==8.4.2
+pytest-asyncio==1.2.0
 
-# mongo-db
-pymongo
+# MongoDB
+pymongo==4.15.3
 
-pytz
+# Timezone Support
+pytz==2025.2

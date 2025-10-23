@@ -1,0 +1,15 @@
+{
+  "name": "Friday Individual Caller Rule",
+  "trunk_ids": ["ST_EmMmjttJHZHP"],
+  "rule": {
+    "dispatchRuleIndividual": {
+      "roomPrefix": "friday-call-"
+    }
+  },
+  "roomConfig": {
+    "agents": [{
+      "agentName": "friday-assistant",
+      "metadata": "individual caller session"
+    }]
+  }
+}

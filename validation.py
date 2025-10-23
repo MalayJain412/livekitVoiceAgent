@@ -7,6 +7,24 @@ import json
 from livekit import api
 from livekit.agents import get_job_context
 
+def load_test_config() -> Optional[Dict]:
+    """
+    Load test configuration from local file for testing validation logic.
+    Used when TEST_API_RESPONSE_FILE is set.
+    """
+    test_file = os.getenv("TEST_API_RESPONSE_FILE")
+    if test_file:
+        try:
+            logging.info(f"TEST MODE: Loading validation config from local file: {test_file}")
+            with open(test_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            logging.info(f"Successfully loaded test config from {test_file}")
+            return data
+        except Exception as e:
+            logging.error(f"Failed to load test config from {test_file}: {e}")
+            return None
+    return None
+
 def validate_campaign_schedule(schedule: Dict) -> bool:
     """
     Validate if current time is within the campaign schedule.
@@ -158,22 +176,3 @@ async def hangup_call():
         logging.info("Call hung up due to validation failure")
     except Exception as e:
         logging.error(f"Error hanging up call: {e}")
-
-
-def load_test_config() -> Optional[Dict]:
-    """
-    Load test configuration from local file for testing validation logic.
-    Used when TEST_API_RESPONSE_FILE is set.
-    """
-    test_file = os.getenv("TEST_API_RESPONSE_FILE")
-    if test_file:
-        try:
-            logging.info(f"TEST MODE: Loading validation config from local file: {test_file}")
-            with open(test_file, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            logging.info(f"Successfully loaded test config from {test_file}")
-            return data
-        except Exception as e:
-            logging.error(f"Failed to load test config from {test_file}: {e}")
-            return None
-    return None
