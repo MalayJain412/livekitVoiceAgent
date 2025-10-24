@@ -75,6 +75,9 @@ def load_persona_from_api(dialed_number: str, timeout: int = 5) -> Optional[Dict
     Used as fallback when job metadata is missing.
     
     For testing: If TEST_API_RESPONSE_FILE is set, loads from local file instead of API.
+    
+    Raises:
+        ValueError: If API returns "No campaigns found" message
     """
     if not dialed_number:
         return None
@@ -99,6 +102,11 @@ def load_persona_from_api(dialed_number: str, timeout: int = 5) -> Optional[Dict
         resp.raise_for_status()
         data = resp.json()
         
+        # Check for "No campaigns found" response and fail validation directly
+        if isinstance(data, dict) and data.get("message") == "No campaigns found":
+            logging.error(f"API returned 'No campaigns found' for {dialed_number} - failing validation")
+            raise ValueError(f"No campaigns found for number {dialed_number}")
+        
         # Extract persona from API response
         campaigns = data.get("campaigns") or []
         if not campaigns:
@@ -118,6 +126,9 @@ def load_persona_from_api(dialed_number: str, timeout: int = 5) -> Optional[Dict
         logging.info(f"Successfully loaded persona from API for {dialed_number}: {persona.get('name', 'unknown')}")
         return data  # Return full config for consistency with metadata format
         
+    except ValueError:
+        # Re-raise ValueError (our "No campaigns found" case) to fail validation
+        raise
     except Exception as e:
         logging.warning(f"Failed to load persona from API for {dialed_number}: {e}")
         return None
@@ -198,6 +209,10 @@ When the user indicates the conversation is over (e.g., by saying "goodbye," "th
             session_instructions = "Greet the user and ask how you can help them."
             logging.info("No welcome message found; using generic greeting for session instruction.")
 
+    except ValueError:
+        # Re-raise ValueError (our "No campaigns found" case) to fail validation
+        logging.error(f"Validation failed for {dialed_number}: No campaigns found")
+        raise
     except Exception as e:
         logging.error(f"Error loading persona from API for {dialed_number}: {e}", exc_info=True)
 
@@ -238,7 +253,12 @@ async def load_persona_with_fallback(ctx: JobContext) -> Tuple[str, Optional[str
     default_caller = os.getenv("DEFAULT_CALLER", "8655701143")
     logging.info(f"Loading persona from API using DEFAULT_CALLER: {default_caller}")
     
-    result = await load_persona_from_dialed_number(default_caller)
+    try:
+        result = await load_persona_from_dialed_number(default_caller)
+    except ValueError as e:
+        # API returned "No campaigns found" - fail validation directly
+        logging.error(f"Persona validation failed: {e}")
+        raise
     
     # Log the persona loading event
     try:
