@@ -2,83 +2,219 @@
   "speakers": [
     {
       "id": "2EiwWnXFnvU5JabPnv8n",
-      "name": "Clyde"
+      "name": "Clyde",
+      "accent": "american",
+      "gender": "male",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en"]
     },
     {
       "id": "CwhRBWXzGAHq8TQ4Fs17",
-      "name": "Roger"
+      "name": "Roger",
+      "accent": "american",
+      "gender": "male",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en", "fr", "de", "nl", "es"]
     },
     {
       "id": "EXAVITQu4vr4xnSDxMaL",
-      "name": "Sarah"
+      "name": "Sarah",
+      "accent": "american",
+      "gender": "female",
+      "age": "young",
+      "description": "No Description Label",
+      "supported_languages": ["en", "fr", "ar", "zh", "es", "hi"]
     },
     {
       "id": "FGY2WhTYpPnrIDTdsKH5",
-      "name": "Laura"
+      "name": "Laura",
+      "accent": "american",
+      "gender": "female",
+      "age": "young",
+      "description": "No Description Label",
+      "supported_languages": ["en", "fr", "ar", "zh", "de"]
     },
     {
       "id": "IKne3meq5aSn9XLyUdCD",
-      "name": "Charlie"
+      "name": "Charlie",
+      "accent": "australian",
+      "gender": "male",
+      "age": "young",
+      "description": "No Description Label",
+      "supported_languages": ["en", "zh", "pt", "fil", "es"]
     },
     {
       "id": "JBFqnCBsd6RMkjVDRZzb",
-      "name": "George"
+      "name": "George",
+      "accent": "british",
+      "gender": "male",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en", "fr", "ar", "ja", "cs", "fil", "es", "hi"]
     },
     {
       "id": "N2lVS1w4EtoT3dr4eOWO",
-      "name": "Callum"
+      "name": "Callum",
+      "accent": "",
+      "gender": "male",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en", "fr", "hi"]
     },
     {
       "id": "SAz9YHcvj6GT2YYXdXww",
-      "name": "River"
+      "name": "River",
+      "accent": "american",
+      "gender": "neutral",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en", "it", "fr", "pt", "zh"]
     },
     {
       "id": "SOYHLrjzK2X1ezoPC6cr",
-      "name": "Harry"
+      "name": "Harry",
+      "accent": "american",
+      "gender": "male",
+      "age": "young",
+      "description": "No Description Label",
+      "supported_languages": ["en"]
     },
     {
       "id": "TX3LPaxmHKxFdv7VOQHJ",
-      "name": "Liam"
+      "name": "Liam",
+      "accent": "american",
+      "gender": "male",
+      "age": "young",
+      "description": "No Description Label",
+      "supported_languages": ["en", "de", "pt", "cs", "pl", "tr", "hi"]
     },
     {
       "id": "Xb7hH8MSUJpSbSDYk0k2",
-      "name": "Alice"
+      "name": "Alice",
+      "accent": "british",
+      "gender": "female",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en", "it", "fr", "ar", "ja", "pl", "hi"]
     },
     {
       "id": "XrExE9yKIg1WjnnlVkGX",
-      "name": "Matilda"
+      "name": "Matilda",
+      "accent": "american",
+      "gender": "female",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en", "it", "fr", "de", "ar", "es"]
     },
     {
       "id": "bIHbv24MWmeRgasZH58o",
-      "name": "Will"
+      "name": "Will",
+      "accent": "american",
+      "gender": "male",
+      "age": "young",
+      "description": "No Description Label",
+      "supported_languages": ["en", "fr", "de", "pt", "zh", "cs", "fil", "sk", "es", "sv"]
     },
     {
       "id": "cgSgspJ2msm6clMCkdW9",
-      "name": "Jessica"
+      "name": "Jessica",
+      "accent": "american",
+      "gender": "female",
+      "age": "young",
+      "description": "No Description Label",
+      "supported_languages": ["en", "fr", "ar", "ja", "zh", "de", "cs", "hi"]
     },
     {
       "id": "cjVigY5qzO86Huf0OWal",
-      "name": "Eric"
+      "name": "Eric",
+      "accent": "american",
+      "gender": "male",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en", "fr", "pt", "de", "sk", "es"]
     },
     {
       "id": "iP95p4xoKVk53GoZ742B",
-      "name": "Chris"
+      "name": "Chris",
+      "accent": "american",
+      "gender": "male",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en", "fr", "ar", "pt", "sv", "hi"]
     },
     {
       "id": "nPczCjzI2devNBz1zQrb",
-      "name": "Brian"
+      "name": "Brian",
+      "accent": "american",
+      "gender": "male",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en", "ar", "zh", "pt", "de", "nl", "sk", "ro", "hi"]
     },
     {
       "id": "onwK4e9ZLuTAKqWW03F9",
-      "name": "Daniel"
+      "name": "Daniel",
+      "accent": "british",
+      "gender": "male",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en", "de", "tr"]
     },
     {
       "id": "pFZP5JQG7iQjIQuC4Bku",
-      "name": "Lily"
+      "name": "Lily",
+      "accent": "",
+      "gender": "female",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["en", "it", "de", "zh", "cs", "nl", "pl"]
     },
     {
       "id": "pqHfZKP75CvOlQylNhV4",
-      "name": "Bill"
+      "name": "Bill",
+      "accent": "american",
+      "gender": "male",
+      "age": "old",
+      "description": "No Description Label",
+      "supported_languages": ["en", "fr", "ar", "zh", "de", "cs"]
+    },
+    {
+      "id": "RILOU7YmBhvwJGDGjNmP",
+      "name": "Jane - Professional Audiobook Reader",
+      "accent": "british",
+      "gender": "female",
+      "age": "old",
+      "description": "No Description Label",
+      "supported_languages": ["fil", "hu", "tr", "cs", "zh", "ko", "hr", "ru", "el", "en", "fr", "pt", "sk", "sv", "pl", "uk", "it", "no"]
+    },
+    {
+      "id": "RXe6OFmxoC0nlSWpuCDy",
+      "name": "Anika - Soothing Customer Care Agent",
+      "accent": "standard",
+      "gender": "female",
+      "age": "young",
+      "description": "No Description Label",
+      "supported_languages": ["hu", "tr", "ru", "sk", "id", "ro", "hr", "pt", "da"]
+    },
+    {
+      "id": "m5qndnI7u4OAdXhH0Mr5",
+      "name": "Krishna - Energetic Hindi Voice",
+      "accent": "standard",
+      "gender": "male",
+      "age": "middle_aged",
+      "description": "No Description Label",
+      "supported_languages": ["pt", "es", "el", "hr", "fr", "ar", "fil", "tr", "hu", "ro", "nl", "ms", "ko", "id", "sk"]
+    },
+    {
+      "id": "qFwAIpwqlpqZbTYpttVi",
+      "name": "Swati-S",
+      "gender": "female",
+      "accent": "Indian",
+      "language": "Hindi",
+      "description": "A soft, romantic young female voice with a natural conversational style that feels warm, relatable, and emotionally engaging.",
+      "best_used_for": "Podcasts, voice bots, romantic content, emotional storytelling"
     }
   ]
 }
