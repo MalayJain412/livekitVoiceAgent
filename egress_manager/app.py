@@ -151,10 +151,47 @@ async def webhook(request: Request, x_signature: str = Header(None)):
             "stopped_at": None,
             "duration_sec": None,
             "status": "starting",
+            "tracks": []  # Array to hold individual track recordings
         }
         if recordings_col is not None:
             recordings_col.insert_one(doc)
         return {"status": "ok", "started": info}
+    
+    # track published - start individual track recording
+    if event_type == "track_published":
+        room = payload.get("room", {})
+        room_name = room.get("name") or room.get("sid")
+        participant = payload.get("participant", {})
+        identity = participant.get("identity") or participant.get("sid") or "unknown"
+        track = payload.get("track", {})
+        track_id = track.get("sid")
+        track_type = track.get("type")
+        participant_kind = participant.get("kind")
+        
+        # Only start TrackEgress for audio tracks from SIP participants
+        if track_type == "AUDIO" and participant_kind == "SIP":
+            try:
+                info = start_track_egress(room_name, track_id)
+                track_egress_id = info.get("egress_id")
+                
+                # Find the main recording document and add this track's info
+                # This links the raw track file to the main call record
+                if recordings_col is not None:
+                    recordings_col.update_one(
+                        {"room_name": room_name, "agent_identity": identity, "status": "starting"},
+                        {"$push": {"tracks": {
+                            "track_id": track_id,
+                            "egress_id": track_egress_id,
+                            "filepath": None,
+                            "status": "starting"
+                        }}}
+                    )
+                return {"status": "ok", "started_track_egress": info}
+            except Exception as e:
+                print(f"Error starting Track Egress for track {track_id}: {e}")
+                # Return 200 OK to prevent LiveKit from retrying the webhook
+                return {"status": "error", "message": str(e)}
+    
     if event_type == "egress_completed":
         info = payload.get("info", {})
         egress_id = info.get("egress_id") or payload.get("egress_id")
@@ -167,11 +204,25 @@ async def webhook(request: Request, x_signature: str = Header(None)):
                 filepath = out[0].get("filepath")
         except Exception:
             filepath = None
+        
         stopped_at = datetime.utcnow()
+        
         if recordings_col is not None:
-            recordings_col.update_one(
+            # First try to update as a main recording (ParticipantEgress)
+            updated = recordings_col.update_one(
                 {"egress_id": egress_id},
-                {"$set": {"status": "completed", "stopped_at": stopped_at, "filepath": filepath}},
+                {"$set": {"status": "completed", "stopped_at": stopped_at, "filepath": filepath}}
             )
+            
+            # If not found as a main egress, it must be a track egress (TrackEgress)
+            if updated.matched_count == 0:
+                recordings_col.update_one(
+                    {"tracks.egress_id": egress_id},
+                    {"$set": {
+                        "tracks.$.status": "completed",
+                        "tracks.$.filepath": filepath
+                    }}
+                )
+        
         return {"status": "ok"}
     return {"status": "ignored", "event": event_type}
