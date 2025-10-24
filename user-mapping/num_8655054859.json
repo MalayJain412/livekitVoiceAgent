@@ -48,12 +48,12 @@
           "status": "busy",
           "voiceDetails": {
             "id": "68f8853ed07d3e6422a578e0",
-            "name": "Aarti",
+            "name": "Shimmer",
             "gender": "female",
             "language": "हिन्दी",
             "accent": "Indian",
             "age": "adult",
-            "voiceModel": "Cartesia",
+            "voiceModel": "OpenAi",
             "quality": "premium_ultrarealistic"
           },
           "persona": {

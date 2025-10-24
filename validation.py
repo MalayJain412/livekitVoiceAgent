@@ -41,9 +41,16 @@ def validate_campaign_schedule(schedule: Dict) -> bool:
         bool: True if within schedule, False otherwise
     """
     try:
-        timezone = pytz.timezone(schedule.get("timeZone", "UTC"))
-        if timezone is "IST":
-            timezone = "Asia/Kolkata"
+        # 1. Get the timezone *string* from the API first
+        tz_string = schedule.get("timeZone", "UTC") 
+        
+        # 2. Check and correct the string *before* giving it to pytz
+        #    Also use '==' for string comparison, not 'is'
+        if tz_string == "IST":
+            tz_string = "Asia/Kolkata"
+        
+        # 3. Now, safely create the timezone object
+        timezone = pytz.timezone(tz_string)
         now = datetime.now(timezone)
 
         # Check date range
