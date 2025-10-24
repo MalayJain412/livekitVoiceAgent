@@ -66,8 +66,14 @@ def find_voice_id(provider, name, all_voices):
         key_map = {"sarvam": "speakers", "openai": "openai_voices"}
         voice_list_key = key_map[provider_key]
         for voice in voices_data.get(voice_list_key, []):
-            if voice.get("name") == name:
-                return name # Return the name as it's the identifier
+            # Case-insensitive comparison for Sarvam
+            if voice.get("name", "").lower() == name.lower():
+                return voice.get("name") # Return the correct case from our data
+    
+    # Special fallback for Sarvam - if voice not found, use a default
+    if provider_key == "sarvam":
+        print(f"Warning: Voice '{name}' not found for Sarvam. Falling back to 'anushka'.")
+        return "anushka"  # Safe fallback that exists in Sarvam
     
     print(f"Warning: Voice '{name}' not found for provider '{provider}'. Using name as fallback.")
     return name # Fallback if no ID is found
@@ -79,10 +85,12 @@ def extract_voice_details(payload):
     """
     try:
         # Navigate through the nested structure
-        details = payload["campaigns"][0]["voiceAgents"][0]["voiceDetails"]
-        provider = details.get("voiceModel")
-        voice_name = details.get("name")
-        language_code = details.get("language", "en").lower() # Default to 'en'
+        voice_details = payload["campaigns"][0]["voiceAgents"][0]["voiceDetails"]
+        provider = voice_details.get("voiceModel")
+        voice_name = voice_details.get("name")
+        language_code = voice_details.get("language", "en").lower() # Default to 'en'
+        
+        print(f"Extracted voice details: provider={provider}, name={voice_name}, language={language_code}")
         
         # Simple language code mapping
         lang_map = {
@@ -92,9 +100,9 @@ def extract_voice_details(payload):
 
         if provider and voice_name:
             return provider, voice_name, language
-    except (KeyError, IndexError, TypeError):
+    except (KeyError, IndexError, TypeError) as e:
         # Handle cases where keys are missing or payload isn't a list/dict
-        print("Error: Could not extract voice details from payload.")
+        print(f"Error: Could not extract voice details from payload: {e}")
     return None, None, None
 
 
@@ -155,9 +163,12 @@ def get_tts_instance(provider, voice_identifier, language):
             model="eleven_multilingual_v2"
         )
     elif provider_lower == "sarvam":
+        # Ensure the voice name is lowercase as Sarvam expects
+        speaker_name = voice_identifier.lower()
+        print(f"Using Sarvam speaker: {speaker_name}")
         return sarvam.TTS(
             target_language_code=f"{language}-IN",
-            speaker=voice_identifier, # Sarvam uses the name
+            speaker=speaker_name, # Sarvam uses lowercase names
             pace=0.8
         )
     elif provider_lower == "openai":
@@ -191,7 +202,13 @@ def get_instances_from_payload(payload):
     if tts_provider and tts_voice_name and all_voices:
         # Find the specific voice ID or name required by the SDK
         voice_identifier = find_voice_id(tts_provider, tts_voice_name, all_voices)
-        tts_instance = get_tts_instance(tts_provider, voice_identifier, tts_language)
+        try:
+            tts_instance = get_tts_instance(tts_provider, voice_identifier, tts_language)
+        except Exception as e:
+            print(f"Error creating TTS instance for {tts_provider} with voice {tts_voice_name}: {e}")
+            print("Falling back to default TTS configuration.")
+            # Fallback to a reliable default
+            tts_instance = get_tts_instance("cartesia", "faf0731e-dfb9-4cfc-8119-259a79b27e12", "hi")
     else:
         # Fallback to a default if payload is invalid or voice data is missing
         print("Falling back to default TTS configuration.")

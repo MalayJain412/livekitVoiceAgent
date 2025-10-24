@@ -182,6 +182,11 @@ You must use the following information to answer user questions. Do not use outs
 If the conversation requires it, you can ask for the following data fields for lead generation. Only ask for what is necessary.
 - Required: name, email, phone number.
 - Optional: organization name, position.
+
+
+**Ending the Conversation:**
+When the user indicates the conversation is over (e.g., by saying "goodbye," "thank you for your time," "hang up," etc.) or when you have fulfilled their request and there is nothing else to discuss, you MUST use the `end_call` tool to terminate the conversation. Do not say goodbye yourself; the system will handle the closing message after you call the tool.
+
 """
         logging.info("Agent instructions built successfully.")
 

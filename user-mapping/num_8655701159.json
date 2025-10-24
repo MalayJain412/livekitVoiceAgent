@@ -41,18 +41,18 @@
             },
             "voiceAgents": [
                 {
-                    "id": "68c9105cfde0aa95caa3db64",
+                    "id": "voice_202",
                     "name": "piperbot",
                     "type": "sales",
                     "status": "busy",
                     "voiceDetails": {
                         "id": "68f88672d07d3e6422a57955",
-                        "name": "Arushi",
+                        "name": "Lily",
                         "gender": "female",
                         "language": "ENGLISH",
                         "accent": "Indian",
                         "age": "adult",
-                        "voiceModel": "Cartesia",
+                        "voiceModel": "ElevenLabs",
                         "quality": "Premium+UltraRealistic"
                     },
                     "persona": {

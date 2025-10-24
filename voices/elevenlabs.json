@@ -1,184 +1,84 @@
 {
   "speakers": [
     {
-      "id": "k2intd1ORm0YUH8etnXg",
-      "name": "Zara – Sweet & Friendly Companion",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "A light, cheerful voice that feels like a genuine friend by your side.",
-      "best_used_for": "Conversational AI, friendly interactions, companion apps"
+      "id": "2EiwWnXFnvU5JabPnv8n",
+      "name": "Clyde"
     },
     {
-      "id": "ni6cdqyS9wBvic5LPA7M",
-      "name": "Tara - Expressive Conversational Hindi Voice",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "Tara's English voice has already generated millions of characters. She is a professional actress with extensive acting experience and great potential ahead. You'll hear all those emotions in her voice. Give it a try, and I'm sure you'll love her Hindi voice too.",
-      "best_used_for": "Conversational bots, emotional storytelling, voice assistants"
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger"
     },
     {
-      "id": "n8agU3KLt1Yttvrx1mYA",
-      "name": "Nara – Tier 2 & 3 Native Indian Girl Tone for Localised Bots",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "Nara has the warm, unfiltered tone of a typical Tier 2 & Tier 3 Indian girl — casual, simple, and effortlessly real.",
-      "best_used_for": "Localised bots, regional content, authentic Indian conversations"
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah"
     },
     {
-      "id": "FZDpfsjLp5bRzmlwdm0P",
-      "name": "Pratima - Casual Hindi Conversational Voice",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "Pratima is the pen name of a passionate actress. Her voice has been recorded in a very natural, conversational style, making it perfect for all use cases where a raw, authentic voice is needed. Give it a try, and you'll find her voice to be highly relatable.",
-      "best_used_for": "Casual conversations, relatable content, natural interactions"
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura"
     },
     {
-      "id": "LWFgMHXb8m0uANBUpzlq",
-      "name": "Saavi - Recovery & Payment Reminder Voice Agent Banks, NBFCs & Lending Firms",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "A clear, firm, and polite female voice designed for recovery, payment reminders, and follow-ups.",
-      "best_used_for": "Financial services, payment reminders, banking communications"
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie"
     },
     {
-      "id": "voices-item-EXTRACTED_ID_6",
-      "name": "Gargi - Girl Next Door",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "Gargi has a raw voice that feels less like AI and more like the girl next door. Her authenticity brings a relatable charm, making every interaction personal and warm. Whether narrating stories or voicing customer support, her tone feels natural and engaging. From educational content to podcasts and interactive assistants, Gargi's voice adds familiarity and trust.",
-      "best_used_for": "Customer support, storytelling, educational content, podcasts"
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George"
     },
     {
-      "id": "1zUSi8LeHs9M2mV8X6YS",
-      "name": "Priyanka Sogam – Romantic, Polished & Calm",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "A soft, velvety voice dipped in elegance — warm, slow-paced, and effortlessly alluring.",
-      "best_used_for": "Romantic content, polished presentations, calming experiences"
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum"
     },
     {
-      "id": "RXe6OFmxoC0nlSWpuCDy",
-      "name": "Anika - Soothing Customer Care Agent",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "Anika is a calm, empathetic, and listener-first voice, specially crafted for customer service experiences.",
-      "best_used_for": "Customer care, empathetic interactions, support services"
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River"
     },
     {
-      "id": "1Z7Y8o9cvUeWq8oLKgMY",
-      "name": "Customer Care Tripti – Calm, Experienced Voice for Hindi AI Bots & Agents",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "A composed and reassuring Hindi voice built for AI-driven customer support, IVRs, and virtual agents.",
-      "best_used_for": "AI customer support, IVR systems, virtual agents"
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry"
     },
     {
-      "id": "gHu9GtaHOXcSqFTK06ux",
-      "name": "Anjali - Soothing Hindi Voice",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "Anjali's soothing voice is perfect for creating calming and engaging content. You can use it for audiobooks, podcasts, meditation apps, or any project that needs a friendly and reassuring tone.",
-      "best_used_for": "Audiobooks, podcasts, meditation, calming content"
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam"
     },
     {
-      "id": "aqt45iIXdF98ngoDdgAp",
-      "name": "Uma - Blunt Conversational Voice for Real Talk, Reels & Sarcasm",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "Uma delivers a bold, sarcastic, and brutally honest tone.",
-      "best_used_for": "Real talk, reels, sarcastic content, authentic conversations"
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice"
     },
     {
-      "id": "TRnaQb7q41oL7sV0w6Bu",
-      "name": "Simran – Bright, Fun, and Friendly BFF Voice for Gen Z Gossip",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "A bubbly, expressive voice that sounds just like your favorite friend spilling tea over texts.",
-      "best_used_for": "Gen Z content, gossip, friendly conversations, social media"
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda"
     },
     {
-      "id": "DFOZQw3ulRFmiWJtMY5d",
-      "name": "Roopa – Clear & Natural Female Customer Care Agent",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "Roopa's voice is naturally modulated, clear, & emotionally aware—crafted specifically for customer support, IVR flows, & human-sounding bots. Her tone effortlessly balances professionalism with relatability, making her ideal for BFSI, e-commerce, logistics, & edtech sectors.",
-      "best_used_for": "Customer support, IVR, BFSI, e-commerce, logistics, edtech"
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will"
     },
     {
-      "id": "Ms9OTvWb99V6DwRHZn6q",
-      "name": "Monika Sogam - Friendly Customer Care Agent",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "A warm and approachable voice designed for exceptional customer service.",
-      "best_used_for": "Customer service, friendly interactions, support"
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica"
     },
     {
-      "id": "qFwAIpwqlpqZbTYpttVi",
-      "name": "Swati S – Young Romantic Female Voice for Podcasts & Voice bots",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "A soft, romantic young female voice with a natural conversational style that feels warm, relatable, and emotionally engaging.",
-      "best_used_for": "Podcasts, voice bots, romantic content, emotional storytelling"
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric"
     },
     {
-      "id": "iheWwe31xAeFtzyqH38i",
-      "name": "Riya Rao - Hindi Conversational Voice",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "Riya is the pen name of one of the most professional voice-over artists you will ever hear on ElevenLabs. Her voice has already been a part of major conversational bots in the past. Use it for all your professional and conversational needs, such as social media, documentaries, audiobooks, corporate videos, and so on.",
-      "best_used_for": "Professional content, conversational bots, social media, documentaries, audiobooks, corporate videos"
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris"
     },
     {
-      "id": "ryIIztHPLYSJ74ueXxnO",
-      "name": "Sia – Casual & Comforting Girl Voice for AI Chatbots & Apps",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "A friendly, comforting voice designed for relaxed chats and emotionally aware AI interactions.",
-      "best_used_for": "AI chatbots, casual conversations, comforting interactions"
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian"
     },
     {
-      "id": "hGb0Exk8cp4vQEnwolxa",
-      "name": "Ayesha - Energetic Hindi Voice",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",  
-      "description": "Ayesha is the pen name of a very famous and talented voice over artist and singer. Her voice is well-suited for conversational-style ads, podcasts, narrations, e-learning, engaging content, etc. Do give it a try and you will love it.",
-      "best_used_for": "Ads, podcasts, narrations, e-learning, engaging content"
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel"
     },
     {
-      "id": "ALCIIw5qAlLDox8iBl0U",
-      "name": "Alisha - Soft-Spoken Young female for Customer Care",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "Alisha's gentle, warm voice is ideal for empathetic and friendly customer interactions in Hindi.",
-      "best_used_for": "Customer care, empathetic interactions, friendly support"
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily"
     },
     {
-      "id": "s6cZdgI3j07hf4frz4Q8",
-      "name": "Arvi – Desi Conversational Voice",
-      "gender": "female",
-      "accent": "Indian",
-      "language": "Hindi",
-      "description": "A lively and authentic Hindi voice designed for casual, everyday conversations with a distinct desi touch.",
-      "best_used_for": "Casual conversations, desi content, authentic Indian interactions"
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill"
     }
   ]
 }
