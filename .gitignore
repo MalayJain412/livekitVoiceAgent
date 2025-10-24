@@ -39,5 +39,3 @@ python_files/
 tests/
 
 sip/
-voices/elevenlabs.py
-voices/openai_voices.py
