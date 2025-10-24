@@ -191,8 +191,9 @@ def get_log_path() -> str:
 
 def set_session_id(session_id: str) -> None:
     """Set the current session ID for transcript logging"""
-    global _current_session_id
+    global _current_session_id, _session_saved
     _current_session_id = session_id
+    _session_saved = False  # Reset save state for new session
     logging.info(f"Transcript logging session ID set to: {session_id}")
 
 def get_session_id() -> Optional[str]:
@@ -205,8 +206,18 @@ def generate_session_id() -> str:
     set_session_id(session_id)
     return session_id
 
+# Global flag to track if session has already been saved
+_session_saved = False
+
 def save_conversation_session(items: list, metadata: Optional[dict] = None) -> Optional[str]:
     """Save complete conversation session to MongoDB and/or file"""
+    global _session_saved
+    
+    # Prevent duplicate saves for the same session
+    if _session_saved:
+        logging.info(f"Session already saved for {_current_session_id}, skipping duplicate save")
+        return None
+    
     if not items:
         # If no items were provided, try to pull events from MongoDB transcript_events
         if MONGODB_AVAILABLE:
@@ -255,16 +266,24 @@ def save_conversation_session(items: list, metadata: Optional[dict] = None) -> O
         "metadata": metadata or {}
     }
     
-    # Try MongoDB first
+    # Try MongoDB first (handle duplicates gracefully)
+    mongo_id = None
     if MONGODB_AVAILABLE:
         try:
             mongo_id = ConversationDB.create_session(session_data)
             if mongo_id:
-                logging.info(f"Conversation session saved to MongoDB: {mongo_id}")
+                logging.info(f"Session created with ID: {mongo_id}")
         except Exception as e:
-            logging.error(f"Failed to save session to MongoDB: {e}")
+            # Handle duplicate key error gracefully
+            if "duplicate key error" in str(e).lower():
+                logging.info(f"Session {session_id} already exists in MongoDB, skipping duplicate save")
+                _session_saved = True  # Mark as saved to prevent further attempts
+                return None
+            else:
+                logging.error(f"Error creating conversation session: {e}")
     
-    # Always save to file as backup
+    # Save to file as backup (only if not already saved)
+    session_file = None
     try:
         timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S.%f")
         session_file = DEFAULT_DIR / f"transcript_session_{timestamp}.json"
@@ -273,6 +292,9 @@ def save_conversation_session(items: list, metadata: Optional[dict] = None) -> O
             json.dump(session_data, f, indent=2, ensure_ascii=False, default=str)
         
         logging.info(f"Conversation session saved to file: {session_file}")
+        
+        # Mark session as saved to prevent duplicates
+        _session_saved = True
         
         # Auto-upload to CRM if configured
         if CRM_AUTO_UPLOAD and CRM_UPLOAD_AVAILABLE and all([CRM_CAMPAIGN_ID, CRM_VOICE_AGENT_ID, CRM_CLIENT_ID]):

@@ -138,8 +138,11 @@ def get_stt_instance(provider="deepgram"): # Added default for simplicity
         )
     elif provider == "deepgram":
         return deepgram.STT(
-            model="nova-2", 
-            language="multi"
+            model="nova-3-general",  # Use stable nova-3 model
+            language="multi",  # Multi-language support for Hindi-English
+            smart_format=True,  # Enable smart formatting for better readability
+            punctuate=True,  # Enable punctuation
+            interim_results=True  # Enable interim results for better UX
         )
     else:
         raise ValueError(f"Unsupported STT provider: {provider}")
@@ -183,7 +186,9 @@ def get_tts_instance(provider, voice_identifier, language):
 
 
 def get_vad_instance():
-    """Get Voice Activity Detection instance"""
+    """Get Voice Activity Detection instance - using basic silero for local setup"""
+    # Note: For local LiveKit setup, advanced VAD features may not be available
+    # Using basic silero configuration without cloud-specific features
     return silero.VAD.load()
 
 

@@ -47,12 +47,12 @@
                     "status": "busy",
                     "voiceDetails": {
                         "id": "68f88672d07d3e6422a57955",
-                        "name": "Lily",
+                        "name": "Arushi",
                         "gender": "female",
                         "language": "ENGLISH",
                         "accent": "Indian",
                         "age": "adult",
-                        "voiceModel": "ElevenLabs",
+                        "voiceModel": "Cartesia",
                         "quality": "Premium+UltraRealistic"
                     },
                     "persona": {

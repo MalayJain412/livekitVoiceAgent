@@ -79,10 +79,10 @@ class SessionManager:
             pass
     
     async def setup_shutdown_callback(self):
-        """Setup shutdown callback to save final session history"""
+        """Setup shutdown callback to save final session history - SIMPLIFIED VERSION"""
         async def _save_history_on_shutdown():
             try:
-                # session.history may expose toJSON/to_json; try several options
+                # Extract session history
                 try:
                     payload = self.session.history.toJSON()
                 except Exception:
@@ -94,6 +94,7 @@ class SessionManager:
                         except Exception:
                             payload = str(self.session.history)
 
+                # Save raw transcript (first file)
                 timestamp = datetime.utcnow().isoformat().replace(":", "-")
                 room_name = getattr(self.session, "room", None)
                 room_name = getattr(room_name, "name", "session") if room_name else "session"
@@ -102,29 +103,8 @@ class SessionManager:
                     json.dump(payload, f, ensure_ascii=False, indent=2)
                 print(f"Transcript saved to {fname}")
                 
-                # Attempt to extract items list and persist full conversation session
-                try:
-                    items = None
-                    if isinstance(payload, dict):
-                        items = payload.get("items")
-                    elif isinstance(payload, str):
-                        try:
-                            parsed = json.loads(payload)
-                            if isinstance(parsed, dict):
-                                items = parsed.get("items")
-                        except Exception:
-                            items = None
-
-                    if items:
-                        try:
-                            meta = {"room": getattr(self.session.room, "name", None)} if getattr(self.session, "room", None) else {}
-                            saved = save_conversation_session(items, metadata=meta)
-                            if saved:
-                                logging.info(f"Conversation session saved: {saved}")
-                        except Exception as e:
-                            logging.error(f"Failed to save conversation session: {e}")
-                except Exception:
-                    pass
+                # Note: Do NOT call save_conversation_session here as flush_and_stop() will handle it
+                
             except Exception as e:
                 # fallback: log an event indicating save failed
                 log_event({
@@ -134,7 +114,7 @@ class SessionManager:
                     "timestamp": datetime.utcnow().isoformat() + "Z",
                 })
             finally:
-                # flush logger thread
+                # flush logger thread (this will trigger final save_conversation_session)
                 try:
                     flush_and_stop()
                 except Exception:
