@@ -42,7 +42,8 @@ def validate_campaign_schedule(schedule: Dict) -> bool:
     """
     try:
         timezone = pytz.timezone(schedule.get("timeZone", "UTC"))
-        # timezone = "Asia/Kolkata"
+        if timezone is "IST":
+            timezone = "Asia/Kolkata"
         now = datetime.now(timezone)
 
         # Check date range
