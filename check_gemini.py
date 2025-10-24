@@ -4,7 +4,7 @@ import json
 
 # Configuration — change as needed
 # API_KEY = os.getenv("GEMINI_API_KEY", "your_api_key_here")
-API_KEY = "AIzaSyAeGYOH50k-ErRaisS60dyIIpqPpgatgwE"
+API_KEY = ""
 MODEL = "gemini-2.5-flash"  # or whichever model you intend to use
 BASE_URL = "https://generativelanguage.googleapis.com/v1beta"  # or correct endpoint
 # E.g. URL for “generateContent” for Gemini

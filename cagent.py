@@ -9,9 +9,15 @@ load_dotenv()  # Load environment variables early
 from livekit import agents
 from livekit.agents import AgentSession, Agent, RoomInputOptions, RoomOutputOptions, JobContext
 from livekit.plugins import google, cartesia, deepgram, noise_cancellation, silero
-
 from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
-from tools import get_weather, search_web, triotech_info, create_lead, detect_lead_intent, HangupTool
+from tools import (
+    # get_weather, 
+    # search_web, 
+    # triotech_info,
+    create_lead, 
+    detect_lead_intent, 
+    HangupTool
+)
 import config
 from instances import get_instances_from_payload
 from persona_handler import (
@@ -23,7 +29,6 @@ from persona_handler import (
 from session_manager import SessionManager
 from validation import validate_agent_availability, hangup_call
 
-# load_dotenv()  # Moved to top of file
 # Centralized logging config
 try:
     configure_logging()
@@ -38,7 +43,13 @@ class Assistant(Agent):
 
         super().__init__(
             instructions=instructions,
-            tools=[get_weather, search_web, triotech_info, create_lead, detect_lead_intent, end_call_tool],
+            tools=[
+                # get_weather, 
+                # search_web, 
+                # triotech_info, 
+                create_lead, 
+                detect_lead_intent, 
+                end_call_tool],
         )
     
     # Capture realtime transcriptions via transcription_node (called by AgentSession)

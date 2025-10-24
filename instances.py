@@ -15,6 +15,10 @@ from config import (
     AZURE_OPENAI_STT_API_KEY, 
     AZURE_OPENAI_STT_ENDPOINT,
     AZURE_OPENAI_STT_API_VERSION,
+    AZURE_OPENAI_TTS_API_KEY,
+    AZURE_OPENAI_TTS_ENDPOINT,
+    AZURE_OPENAI_TTS_API_VERSION,
+    AZURE_OPENAI_TTS_DEPLOYMENT,
     CARTESIA_API_KEY,
     LLM_MODEL,
     DEEPGRAM_API_KEY
@@ -59,11 +63,12 @@ def find_voice_id(provider, name, all_voices):
             # Check if the simple name (e.g., "Priyanka") is at the start of the full name
             if speaker.get("name", "").startswith(name):
                 return speaker.get("id")
-    # For Sarvam and OpenAI, the name is the identifier
-    elif provider_key in ["sarvam", "openai"]:
+    # For Sarvam and OpenAI (which is actually Azure OpenAI), the name is the identifier
+    elif provider_key in ["sarvam", "openai", "azure"]:
         # These providers use the name directly, so we just return it.
         # This check confirms the name exists in our list.
-        key_map = {"sarvam": "speakers", "openai": "openai_voices"}
+        # Note: "openai" refers to Azure OpenAI in our system
+        key_map = {"sarvam": "speakers", "openai": "openai_voices", "azure": "openai_voices"}
         voice_list_key = key_map[provider_key]
         for voice in voices_data.get(voice_list_key, []):
             # Case-insensitive comparison for Sarvam
@@ -149,7 +154,10 @@ def get_stt_instance(provider="deepgram"): # Added default for simplicity
 
 # MODIFIED get_tts_instance to be fully dynamic
 def get_tts_instance(provider, voice_identifier, language):
-    """Get TTS instance based on provider, voice ID/name, and language."""
+    """
+    Get TTS instance based on provider, voice ID/name, and language.
+    Note: 'openai' provider refers to Azure OpenAI, not standard OpenAI
+    """
     provider_lower = provider.lower()
     print(f"Configuring TTS for provider: {provider_lower}, voice: {voice_identifier}, lang: {language}")
 
@@ -174,12 +182,16 @@ def get_tts_instance(provider, voice_identifier, language):
             speaker=speaker_name, # Sarvam uses lowercase names
             pace=0.8
         )
-    elif provider_lower == "openai":
-        # Assuming you will add openai.TTS plugin
-        # This is a placeholder for how it would work
-        return openai.TTS(
-             model="tts-1",
-             voice=voice_identifier.lower() # OpenAI uses lowercase names like 'alloy', 'echo'
+    elif provider_lower in ["openai", "azure"]:
+        # When users specify "openai", they mean Azure OpenAI (not standard OpenAI)
+        # Azure OpenAI TTS using the unified realtime resource
+        return openai.TTS.with_azure(
+            model="tts-1",  # TTS model for Azure OpenAI
+            voice=voice_identifier.lower(),
+            azure_endpoint=AZURE_OPENAI_TTS_ENDPOINT,
+            api_key=AZURE_OPENAI_TTS_API_KEY,
+            azure_deployment=AZURE_OPENAI_TTS_DEPLOYMENT,
+            api_version=AZURE_OPENAI_TTS_API_VERSION
         )
     else:
         raise ValueError(f"Unsupported TTS provider: {provider}")
@@ -220,9 +232,9 @@ def get_instances_from_payload(payload):
         tts_instance = get_tts_instance("cartesia", "faf0731e-dfb9-4cfc-8119-259a79b27e12", "hi")
 
     return {
-        "llm": get_llm_instance("google"),   # Kept static for now
-        "stt": get_stt_instance("deepgram"), # Kept static for now
-        "tts": tts_instance,                 # Dynamically configured
+        "llm": get_llm_instance("azure"),     # Use Azure OpenAI for LLM
+        "stt": get_stt_instance("deepgram"),     # Use Deepgram for STT  
+        "tts": tts_instance,                  # Dynamically configured
         "vad": get_vad_instance()
     }
 

@@ -85,211 +85,211 @@ rag_chain = None
 # Flag to indicate if RAG (retrieval-augmented generation) dependencies are available
 RAG_AVAILABLE = False
 
-def _load_triotech_data():
-    """Load Triotech knowledge base data."""
-    try:
-        with open(TRIOTECH_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception as e:
-        logging.error(f"Error loading Triotech data: {e}")
-        return {"products": [], "faqs": [], "differentiators": []}
+# def _load_triotech_data():
+#     """Load Triotech knowledge base data."""
+#     try:
+#         with open(TRIOTECH_FILE, "r", encoding="utf-8") as f:
+#             return json.load(f)
+#     except Exception as e:
+#         logging.error(f"Error loading Triotech data: {e}")
+#         return {"products": [], "faqs": [], "differentiators": []}
 
-def _initialize_rag_system():
-    """Initialize the RAG system for detailed queries"""
-    global rag_chain
+# def _initialize_rag_system():
+#     """Initialize the RAG system for detailed queries"""
+#     global rag_chain
     
-    if not RAG_AVAILABLE:
-        logging.warning("RAG system not available - missing dependencies")
-        return False
+#     if not RAG_AVAILABLE:
+#         logging.warning("RAG system not available - missing dependencies")
+#         return False
         
-    if rag_chain is not None:
-        return True  # Already initialized
+#     if rag_chain is not None:
+#         return True  # Already initialized
         
-    try:
-        # Check if RAG database exists
-        if not os.path.exists(RAG_DB_PATH):
-            logging.warning(f"RAG database not found at {RAG_DB_PATH}")
-            return False
+#     try:
+#         # Check if RAG database exists
+#         if not os.path.exists(RAG_DB_PATH):
+#             logging.warning(f"RAG database not found at {RAG_DB_PATH}")
+#             return False
             
-        # Get Google API key
-        google_api_key = os.getenv("GOOGLE_API_KEY")
-        if not google_api_key:
-            logging.warning("GOOGLE_API_KEY not found for RAG system")
-            return False
+#         # Get Google API key
+#         google_api_key = os.getenv("GOOGLE_API_KEY")
+#         if not google_api_key:
+#             logging.warning("GOOGLE_API_KEY not found for RAG system")
+#             return False
             
-        # Initialize components
-        llm = ChatGoogleGenerativeAI(
-            model="gemini-1.5-flash",
-            google_api_key=google_api_key,
-            temperature=0.3
-        )
+#         # Initialize components
+#         llm = ChatGoogleGenerativeAI(
+#             model="gemini-1.5-flash",
+#             google_api_key=google_api_key,
+#             temperature=0.3
+#         )
         
-        embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+#         embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         
-        vectorstore = Chroma(
-            persist_directory=RAG_DB_PATH,
-            embedding_function=embeddings
-        )
+#         vectorstore = Chroma(
+#             persist_directory=RAG_DB_PATH,
+#             embedding_function=embeddings
+#         )
         
-        retriever = vectorstore.as_retriever(
-            search_type="mmr",
-            search_kwargs={"k": 4, "fetch_k": 8}
-        )
+#         retriever = vectorstore.as_retriever(
+#             search_type="mmr",
+#             search_kwargs={"k": 4, "fetch_k": 8}
+#         )
         
-        # Triotech-specific prompt
-        system_prompt = """You are a Triotech sales assistant with access to detailed product documentation.
+#         # Triotech-specific prompt
+#         system_prompt = """You are a Triotech sales assistant with access to detailed product documentation.
         
-Guidelines:
-1. Answer questions about Triotech products, features, and services using the provided context.
-2. Be specific and detailed when explaining product capabilities.
-3. If the context contains relevant information, provide comprehensive answers.
-4. Always respond in Hindi unless the user explicitly asks in English.
-5. Focus on business benefits and use cases.
-6. If information is incomplete, mention what details are available.
+# Guidelines:
+# 1. Answer questions about Triotech products, features, and services using the provided context.
+# 2. Be specific and detailed when explaining product capabilities.
+# 3. If the context contains relevant information, provide comprehensive answers.
+# 4. Always respond in Hindi unless the user explicitly asks in English.
+# 5. Focus on business benefits and use cases.
+# 6. If information is incomplete, mention what details are available.
 
-Context: {context}"""
+# Context: {context}"""
 
-        qa_prompt = ChatPromptTemplate.from_messages([
-            ("system", system_prompt),
-            ("human", "{input}")
-        ])
+#         qa_prompt = ChatPromptTemplate.from_messages([
+#             ("system", system_prompt),
+#             ("human", "{input}")
+#         ])
         
-        question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
-        rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+#         question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
+#         rag_chain = create_retrieval_chain(retriever, question_answer_chain)
         
-        logging.info("RAG system initialized successfully")
-        return True
+#         logging.info("RAG system initialized successfully")
+#         return True
         
-    except Exception as e:
-        logging.error(f"Error initializing RAG system: {e}")
-        return False
+#     except Exception as e:
+#         logging.error(f"Error initializing RAG system: {e}")
+#         return False
 
-def _query_rag_system(query: str) -> str:
-    """Query the RAG system for detailed information"""
-    global rag_chain
+# def _query_rag_system(query: str) -> str:
+#     """Query the RAG system for detailed information"""
+#     global rag_chain
     
-    if not _initialize_rag_system():
-        return None
+#     if not _initialize_rag_system():
+#         return None
         
-    try:
-        response = rag_chain.invoke({"input": query})
-        answer = response.get("answer", "").strip()
+#     try:
+#         response = rag_chain.invoke({"input": query})
+#         answer = response.get("answer", "").strip()
         
-        if answer and len(answer) > 50:  # Valid detailed response
-            return answer
-        else:
-            return None
+#         if answer and len(answer) > 50:  # Valid detailed response
+#             return answer
+#         else:
+#             return None
             
-    except Exception as e:
-        logging.error(f"Error querying RAG system: {e}")
-        return None
+#     except Exception as e:
+#         logging.error(f"Error querying RAG system: {e}")
+#         return None
 
-@function_tool()
-async def get_weather(city: str) -> str:
-    """Get the current weather for a given city"""
-    try:
-        response = requests.get(f"https://wttr.in/{city}?format=3")
-        if response.status_code == 200:
-            logging.info(f"Weather for {city}: {response.text.strip()}")
-            return response.text.strip()
-        else:
-            logging.error(f"Failed to get weather for {city}: {response.status_code}")
-            return f"Failed to get weather for {city}: {response.status_code}"
-    except Exception as e:
-        logging.error(f"Error getting weather for {city}: {e}")
-        return f"Error getting weather for {city}: {e}"
+# @function_tool()
+# async def get_weather(city: str) -> str:
+#     """Get the current weather for a given city"""
+#     try:
+#         response = requests.get(f"https://wttr.in/{city}?format=3")
+#         if response.status_code == 200:
+#             logging.info(f"Weather for {city}: {response.text.strip()}")
+#             return response.text.strip()
+#         else:
+#             logging.error(f"Failed to get weather for {city}: {response.status_code}")
+#             return f"Failed to get weather for {city}: {response.status_code}"
+#     except Exception as e:
+#         logging.error(f"Error getting weather for {city}: {e}")
+#         return f"Error getting weather for {city}: {e}"
     
-@function_tool()
-async def search_web(query: str) -> str:
-    """Search the web for information about a given query using DuckDuckGo Search"""
-    try:
-        results = DuckDuckGoSearchRun().run(tool_input=query)
-        logging.info(f"Search results for '{query}': {results}")
-        return results
-    except Exception as e:
-        logging.error(f"Error searching the web for '{query}': {e}")
-        return f"An error occurred while searching the web for '{query}'."
+# @function_tool()
+# async def search_web(query: str) -> str:
+#     """Search the web for information about a given query using DuckDuckGo Search"""
+#     try:
+#         results = DuckDuckGoSearchRun().run(tool_input=query)
+#         logging.info(f"Search results for '{query}': {results}")
+#         return results
+#     except Exception as e:
+#         logging.error(f"Error searching the web for '{query}': {e}")
+#         return f"An error occurred while searching the web for '{query}'."
 
-@function_tool()
-async def triotech_info(query: str) -> str:
-    """
-    Hybrid Triotech knowledge system: uses JSON for basic info, RAG for detailed queries.
-    Examples:
-      - "Tell me about Justtawk" (basic - uses JSON)
-      - "What are the detailed features of Justtawk?" (detailed - uses RAG)
-      - "How to integrate Convoze with existing systems?" (detailed - uses RAG)
-      - "List all products" (basic - uses JSON)
-    """
-    data = _load_triotech_data()
-    query_lower = (query or "").lower()
+# @function_tool()
+# async def triotech_info(query: str) -> str:
+#     """
+#     Hybrid Triotech knowledge system: uses JSON for basic info, RAG for detailed queries.
+#     Examples:
+#       - "Tell me about Justtawk" (basic - uses JSON)
+#       - "What are the detailed features of Justtawk?" (detailed - uses RAG)
+#       - "How to integrate Convoze with existing systems?" (detailed - uses RAG)
+#       - "List all products" (basic - uses JSON)
+#     """
+#     data = _load_triotech_data()
+#     query_lower = (query or "").lower()
     
-    # Step 1: Try JSON for basic product/FAQ lookup
-    json_result = None
+#     # Step 1: Try JSON for basic product/FAQ lookup
+#     json_result = None
     
-    # Product lookup by name (exact substring match)
-    for p in data.get("products", []):
-        if p.get("name", "").lower() in query_lower:
-            json_result = f"{p['name']}: {p['desc']} (Target: {p['target']})"
-            break
+#     # Product lookup by name (exact substring match)
+#     for p in data.get("products", []):
+#         if p.get("name", "").lower() in query_lower:
+#             json_result = f"{p['name']}: {p['desc']} (Target: {p['target']})"
+#             break
     
-    # FAQ lookup if no product match
-    if not json_result:
-        for faq in data.get("faqs", []):
-            fq_lower = faq.get("q", "").lower()
-            faq_words = [w for w in fq_lower.split() if len(w) > 3]
-            if any(w in query_lower for w in faq_words):
-                json_result = f"Q: {faq['q']} → A: {faq['a']}"
-                break
+#     # FAQ lookup if no product match
+#     if not json_result:
+#         for faq in data.get("faqs", []):
+#             fq_lower = faq.get("q", "").lower()
+#             faq_words = [w for w in fq_lower.split() if len(w) > 3]
+#             if any(w in query_lower for w in faq_words):
+#                 json_result = f"Q: {faq['q']} → A: {faq['a']}"
+#                 break
     
-    # Differentiators lookup
-    if not json_result and ("why triotech" in query_lower or "differentiator" in query_lower or "why choose" in query_lower):
-        json_result = "Key Differentiators: " + ", ".join(data.get("differentiators", []))
+#     # Differentiators lookup
+#     if not json_result and ("why triotech" in query_lower or "differentiator" in query_lower or "why choose" in query_lower):
+#         json_result = "Key Differentiators: " + ", ".join(data.get("differentiators", []))
     
-    # List products
-    if not json_result and ("list" in query_lower and "product" in query_lower):
-        names = [p.get("name") for p in data.get("products", [])]
-        json_result = "Products: " + ", ".join(names) if names else "माफ़ करें, उत्पाद सूची उपलब्ध नहीं है।"
+#     # List products
+#     if not json_result and ("list" in query_lower and "product" in query_lower):
+#         names = [p.get("name") for p in data.get("products", [])]
+#         json_result = "Products: " + ", ".join(names) if names else "माफ़ करें, उत्पाद सूची उपलब्ध नहीं है।"
     
-    # Step 2: Determine if detailed query (needs RAG)
-    detailed_keywords = [
-        "detailed", "features", "how to", "integrate", "implementation", 
-        "pricing", "demo", "setup", "configuration", "api", "technical",
-        "comparison", "benefits", "use case", "workflow", "process"
-    ]
+#     # Step 2: Determine if detailed query (needs RAG)
+#     detailed_keywords = [
+#         "detailed", "features", "how to", "integrate", "implementation", 
+#         "pricing", "demo", "setup", "configuration", "api", "technical",
+#         "comparison", "benefits", "use case", "workflow", "process"
+#     ]
     
-    is_detailed_query = any(keyword in query_lower for keyword in detailed_keywords)
+#     is_detailed_query = any(keyword in query_lower for keyword in detailed_keywords)
     
-    # Step 3: Decision logic
-    if json_result and not is_detailed_query:
-        # Basic query with JSON match - return JSON result
-        logging.info(f"Hybrid: Using JSON for basic query: {query}")
-        return json_result
+#     # Step 3: Decision logic
+#     if json_result and not is_detailed_query:
+#         # Basic query with JSON match - return JSON result
+#         logging.info(f"Hybrid: Using JSON for basic query: {query}")
+#         return json_result
     
-    elif json_result and is_detailed_query:
-        # Detailed query about known product - try RAG first, fallback to enhanced JSON
-        logging.info(f"Hybrid: Trying RAG for detailed query about known product: {query}")
-        rag_result = _query_rag_system(query)
+#     elif json_result and is_detailed_query:
+#         # Detailed query about known product - try RAG first, fallback to enhanced JSON
+#         logging.info(f"Hybrid: Trying RAG for detailed query about known product: {query}")
+#         rag_result = _query_rag_system(query)
         
-        if rag_result:
-            return rag_result
-        else:
-            # RAG failed, return enhanced JSON response
-            return json_result + "\n\nअधिक विस्तृत जानकारी के लिए, कृपया हमारी सेल्स टीम से संपर्क करें।"
+#         if rag_result:
+#             return rag_result
+#         else:
+#             # RAG failed, return enhanced JSON response
+#             return json_result + "\n\nअधिक विस्तृत जानकारी के लिए, कृपया हमारी सेल्स टीम से संपर्क करें।"
     
-    elif not json_result and is_detailed_query:
-        # No JSON match but detailed query - try RAG
-        logging.info(f"Hybrid: Using RAG for unknown detailed query: {query}")
-        rag_result = _query_rag_system(query)
+#     elif not json_result and is_detailed_query:
+#         # No JSON match but detailed query - try RAG
+#         logging.info(f"Hybrid: Using RAG for unknown detailed query: {query}")
+#         rag_result = _query_rag_system(query)
         
-        if rag_result:
-            return rag_result
-        else:
-            return "माफ़ करें, इस बारे में विस्तृत जानकारी उपलब्ध नहीं है। क्या आप चाहेंगे कि मैं आपको हमारी सेल्स टीम से जोड़ दूँ?"
+#         if rag_result:
+#             return rag_result
+#         else:
+#             return "माफ़ करें, इस बारे में विस्तृत जानकारी उपलब्ध नहीं है। क्या आप चाहेंगे कि मैं आपको हमारी सेल्स टीम से जोड़ दूँ?"
     
-    else:
-        # No JSON match and basic query - standard fallback
-        logging.info(f"Hybrid: No match found for basic query: {query}")
-        return "माफ़ करें, इस बारे में मुझे जानकारी नहीं मिली। क्या आप चाहेंगे कि मैं आपको हमारी सेल्स टीम से जोड़ दूँ?"
+#     else:
+#         # No JSON match and basic query - standard fallback
+#         logging.info(f"Hybrid: No match found for basic query: {query}")
+#         return "माफ़ करें, इस बारे में मुझे जानकारी नहीं मिली। क्या आप चाहेंगे कि मैं आपको हमारी सेल्स टीम से जोड़ दूँ?"
 
 @function_tool()
 async def create_lead(name: str, email: str, company: str, interest: str, phone: str = "", job_title: str = "", budget: str = "", timeline: str = "") -> str:

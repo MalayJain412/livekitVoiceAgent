@@ -1,5 +1,9 @@
 import os
 import datetime
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 _conversation_log_path = None
 
@@ -14,16 +18,21 @@ LIVEKIT_API_SECRET = os.environ.get("LIVEKIT_API_SECRET")
 # AI MODEL CONFIGURATION
 # =============================================================================
 
-# --- CURRENTLY ACTIVE: Azure OpenAI Configuration ---
+# --- CURRENTLY ACTIVE: Azure OpenAI Configuration (Unified Resource) ---
 AZURE_OPENAI_API_KEY = os.environ.get("AZURE_OPENAI_API_KEY")
 AZURE_OPENAI_ENDPOINT = os.environ.get("AZURE_OPENAI_ENDPOINT")
-OPENAI_API_VERSION = os.environ.get("OPENAI_API_VERSION", "2024-12-01-preview")
-AZURE_OPENAI_LLM_DEPLOYMENT = os.environ.get("AZURE_OPENAI_LLM_DEPLOYMENT", "gpt-4o-mini")
-AZURE_OPENAI_STT_DEPLOYMENT = os.environ.get("AZURE_OPENAI_STT_DEPLOYMENT", "gpt-4o-transcribe")
-# Alternative STT configuration (if using different endpoint for STT)
+OPENAI_API_VERSION = os.environ.get("OPENAI_API_VERSION", "2024-10-01-preview")
+AZURE_OPENAI_LLM_DEPLOYMENT = os.environ.get("AZURE_OPENAI_LLM_DEPLOYMENT", "gpt-4o-realtime-preview")
+AZURE_OPENAI_STT_DEPLOYMENT = os.environ.get("AZURE_OPENAI_STT_DEPLOYMENT", "gpt-4o-realtime-preview")
+# Alternative STT configuration (using same unified resource)
 AZURE_OPENAI_STT_API_KEY = os.environ.get("AZURE_OPENAI_STT_API_KEY", AZURE_OPENAI_API_KEY)
 AZURE_OPENAI_STT_ENDPOINT = os.environ.get("AZURE_OPENAI_STT_ENDPOINT", AZURE_OPENAI_ENDPOINT)
 AZURE_OPENAI_STT_API_VERSION = os.environ.get("AZURE_OPENAI_STT_API_VERSION", OPENAI_API_VERSION)
+# TTS configuration (using same unified resource)
+AZURE_OPENAI_TTS_API_KEY = os.environ.get("AZURE_OPENAI_TTS_API_KEY", AZURE_OPENAI_API_KEY)
+AZURE_OPENAI_TTS_ENDPOINT = os.environ.get("AZURE_OPENAI_TTS_ENDPOINT", AZURE_OPENAI_ENDPOINT)
+AZURE_OPENAI_TTS_API_VERSION = os.environ.get("AZURE_OPENAI_TTS_API_VERSION", OPENAI_API_VERSION)
+AZURE_OPENAI_TTS_DEPLOYMENT = os.environ.get("AZURE_OPENAI_TTS_DEPLOYMENT", "gpt-4o-realtime-preview")
 
 # --- CURRENTLY ACTIVE: Cartesia TTS Configuration ---
 CARTESIA_API_KEY = os.environ.get("CARTESIA_API_KEY")

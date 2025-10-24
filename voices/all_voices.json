@@ -522,74 +522,32 @@
             {
                 "id": "OA001",
                 "name": "Alloy",
-                "tone": "Neutral, professional, and clear",
-                "gender": "Neutral",
-                "category": "Professional",
-                "sample_favorite": true
+                "description": "Neutral, balanced voice"
             },
             {
                 "id": "OA002",
                 "name": "Echo",
-                "tone": "Warm, friendly, and engaging",
-                "gender": "Young Male",
-                "category": "Conversational",
-                "sample_favorite": true
+                "description": "Male voice, clear and direct"
             },
             {
                 "id": "OA003",
                 "name": "Fable",
-                "tone": "Energetic, expressive, and engaging",
-                "gender": "Young Male",
-                "category": "Narration",
-                "sample_favorite": true
+                "description": "British accent, storytelling voice"
             },
             {
                 "id": "OA004",
                 "name": "Onyx",
-                "tone": "Older, mature, and experienced",
-                "gender": "Old Male",
-                "category": "Authoritative",
-                "sample_favorite": true
+                "description": "Deep male voice, authoritative"
             },
             {
                 "id": "OA005",
                 "name": "Nova",
-                "tone": "Young, energetic, and engaging",
-                "gender": "Young Female",
-                "category": "Conversational",
-                "sample_favorite": true
+                "description": "Young female voice, energetic"
             },
             {
                 "id": "OA006",
                 "name": "Shimmer",
-                "tone": "Lively, vibrant, and dynamic",
-                "gender": "Young Female",
-                "category": "Expressive",
-                "sample_favorite": true
-            },
-            {
-                "id": "OA007",
-                "name": "Ash",
-                "tone": "Enthusiastic, energetic, and lively",
-                "gender": "Young Male",
-                "category": "Expressive",
-                "sample_favorite": true
-            },
-            {
-                "id": "OA009",
-                "name": "Coral",
-                "tone": "Cheerful, friendly, and community-oriented",
-                "gender": "Young Female",
-                "category": "Community",
-                "sample_favorite": true
-            },
-            {
-                "id": "OA010",
-                "name": "Sage",
-                "tone": "Wise, calm, and knowledgeable",
-                "gender": "Young Female",
-                "category": "Educational",
-                "sample_favorite": true
+                "description": "Female voice, soft and gentle"
             }
         ]
     }

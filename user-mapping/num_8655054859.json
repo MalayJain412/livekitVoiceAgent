@@ -1,0 +1,101 @@
+{
+  "mobileNo": "+918655054859",
+  "campaigns": [
+    {
+      "campaignId": "68c90b0af10aa806b12d1419",
+      "campaignName": "Xeny-Inbound",
+      "campaignType": "inbound",
+      "status": "active",
+      "description": "Inbound Call",
+      "numbers": {
+        "singleNumber": "+918655054859",
+        "concurrency": 1,
+        "numberArray": [],
+        "numberSource": "single"
+      },
+      "schedule": {
+        "startDate": "2025-09-01T00:00:00.000Z",
+        "endDate": "2025-12-31T00:00:00.000Z",
+        "timeZone": "Asia/Kolkata",
+        "activeHours": {
+          "start": "00:01",
+          "end": "23:59"
+        },
+        "daysOfWeek": [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday"
+        ]
+      },
+      "client": {
+        "id": "68c902bf1d21e95f946250f3",
+        "name": "Xeny Demo",
+        "companyName": "XenyDemo",
+        "email": "xeny@xeny.ai",
+        "credits": {
+          "balance": 670,
+          "totalEarned": 1000,
+          "totalSpent": 330
+        }
+      },
+      "voiceAgents": [
+        {
+          "id": "68c90a70f10aa806b12d1396",
+          "name": "xeny",
+          "type": "sales",
+          "status": "busy",
+          "voiceDetails": {
+            "id": "68f8853ed07d3e6422a578e0",
+            "name": "Aarti",
+            "gender": "female",
+            "language": "हिन्दी",
+            "accent": "Indian",
+            "age": "adult",
+            "voiceModel": "Cartesia",
+            "quality": "premium_ultrarealistic"
+          },
+          "persona": {
+            "id": "68c90a70f10aa806b12d1396",
+            "name": "xeny",
+            "language": "Hindi",
+            "additionalLanguages": [
+              "English"
+            ],
+            "voice": "Aarti",
+            "welcomeMessage": "Namaste! Main Zeny hoon. Main aapki kaise madad kar sakti hoon?",
+            "closingMessage": "Closing\nIf issue resolved:\n- When the conversation is in Hindi: \"Aur koi madad chahiye aapko? [If no] Aapka bahut dhanyavaad. Aapka din shubh ho!\"\n- When the conversation is in English : \"Is there anything else I can help you with? [If no] Thank you for your time today. Have a wonderful day!\"",
+            "transferNumber": "",
+            "personality": "You are Xeny, an AI voice assistant for customer service. Here's how to behave:\n\nCritical: You are a sales agent and can only provide assistance about lead generation, appointment scheduling. If user is asking the query which is not relevant to this simple ignore or say I can only assist with Lead generation and appointment scheduling.\n\n## LANGUAGE RULES\n- ONLY switch to English if customer explicitly asks: \"English mein baat karo\" or \"Please speak in english\"\n- If customer speaks Hindi, respond in Hindi  \n- If customer speaks English, respond in English\n- If customer uses Hinglish (mix), respond in Hinglish\n- NEVER switch languages automatically - only when explicitly requested\n- Use feminine verb forms for yourself (karungi, lungi, jaungi)\n- Use appropriate gender forms for customers\n\n## CORE BEHAVIOR\n- Be warm, empathetic, and human-like\n- Keep responses 2-3 sentences max\n- Stay professional yet friendly\n- Ask if customer needs anything else before ending\n- Transfer calls immediately when asked for manager/supervisor\n- NEVER say vague responses like \"bilkul\", \"sure\", \"okay\" without context\n- ALWAYS provide specific, helpful information\n- If you don't know something, ask for more details instead of giving vague responses\n\n## RESPONSES TO AVOID\n- Don't say \"bilkul\" alone - always add context\n- Don't say \"sure\" alone - always add context  \n- Don't say \"okay\" alone - always add context\n- Don't give vague responses - be specific and helpful\n\n## Services offer\n- Order tracking\n- Appointment booking\n\nRemember: Be natural, empathetic, and helpful. Always end by asking if there's anything else you can help with.",
+            "conversationStructure": "-",
+            "workflow": "-",
+            "knowledgeBase": "-",
+            "dataFields": [
+              {
+                "field": "registered",
+                "type": "Date",
+                "description": "ASK FOR REGISTERED MAIL OF USER",
+                "_id": "68c90a70f10aa806b12d1397",
+                "id": "68c90a70f10aa806b12d1397"
+              }
+            ],
+            "status": "busy",
+            "client": "68c902bf1d21e95f946250f3",
+            "createdBy": "68c902bf1d21e95f946250f5",
+            "tags": [],
+            "version": "1.0.0",
+            "createdAt": "2025-09-16T06:57:52.494Z",
+            "updatedAt": "2025-10-23T13:54:10.006Z"
+          },
+          "createdAt": "2025-09-16T06:57:52.494Z",
+          "updatedAt": "2025-10-23T13:54:10.006Z"
+        }
+      ],
+      "createdAt": "2025-09-16T07:00:26.390Z",
+      "updatedAt": "2025-10-23T13:29:11.060Z"
+    }
+  ],
+  "totalCampaigns": 1,
+  "searchDigits": "55054859"
+}

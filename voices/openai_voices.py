@@ -37,7 +37,7 @@ for i, voice in enumerate(OPENAI_TTS_VOICES, 1):
     print(f"{i}. {voice['name']} - {voice['description']}")
 
 # Test connection by trying to make a simple TTS request
-test_url = f"{ENDPOINT.rstrip('/')}/openai/deployments/gpt-4o-mini-tts/audio/speech"
+test_url = f"{ENDPOINT.rstrip('/')}/openai/deployments/gpt-4o-realtime-preview/audio/speech"
 headers = {
     "api-key": API_KEY,
     "Content-Type": "application/json"
@@ -52,7 +52,7 @@ test_data = {
 print("\n=== Testing TTS Endpoint Connection ===")
 try:
     # We won't actually send audio data, just test if the endpoint is reachable
-    response = requests.post(test_url, headers=headers, json=test_data, params={"api-version": "2024-06-01"})
+    response = requests.post(test_url, headers=headers, json=test_data, params={"api-version": "2024-10-01-preview"})
     
     if response.status_code == 200:
         print("✅ TTS endpoint is working!")
