@@ -117,7 +117,7 @@ def get_llm_instance(provider="google"): # Added default for simplicity
     """Get LLM instance based on provider"""
     if provider == "azure":
         return openai.LLM.with_azure(
-            model=AZURE_OPENAI_LLM_DEPLOYMENT,
+            model="gpt-4o-mini",
             azure_endpoint=AZURE_OPENAI_ENDPOINT,
             api_key=AZURE_OPENAI_API_KEY,
             azure_deployment=AZURE_OPENAI_LLM_DEPLOYMENT,
@@ -134,7 +134,7 @@ def get_stt_instance(provider="deepgram"): # Added default for simplicity
     """Get STT instance based on provider"""
     if provider == "azure":
         return openai.STT.with_azure(
-            model=AZURE_OPENAI_STT_DEPLOYMENT,
+            model="AZURE_OPENAI_STT_DEPLOYMENT",
             azure_endpoint=AZURE_OPENAI_STT_ENDPOINT,
             api_key=AZURE_OPENAI_STT_API_KEY,
             azure_deployment=AZURE_OPENAI_STT_DEPLOYMENT,
@@ -186,7 +186,7 @@ def get_tts_instance(provider, voice_identifier, language):
         # When users specify "openai", they mean Azure OpenAI (not standard OpenAI)
         # Azure OpenAI TTS using the unified realtime resource
         return openai.TTS.with_azure(
-            model="tts-1",  # TTS model for Azure OpenAI
+            model=AZURE_OPENAI_TTS_DEPLOYMENT,  # TTS model for Azure OpenAI
             voice=voice_identifier.lower(),
             azure_endpoint=AZURE_OPENAI_TTS_ENDPOINT,
             api_key=AZURE_OPENAI_TTS_API_KEY,
