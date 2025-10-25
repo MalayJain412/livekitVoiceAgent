@@ -25,6 +25,48 @@ def load_test_config() -> Optional[Dict]:
             return None
     return None
 
+def get_timezone_from_string(tz_string: Optional[str]) -> pytz.BaseTzInfo:
+    """
+    Convert timezone string to pytz timezone object with robust mapping.
+    
+    Args:
+        tz_string: Timezone string from API (can be short code or full name)
+        
+    Returns:
+        pytz timezone object, defaults to UTC if invalid
+    """
+    if not tz_string:
+        tz_string = "UTC"
+
+    tz_string = tz_string.strip().upper()
+
+    # Mapping for common ambiguous short codes
+    tz_aliases = {
+        "IST": "Asia/Kolkata",       # India Standard Time
+        "GST": "Asia/Dubai",         # Gulf Standard Time (UAE)
+        "PKT": "Asia/Karachi",       # Pakistan
+        "BST": "Europe/London",      # British Summer Time
+        "CST": "America/Chicago",    # Central US
+        "EST": "America/New_York",   # Eastern US
+        "PST": "America/Los_Angeles",
+        "CET": "Europe/Paris",
+        "EET": "Europe/Athens",
+        "JST": "Asia/Tokyo",
+        "HKT": "Asia/Hong_Kong",
+    }
+
+    # Try to map alias → full timezone string
+    if tz_string in tz_aliases:
+        tz_string = tz_aliases[tz_string]
+
+    # Try to create a valid pytz timezone
+    try:
+        return pytz.timezone(tz_string)
+    except pytz.UnknownTimeZoneError:
+        # Fallback to UTC if nothing matches
+        logging.warning(f"Unknown timezone '{tz_string}', defaulting to UTC")
+        return pytz.timezone("UTC")
+
 def validate_campaign_schedule(schedule: Dict) -> bool:
     """
     Validate if current time is within the campaign schedule.
@@ -41,16 +83,8 @@ def validate_campaign_schedule(schedule: Dict) -> bool:
         bool: True if within schedule, False otherwise
     """
     try:
-        # 1. Get the timezone *string* from the API first
-        tz_string = schedule.get("timeZone", "UTC") 
-        
-        # 2. Check and correct the string *before* giving it to pytz
-        #    Also use '==' for string comparison, not 'is'
-        if tz_string == "IST":
-            tz_string = "Asia/Kolkata"
-        
-        # 3. Now, safely create the timezone object
-        timezone = pytz.timezone(tz_string)
+        # Get timezone using robust mapping function
+        timezone = get_timezone_from_string(schedule.get("timeZone"))
         now = datetime.now(timezone)
 
         # Check date range
@@ -61,13 +95,13 @@ def validate_campaign_schedule(schedule: Dict) -> bool:
             logging.info(f"Call outside date range: {start_date} to {end_date}")
             return False
 
-        # Check day of week
-        current_day = now.strftime("%A").lower()
-        allowed_days = [day.lower() for day in schedule.get("daysOfWeek", [])]
+        # # Check day of week
+        # current_day = now.strftime("%A").lower()
+        # allowed_days = [day.lower() for day in schedule.get("daysOfWeek", [])]
 
-        if current_day not in allowed_days:
-            logging.info(f"Call on {current_day}, allowed days: {allowed_days}")
-            return False
+        # if current_day not in allowed_days:
+        #     logging.info(f"Call on {current_day}, allowed days: {allowed_days}")
+        #     return False
 
         # Check active hours
         active_hours = schedule.get("activeHours", {})
