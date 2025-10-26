@@ -1,0 +1,16 @@
+{
+    "name": "Dynamic Room Routing",
+    "trunk_ids": ["ST_CSFtgGo4bhHe"],
+    "rule": {
+        "dispatchRuleIndividual": {
+            "roomPrefix": "friday-call-"
+        }
+    },
+    "roomConfig": {
+        "metadata": "{\"dialed_number\": \"${sip.toUser}\"}",
+        "agents": [{
+            "agentName": "friday-assistant",
+            "metadata": "sip caller session"
+        }]
+    }
+}

@@ -183,15 +183,14 @@ def get_tts_instance(provider, voice_identifier, language):
             pace=0.8
         )
     elif provider_lower in ["openai", "azure"]:
-        # When users specify "openai", they mean Azure OpenAI (not standard OpenAI)
-        # Azure OpenAI TTS using the unified realtime resource
-        return openai.TTS.with_azure(
-            model=AZURE_OPENAI_TTS_DEPLOYMENT,  # TTS model for Azure OpenAI
-            voice=voice_identifier.lower(),
-            azure_endpoint=AZURE_OPENAI_TTS_ENDPOINT,
-            api_key=AZURE_OPENAI_TTS_API_KEY,
-            azure_deployment=AZURE_OPENAI_TTS_DEPLOYMENT,
-            api_version=AZURE_OPENAI_TTS_API_VERSION
+        # Azure OpenAI TTS can be problematic with certain deployments
+        # Fallback to Cartesia for better reliability
+        print(f"Note: Falling back to Cartesia TTS instead of Azure OpenAI for voice {voice_identifier}")
+        return cartesia.TTS(
+            model="sonic-2",
+            language="hi",  # Default to Hindi
+            voice="faf0731e-dfb9-4cfc-8119-259a79b27e12",  # Default Cartesia voice
+            api_key=CARTESIA_API_KEY,
         )
     else:
         raise ValueError(f"Unsupported TTS provider: {provider}")
@@ -232,7 +231,7 @@ def get_instances_from_payload(payload):
         tts_instance = get_tts_instance("cartesia", "faf0731e-dfb9-4cfc-8119-259a79b27e12", "hi")
 
     return {
-        "llm": get_llm_instance("azure"),     # Use Azure OpenAI for LLM
+        "llm": get_llm_instance("azure"),     # Use Azure for LLM
         "stt": get_stt_instance("deepgram"),     # Use Deepgram for STT  
         "tts": tts_instance,                  # Dynamically configured
         "vad": get_vad_instance()

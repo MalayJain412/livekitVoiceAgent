@@ -1,12 +1,32 @@
-# config.yaml (Final, Cleaned Version)
-
 api_key: APIntavBoHTqApw
 api_secret: pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
-ws_url: ws://192.168.109.66:7880
+ws_url: ws://127.0.0.1:7880
 redis:
-  address: 192.168.109.66:6379
+  # address: 192.168.56.1:6379
+  address: 172.30.176.1:6379
 sip_port: 5060
 rtp_port: 10000-20000
-use_external_ip: false
+use_external_ip: true
+local_ip: 172.30.184.7
 logging:
   level: debug
+
+inbound_trunks:
+  - name: "Zoiper Local Inbound"
+    username: "1001"
+    password: "1001"
+    allow_register: true     # <--- Enable Zoiper registration
+    encryption: DISABLE
+    allowed_addresses:
+      - "0.0.0.0/0" 
+
+# api_key: APIntavBoHTqApw
+# api_secret: pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
+# ws_url: ws://192.168.109.66:7880
+# redis:
+#   address: 192.168.109.66:6379
+# sip_port: 5060
+# rtp_port: 10000-20000
+# use_external_ip: false
+# logging:
+#   level: debug

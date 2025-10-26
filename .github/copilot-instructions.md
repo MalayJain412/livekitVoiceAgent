@@ -1,51 +1,47 @@
-# Friday AI — Copilot / Agent Instructions
+## Friday AI — Copilot / Agent Instructions (concise)
 
-Purpose: short, targeted guidance so an AI coding agent can be productive in this repository immediately.
+Purpose: short, targeted guidance so an AI coding agent can be productive immediately in this repo.
 
-## Quick start (PowerShell)
+Quick actions (Windows PowerShell)
+- Install deps: `pip install -r requirements.txt`
+- Build RAG DB: `python model/build_db.py`
+- Start voice agent: `python cagent.py` (direct number extraction, no webhook needed)
+- Run RAG API (optional): `python model/runapi.py`
 
-```powershell
-# install deps
-pip install -r requirements.txt
+Where to read first (high signal files)
+- `cagent.py` — main entrypoint with direct number extraction and persona loading
+- `persona_handler.py` — API-based persona loader with room inspection
+- `tools.py` — business logic functions (decorated with `@function_tool()`)
+- `prompts.py` — user-facing Hinglish prompts and lead-capture rules
+- `transcript_logger.py` — realtime JSONL logging and final snapshot logic
 
-# build vector DB (required for RAG)
-python model/build_db.py
+Project conventions (explicit, non-negotiable)
+- User-facing language: Hinglish (see `prompts.py` for exact phrases).
+- Lead files: JSON fields MUST be English: `name,email,company,interest,phone,budget` (used downstream).
+- Tools: use the `@function_tool()` decorator for user-facing tool functions (see `tools.py`).
+- Persona loading: Always from CRM API based on extracted dialed number.
+- Voice mapping: `voices/all_voices.json` and `instances.py` contain TTS/STT provider wiring.
 
-# start webhook handler service (required for dynamic persona loading)
-python handler.py
+Important flows & integration points (short)
+- Voice flow: STT -> Agent (tools + RAG) -> TTS. Key files: `instances.py`, `tools.py`, `prompts.py`.
+- Persona flow: SIP call -> LiveKit room -> `cagent.py` extracts number -> API call -> persona config applied.
+- Lead flow: `detect_lead_intent()` -> `create_lead()` (sanitizes & writes to `leads/`).
+- RAG: `model/build_db.py` (chunk_size=1500, overlap=200) and `model/runapi.py` handle embeddings & queries.
 
-# run voice agent (in separate terminal)  
-python cagent.py
+Testing & debug notes (practical)
+- Small scripts exist for component checks (see `tests/`); run unit-like scripts directly with Python.
+- Integration tests use pytest: e.g. `pytest tests/test_handler.py tests/test_integration.py -v`.
+- Conversation logs: `conversations/transcripts.jsonl` (stream) and `conversations/transcript_session_<ts>.json` (snapshots).
 
-# run RAG web API (optional)
-python model/runapi.py
+Quick pointers for agents editing code
+- When modifying persona or webhook behavior, update `tests/test_handler.py` and `tests/test_integration.py`.
+- If you change RAG content/format, run `python model/build_db.py` and add a small integration test for `model/runapi.py`.
+- Preserve Hinglish prompts in `prompts.py` exactly when altering user-facing flows.
 
-# SIP telephony setup (requires Redis running)
-redis-cli ping  # verify Redis is running
-livekit-server --config livekit.yaml  # start main server
-cd sip-setup && ./livekit-sip --config config.yaml  # start SIP bridge
+Files to inspect for examples
+- `handler.py`, `cagent.py`, `persona_handler.py`, `tools.py`, `prompts.py`, `transcript_logger.py`, `model/build_db.py`.
 
-# run tests (comprehensive pytest suite + simple python scripts)
-python tests/test_tvenv_plugins.py  # basic functionality
-pytest tests/test_handler.py tests/test_integration.py -v  # webhook and persona loading
-pytest tests/test_mongodb_integration.py -v  # database integration
-pytest tests/test_session_manager.py tests/test_persona_config.py -v  # components
-```
-
-## What to read first (fast path)
-- `handler.py` — webhook service for dynamic persona loading based on dialed number (270+ lines)
-- `cagent.py` — main entrypoint: sets up logging, AgentSession, persona loading from job metadata
-- `persona_handler.py` — NEW: centralized persona loading with API/local modes and configuration management
-- `session_manager.py` — NEW: session lifecycle, auto-hangup logic, and conversation history tracking  
-- `validation.py` — NEW: campaign schedule validation and agent availability checks
-- `transcript_logger.py` — background JSONL writer for realtime conversation logging
-- `tools.py` — core function tools (triotech_info, create_lead, detect_lead_intent). Primary place for business logic
-- `prompts.py` — agent/system prompts (Hinglish + lead capture rules)
-- `instances.py` — centralized STT/LLM/TTS configuration with voice mapping from JSON
-- `logging_config.py` — centralized logging setup with third-party noise filtering
-- `db_config.py` — MongoDB Atlas connection and management (optional storage backend)
-- `model/build_db.py` and `model/runapi.py` — RAG build & runtime (Chroma DB, embeddings, API key rotation)
-- `sip-setup/config.yaml` and `livekit.yaml` — SIP bridge and server config (must have identical API keys)
+If anything is unclear or you'd like a different scope (more examples, Windows-specific run scripts, or added tests), tell me which parts to expand and I will iterate.
 
 ## Key repository conventions (must follow exactly)
 - User-facing language: Hinglish (brief Hindi+English). Lead confirmations/prompts are in Hinglish. See `prompts.py` for exact wording
@@ -53,8 +49,7 @@ pytest tests/test_session_manager.py tests/test_persona_config.py -v  # componen
 - Tools: all user-facing tools follow the decorator pattern: `@function_tool()`
 - Conversation logging: streaming JSONL + session snapshots at `conversations/transcript_session_<timestamp>.json`
 - RAG chunk settings: chunk_size=1500, overlap=200 (see `model/build_db.py`)
-- Environment config: Use `LLM_MODEL` env var to switch between Gemini models without code changes
-- Persona loading modes: `PERSONA_USE=api` (webhook-based) vs `PERSONA_USE=local` (file-based fallback)
+- Persona loading: Always from CRM API using extracted dialed number - no local fallbacks
 - Voice configuration: Use `voices/all_voices.json` for TTS voice mapping via `instances.py` 
 - Logging: Centralized via `logging_config.py` with third-party noise filtering (pymongo, werkzeug)
 - Database: Optional MongoDB Atlas integration via `db_config.py` for leads/conversations
@@ -68,7 +63,7 @@ pytest tests/test_session_manager.py tests/test_persona_config.py -v  # componen
 - Integration: LiveKit server for real-time comms, Redis for SIP PSRPC, ChromaDB for vectors
 - SIP telephony: Zoiper/softphone → livekit-sip (port 5060) → LiveKit server (port 7880) → voice agent. All services must connect to same Redis instance
 - Logging architecture: Agent-level hooks capture STT chunks and session items → background worker writes to `conversations/transcripts.jsonl` → shutdown callback saves final snapshot
-- **Dynamic persona loading flow**: SIP call → LiveKit participant_joined event → webhook handler fetches persona from API → handler dispatches agent with persona in job metadata → agent reads metadata and applies persona instructions
+- **Dynamic persona loading flow**: SIP call → LiveKit room → `cagent.py` extracts dialed number → API call → persona config applied directly in agent
 - **Session lifecycle**: `SessionManager` handles auto-hangup timers, conversation history, and graceful cleanup with configurable wait times
 - **Local vs Cloud setup**: Self-hosted LiveKit has limitations - advanced audio filters and VAD features require LiveKit Cloud. Use basic configurations for local development
 
@@ -78,7 +73,7 @@ pytest tests/test_session_manager.py tests/test_persona_config.py -v  # componen
 - LiveKit: Token handling via `generate_livekit_token.py` for backend service integration
 - RAG runtime: `model/runapi.py` handles embeddings, key rotation, queries to `model/chroma_db/`
 - SIP setup: Create trunks via `lk sip inbound create` + dispatch rules via `lk sip dispatch create`. JSON configs in `sip-setup/inbound_trunk.json` and `sip-setup/sip_dispatch.json`
-- **Webhook handler**: Flask service at `handler.py` responds to LiveKit events, fetches persona configs from https://devcrm.xeny.ai/apis/api/public/mobile/<mobileNo>, and dispatches agents with config metadata
+- **Agent flow**: `cagent.py` handles everything: number extraction from room, persona loading from API, validation, and conversation
 - **Voice configuration**: `instances.py` loads voice mappings from `voices/all_voices.json`, supports multiple TTS providers (Cartesia, ElevenLabs, Sarvam)
 - **MongoDB integration**: Optional via `db_config.py` - connection pooling, error handling, and data persistence for leads/conversations
 

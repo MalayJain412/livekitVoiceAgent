@@ -1,11 +1,17 @@
 {
-   "name":"Zoiper to Assistant Room Rule",
-   "trunk_ids":[
-      "ST_EmMmjttJHZHP"
-   ],
-   "rule":{
-      "dispatchRuleDirect":{
-         "roomName":"friday-assistant-room"
+  "dispatch_rule": {
+    "name": "Zoiper to Assistant Room Rule",
+    "trunk_ids": ["ST_RmHemMmVQppz"],
+    "rule": {
+      "dispatchRuleDirect": {
+        "roomName": "friday-assistant-room"
       }
-   }
+    },
+    "roomConfig": {
+      "agents": [{
+        "agentName": "friday-assistant",
+        "metadata": "sip caller session"
+      }]
+    }
+  }
 }

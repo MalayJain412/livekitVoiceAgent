@@ -1,0 +1,28 @@
+# Updated config for Asterisk integration
+api_key: APIntavBoHTqApw
+api_secret: pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
+ws_url: ws://127.0.0.1:7880
+redis:
+  address: 127.0.0.1:6379
+sip_port: 5060
+rtp_port: 10000-20000
+use_external_ip: true
+local_ip: 172.30.184.7
+logging:
+  level: debug
+
+inbound_trunks:
+  - name: "Zoiper Local Inbound"
+    username: "1001"      # Match your Asterisk trunk config
+    password: "1001"     # Set a secure password
+    allow_register: true
+    encryption: DISABLE
+    allowed_addresses:
+      - "0.0.0.0/0"               # Restrict to your Asterisk server IP
+    
+    # Enable header preservation
+    headers_to_attributes:
+      "X-Dialed-Number": "dialedNumber"
+      "X-Called-Number": "calledNumber"
+      "X-Original-Called-Number": "originalCalledNumber"
+      "Diversion": "diversion"

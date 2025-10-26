@@ -1,0 +1,9 @@
+{
+  "name": "Individual Room Dispatch for Asterisk",
+  "trunk_ids": ["ST_CSFtgGo4bhHe"],
+  "rule": {
+      "dispatchRuleIndividual": {
+          "roomPrefix": "sip-call-"
+      }
+  }
+}

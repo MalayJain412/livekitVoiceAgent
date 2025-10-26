@@ -1,37 +1,7 @@
 """
 Persona Handler
-Handles persona loading and configuration from job metadata and CRM API fallback
+Handles persona loading and configuration from dialed number extraction and CRM API
 """
-
-# TODO: CALL NORMALIZATION IMPLEMENTATION
-# =======================================================
-# Future enhancement: Add call normalization functionality from persona_loader.py
-#
-# Call normalization standardizes phone numbers for consistent persona lookup:
-# 1. Remove non-digits: "+91 865-570-1159" → "918655701159"
-# 2. Handle country codes: "918655701159" → "8655701159" (remove 91 prefix if >10 digits)
-# 3. Remove leading zeros: "08655701159" → "8655701159"
-#
-# Implementation approach:
-# def normalize_caller(raw: str) -> str:
-#     """Normalize caller number by removing non-digits and country codes."""
-#     if not raw:
-#         return ""
-#     # strip non-digit characters
-#     s = re.sub(r"\D", "", str(raw))
-#     # if leading country code 91 and length > 10, take last 10 digits
-#     if s.startswith("91") and len(s) > 10:
-#         s = s[-10:]
-#     # if leading zeros, strip
-#     s = s.lstrip("0")
-#     return s
-#
-# Benefits of adding to this file:
-# - Single responsibility: All persona operations in one place
-# - Consistency: All phone number processing centralized
-# - Clean architecture: Eliminates need for persona_loader.py
-# - Better API calls: Normalized numbers for reliable persona lookup
-# =======================================================
 
 import json
 import logging
@@ -39,20 +9,89 @@ import os
 import asyncio
 import requests
 import functools
-import re  # Added for normalization
+import re
 from typing import Dict, Optional, Tuple
 from livekit.agents import JobContext
+from livekit.api.room_service import RoomService
 
 from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
 from transcript_logger import log_event
 
-# Environment configuration for persona loading mode
-PERSONA_USE = os.getenv("PERSONA_USE", "api").lower()  # Options: "local" or "api"
+def _extract_number_from_sip_uri(sip_uri: str) -> str:
+    """
+    Extract phone number from SIP URI.
+    Handles various formats like sip:+918655701159@domain, sip:8655701159@domain
+    """
+    if not sip_uri:
+        return ""
 
-#
-# --- NEW HELPER FUNCTIONS ---
-#
-#----------------
+    # Remove 'sip:' prefix if present
+    if sip_uri.startswith('sip:'):
+        sip_uri = sip_uri[4:]
+
+    # Extract the part before '@' or before any other delimiter
+    # Handle formats like +918655701159@domain or 8655701159@domain
+    number_part = sip_uri.split('@')[0] if '@' in sip_uri else sip_uri
+
+    # Remove any non-digit characters except + at the beginning
+    cleaned = re.sub(r'(?<!^)\+', '', number_part)  # Remove + not at start
+    cleaned = re.sub(r'[^\d+]', '', cleaned)  # Remove non-digits except +
+
+    return cleaned
+
+async def get_sip_participant_and_number(ctx: JobContext) -> Tuple[Optional[str], Optional[str]]:
+    """
+    Extract dialed number from SIP participant in the room.
+    Returns (participant_identity, dialed_number) or (None, None) if not found.
+    """
+    try:
+        # Get room service client
+        room_svc = RoomService(ctx.connection)
+
+        # List participants in the room
+        participants = await room_svc.list_participants(ctx.room.name)
+
+        # Find SIP participant (kind == 2 for SIP participants)
+        sip_participant = None
+        for p in participants.participants:
+            if p.kind == 2:  # SIP participant
+                sip_participant = p
+                break
+
+        if not sip_participant:
+            logging.warning(f"No SIP participant found in room {ctx.room.name}")
+            return None, None
+
+        # Extract number from participant attributes or identity
+        dialed_number = None
+
+        # Priority 1: Check participant attributes for dialedNumber
+        if sip_participant.attributes:
+            dialed_number = sip_participant.attributes.get('dialedNumber')
+
+        # Priority 2: Extract from SIP URI in identity
+        if not dialed_number and sip_participant.identity:
+            dialed_number = _extract_number_from_sip_uri(sip_participant.identity)
+
+        # Priority 3: Extract from room name (fallback)
+        if not dialed_number:
+            # Room names might contain the number, e.g., "room_8655701159"
+            room_name = ctx.room.name
+            if '_' in room_name:
+                potential_number = room_name.split('_')[-1]
+                if potential_number.isdigit():
+                    dialed_number = potential_number
+
+        if dialed_number:
+            logging.info(f"Extracted dialed number '{dialed_number}' from SIP participant {sip_participant.identity}")
+            return sip_participant.identity, dialed_number
+        else:
+            logging.warning(f"Could not extract dialed number from SIP participant {sip_participant.identity}")
+            return sip_participant.identity, None
+
+    except Exception as e:
+        logging.error(f"Error extracting SIP participant and number: {e}")
+        return None, None
 
 def _sanitize_personality_prompt(raw_personality: str) -> str:
     """
@@ -70,7 +109,7 @@ def _sanitize_personality_prompt(raw_personality: str) -> str:
         "Your *only* purpose is to assist with **Lead Generation** and **Appointment Scheduling**.\n"
         "You MUST NOT assist with any other topics (like order tracking, technical support, billing, etc.)."
     )
-    
+
     # 2. Define the true Off-Topic Handling (Polite Redirect, not "ignore")
     off_topic_handling = (
         "# 2. HANDLING OFF-TOPIC REQUESTS\n"
@@ -104,7 +143,7 @@ def _sanitize_personality_prompt(raw_personality: str) -> str:
         "- **Before Ending:** After fulfilling a request (like creating a lead), you MUST always ask "
         "if the user needs more help before you end the call (e.g., \"Aur koi madad chahiye aapko?\")."
     )
-    
+
     # 5. Combine the new, clean rules into a single string
     clean_personality = "\n\n".join([
         "You are Xeny, a warm and professional AI sales assistant.", # Start with a clean intro
@@ -115,7 +154,6 @@ def _sanitize_personality_prompt(raw_personality: str) -> str:
     ])
 
     return clean_personality
-
 
 def _build_persona_prompts(
     persona_name: str,
@@ -128,7 +166,7 @@ def _build_persona_prompts(
     Builds the final, structured AGENT_INSTRUCTION and SESSION_INSTRUCTION
     using the master f-string templates.
     """
-    
+
     # Build the AGENT INSTRUCTION (the agent's core identity)
     agent_instructions = f"""
 # 1. CORE PERSONA
@@ -207,102 +245,51 @@ Start the conversation. Your very first message to the user MUST be this exact g
 - Be professional, helpful, and efficient.
 """
     logging.info("Session instructions built successfully.")
-    
+
     return agent_instructions, session_instructions
-
-#
-# --- END OF NEW HELPER FUNCTIONS ---
-#
-
-
-def should_use_local_persona() -> bool:
-    """Check if we should use local hardcoded prompts instead of API"""
-    return PERSONA_USE == "local"
-
-
-def get_local_persona_config() -> Tuple[str, Optional[str], Optional[str], str, Optional[Dict]]:
-    """
-    Return local hardcoded persona configuration
-    Returns: (agent_instructions, session_instructions, closing_message, persona_name, full_config)
-    """
-    logging.info("Using local hardcoded persona from prompts.py")
-    return (
-        AGENT_INSTRUCTION,      # agent_instructions
-        SESSION_INSTRUCTION,    # session_instructions  
-        None,                   # closing_message
-        "local_default",        # persona_name
-        None                    # full_config
-    )
-
 
 @functools.lru_cache(maxsize=256)
 def load_persona_from_api(dialed_number: str, timeout: int = 5) -> Optional[Dict]:
     """
     Synchronous persona fetch from CRM API (cached).
-    Used as fallback when job metadata is missing.
-    
-    For testing: If TEST_API_RESPONSE_FILE is set, loads from local file instead of API.
-    
+
     Raises:
         ValueError: If API returns "No campaigns found" message
     """
     if not dialed_number:
         return None
-    
-    # Check for test mode - load from local file
-    test_file = os.getenv("TEST_API_RESPONSE_FILE")
 
-    # --- MODIFICATION: Allow test file override based on dialed number ---
-    if not test_file and os.getenv("TEST_MODE") == "local_file":
-        test_file_path = f"user-mapping/num_{dialed_number.strip('+')}.json"
-        logging.warning(f"TEST_MODE=local_file: Attempting to load {test_file_path}")
-        if os.path.exists(test_file_path):
-            test_file = test_file_path
-        else:
-            logging.warning(f"Local test file not found: {test_file_path}")
-
-    if test_file:
-        try:
-            logging.info(f"TEST MODE: Loading persona from local file: {test_file}")
-            with open(test_file, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            logging.info(f"Successfully loaded test data from {test_file}")
-            return data
-        except Exception as e:
-            logging.error(f"Failed to load test data from {test_file}: {e}")
-            return None
-    
     try:
         base = os.getenv("PERSONA_API_BASE", "https://devcrm.xeny.ai/apis/api/public/mobile")
         url = f"{base}/{dialed_number}"
         resp = requests.get(url, timeout=timeout)
         resp.raise_for_status()
         data = resp.json()
-        
+
         # Check for "No campaigns found" response and fail validation directly
         if isinstance(data, dict) and data.get("message") == "No campaigns found":
             logging.error(f"API returned 'No campaigns found' for {dialed_number} - failing validation")
             raise ValueError(f"No campaigns found for number {dialed_number}")
-        
+
         # Extract persona from API response
         campaigns = data.get("campaigns") or []
         if not campaigns:
             logging.warning(f"No campaigns found for {dialed_number}")
             return None
-            
+
         voice_agents = campaigns[0].get("voiceAgents", [])
         if not voice_agents:
             logging.warning(f"No voice agents found for {dialed_number}")
             return None
-            
+
         persona = voice_agents[0].get("persona")
         if not persona:
             logging.warning(f"No persona found for {dialed_number}")
             return None
-            
+
         logging.info(f"Successfully loaded persona from API for {dialed_number}: {persona.get('name', 'unknown')}")
         return data  # Return full config for consistency with metadata format
-        
+
     except ValueError:
         # Re-raise ValueError (our "No campaigns found" case) to fail validation
         raise
@@ -343,14 +330,14 @@ async def load_persona_from_dialed_number(dialed_number: str) -> Tuple[str, Opti
         raw_personality = persona.get("personality", "")
         conversation_structure = persona.get("conversationStructure", "")
         workflow = persona.get("workflow", "")  # This is the Knowledge Base
-        
+
         messages = persona.get("fullConfig", {}).get("messages", {})
-        
+
         if persona.get("welcomeMessage"):
             welcome_message = persona.get("welcomeMessage") or messages.get("welcomeMessage", "")
         else:
             welcome_message = "Greet the user and ask how you can help them."
-        
+
         # Get Closing Message (This is returned, NOT put in the prompt)
         if persona.get("closingMessage"):
             # --- FIX: Clean the closing message ---
@@ -362,14 +349,14 @@ async def load_persona_from_dialed_number(dialed_number: str) -> Tuple[str, Opti
                 closing_message = raw_closing
         else:
             closing_message = "Thank you for contacting us. Have a wonderful day!"
-            
+
         persona_name = persona.get("name", "unknown")
         logging.info(f"Building instructions for persona: {persona_name}")
 
         # 5. --- SANITIZE AND BUILD ---
         # Use the helper functions to fix contradictions and build prompts
         personality = _sanitize_personality_prompt(raw_personality)
-        
+
         agent_instructions, session_instructions = _build_persona_prompts(
             persona_name=persona_name,
             personality=personality,
@@ -387,152 +374,6 @@ async def load_persona_from_dialed_number(dialed_number: str) -> Tuple[str, Opti
     # 7. Return all the configured values
     return agent_instructions, session_instructions, closing_message, persona_name, full_config
 
-async def load_persona_with_fallback(ctx: JobContext) -> Tuple[str, Optional[str], Optional[str], str, Optional[Dict]]:
-    """
-    Load persona configuration with environment-controlled strategy:
-    1. Check PERSONA_USE environment variable
-    2. If "local" - use hardcoded prompts from prompts.py
-    3. If "api" - try job metadata first, then fallback to API
-    
-    Returns:
-        Tuple of (agent_instructions, session_instructions, closing_message, persona_name, full_config)
-    """
-    
-    # Check environment variable first
-    if should_use_local_persona():
-        logging.info(f"PERSONA_USE={PERSONA_USE}: Using local hardcoded persona")
-        return get_local_persona_config()
-    
-    logging.info(f"PERSONA_USE={PERSONA_USE}: Using API-based persona loading")
-    
-    # API-based loading: First try metadata
-    if ctx.job.metadata:
-        logging.info("Attempting to load persona from job metadata")
-        result = load_persona_from_metadata(ctx) # This is a SYNC function
-        if result[3] != "default":  # persona_name != "default" means we found valid persona
-            logging.info("Successfully loaded persona from job metadata")
-            return result
-        else:
-            logging.info("Job metadata present but no valid persona found, falling back to API")
-    else:
-        logging.info("No job metadata found, falling back to API")
-    
-    # Fallback to API call using DEFAULT_CALLER
-    default_caller = os.getenv("DEFAULT_CALLER", "+918655054859") # Updated to your number from logs
-    logging.info(f"Loading persona from API using DEFAULT_CALLER: {default_caller}")
-    
-    try:
-        result = await load_persona_from_dialed_number(default_caller)
-    except ValueError as e:
-        # API returned "No campaigns found" - fail validation directly
-        logging.error(f"Persona validation failed: {e}")
-        raise
-    
-    # Log the persona loading event
-    try:
-        if result[4]:  # full_config is not None
-            log_event({
-                "type": "persona_loaded_from_api",
-                "dialed_number": default_caller,
-                "persona_name": result[3],
-                "source": "api_fallback",
-                "persona_use_mode": PERSONA_USE
-            })
-        else:
-            log_event({
-                "type": "persona_not_found",
-                "dialed_number": default_caller,
-                "source": "api_fallback",
-                "persona_use_mode": PERSONA_USE
-            })
-    except Exception as e:
-        logging.warning(f"Failed to log persona loading event: {e}")
-    
-    return result
-
-def load_persona_from_metadata(ctx: JobContext) -> Tuple[str, Optional[str], Optional[str], str, Optional[Dict]]:
-    """
-    Load persona configuration from job metadata.
-    
-    THIS FUNCTION IS NOW UPDATED TO USE THE SAME ROBUST PROMPT-BUILDING
-    LOGIC AS THE API FALLBACK.
-    
-    Returns:
-        Tuple of (agent_instructions, session_instructions, closing_message, persona_name, full_config)
-    """
-    agent_instructions = AGENT_INSTRUCTION  # default fallback
-    session_instructions = SESSION_INSTRUCTION  # default fallback
-    closing_message = "Thank you for contacting us. Goodbye." # default fallback
-    persona_name = "default"
-    full_config = None
-    
-    if not ctx.job.metadata:
-        logging.info("No job metadata found, using default persona")
-        return agent_instructions, session_instructions, closing_message, persona_name, full_config
-    
-    try:
-        config = json.loads(ctx.job.metadata)
-        if not config:
-            logging.info("Empty metadata config, using default persona")
-            return agent_instructions, session_instructions, closing_message, persona_name, full_config
-            
-        full_config = config
-        logging.info(f"Loaded configuration from metadata for mobile: {config.get('mobileNo', 'unknown')}")
-        
-        # Extract persona configuration safely
-        campaigns = config.get("campaigns", [])
-        if campaigns and len(campaigns) > 0:
-            voice_agents = campaigns[0].get("voiceAgents", [])
-            if voice_agents and len(voice_agents) > 0:
-                persona = voice_agents[0].get("persona", {})
-                if persona:
-                    # --- NEW UNIFIED LOGIC ---
-                    
-                    # 1. Extract components
-                    raw_personality = persona.get("personality", "")
-                    conversation_structure = persona.get("conversationStructure", "")
-                    workflow = persona.get("workflow", "") # Added this, it was missing
-                    persona_name = persona.get("name", "unknown")
-                    
-                    messages = persona.get("fullConfig", {}).get("messages", {})
-                    
-                    welcome_message = persona.get("welcomeMessage") or messages.get("welcomeMessage", "")
-                    if not welcome_message:
-                         welcome_message = "Greet the user and ask how you can help them."
-                         
-                    # Get and Clean Closing Message
-                    raw_closing = persona.get("closingMessage") or messages.get("closingMessage", "")
-                    if "If issue resolved" in raw_closing or "Closing" in raw_closing:
-                        logging.warning(f"Corrupt closing message detected in metadata. Using default.")
-                        closing_message = "Thank you for contacting us. Have a wonderful day!"
-                    elif raw_closing:
-                        closing_message = raw_closing
-                    else:
-                        closing_message = "Thank you for contacting us. Have a wonderful day!"
-                    
-                    logging.info(f"Loaded persona from metadata: {persona_name}")
-
-                    # 2. Sanitize and Build Prompts
-                    personality = _sanitize_personality_prompt(raw_personality)
-                    
-                    agent_instructions, session_instructions = _build_persona_prompts(
-                        persona_name=persona_name,
-                        personality=personality,
-                        workflow=workflow,
-                        conversation_structure=conversation_structure,
-                        welcome_message=welcome_message
-                    )
-                    
-                    logging.info("Agent and session instructions built from metadata persona")
-                    
-    except (json.JSONDecodeError, IndexError, KeyError) as e:
-        logging.warning(f"Could not parse persona from job metadata: {e}. Using default instructions.")
-    except Exception as e:
-        logging.error(f"Unexpected error parsing persona metadata: {e}")
-    
-    return agent_instructions, session_instructions, closing_message, persona_name, full_config
-
-
 def apply_persona_to_agent(agent, agent_instructions: str, persona_name: str):
     """Apply persona configuration to an agent"""
     if agent_instructions != AGENT_INSTRUCTION:
@@ -545,8 +386,7 @@ def apply_persona_to_agent(agent, agent_instructions: str, persona_name: str):
             return False
     return False
 
-
-def attach_persona_to_session(session, full_config: Optional[Dict], persona_name: str, 
+def attach_persona_to_session(session, full_config: Optional[Dict], persona_name: str,
                              session_instructions: Optional[str], closing_message: Optional[str]):
     """Attach persona configuration to session for tools and logging"""
     try:

@@ -8,5 +8,7 @@ keys:
 
 # This is the crucial part that is likely missing
 redis:
-  address: '192.168.109.66:6379'
+  address: '127.0.0.1:6379'
   db: 0
+
+# Webhook removed - using agent triggers instead
