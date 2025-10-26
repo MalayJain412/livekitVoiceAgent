@@ -10,7 +10,8 @@ load_dotenv()  # Load environment variables early
 from livekit import agents
 from livekit.agents import AgentSession, Agent, RoomInputOptions, RoomOutputOptions, JobContext
 from livekit.plugins import google, cartesia, deepgram, noise_cancellation, silero
-from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
+from prompts import set_agent_instruction
+from persona_handler import load_persona_from_dialed_number as load_persona_from_api
 from tools import (
     # get_weather, 
     # search_web, 
@@ -123,28 +124,7 @@ def _extract_number_from_sip_uri(uri: str) -> Optional[str]:
 
 async def load_persona_from_dialed_number(dialed_number: str):
     """Load persona configuration from CRM API using dialed number."""
-    import aiohttp
-    
-    url = f"https://devcrm.xeny.ai/apis/api/public/mobile/{dialed_number}"
-    
-    async with aiohttp.ClientSession() as session:
-        try:
-            async with session.get(url) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    # Assuming the response has the persona config
-                    # Adjust based on actual API response structure
-                    agent_instructions = data.get("agent_instructions", "")
-                    session_instructions = data.get("session_instructions", "")
-                    closing_message = data.get("closing_message", "")
-                    persona_name = data.get("persona_name", "default")
-                    full_config = data
-                    return agent_instructions, session_instructions, closing_message, persona_name, full_config
-                else:
-                    raise ValueError(f"API returned status {response.status}")
-        except Exception as e:
-            logging.error(f"Error fetching persona for {dialed_number}: {e}")
-            raise
+    return await load_persona_from_api(dialed_number)
 
 
 def apply_persona_to_agent(agent: Agent, persona_config: dict):
@@ -163,12 +143,12 @@ def attach_persona_to_session(session: AgentSession, full_config: dict, persona_
 
 class Assistant(Agent):
     def __init__(self, custom_instructions=None, end_call_tool=None):
-        # Use custom_instructions as-is when provided (including empty string).
-        # Only fall back to AGENT_INSTRUCTION when custom_instructions is None.
-        instructions = custom_instructions if custom_instructions is not None else AGENT_INSTRUCTION
+        # Require custom_instructions from API - no fallback to defaults
+        if not custom_instructions:
+            raise ValueError("Agent requires custom_instructions from API - no default fallbacks allowed")
 
         super().__init__(
-            instructions=instructions,
+            instructions=custom_instructions,
             tools=[
                 # get_weather, 
                 # search_web, 
@@ -219,7 +199,7 @@ async def entrypoint(ctx: JobContext):
             tts=instances["tts"],
             vad=instances["vad"],
         )
-        dummy_agent = Assistant(custom_instructions="")  # Minimal placeholder agent
+        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")  # Minimal error handling agent
         
         # Start session with dummy agent
         await session.start(
@@ -250,7 +230,7 @@ async def entrypoint(ctx: JobContext):
             tts=instances["tts"],
             vad=instances["vad"],
         )
-        dummy_agent = Assistant(custom_instructions="")  # Minimal placeholder agent
+        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")  # Minimal error handling agent
         
         # Start session with dummy agent
         await session.start(
@@ -274,7 +254,7 @@ async def entrypoint(ctx: JobContext):
             tts=instances["tts"],
             vad=instances["vad"],
         )
-        dummy_agent = Assistant(custom_instructions="")  # Minimal placeholder agent
+        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")  # Minimal error handling agent
         
         # Start session with dummy agent
         await session.start(
@@ -303,7 +283,7 @@ async def entrypoint(ctx: JobContext):
             vad=instances["vad"],
         )
         
-        dummy_agent = Assistant(custom_instructions="")  # Minimal placeholder agent
+        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")  # Minimal error handling agent
         
         # Start session with dummy agent
         await session.start(
@@ -366,14 +346,12 @@ async def entrypoint(ctx: JobContext):
     logging.info("SessionManager history watcher started")
 
     # Generate initial reply with persona-aware instructions
-    if session_instructions:
-        # Use persona's conversation structure for session behavior
-        initial_instruction = session_instructions
-        logging.info(f"Using persona session instructions for: {persona_name}")
-    else:
-        # Use default session instruction
-        initial_instruction = SESSION_INSTRUCTION
-        logging.info("Using default session instruction")
+    if not session_instructions:
+        raise ValueError(f"Session instructions required from API for persona {persona_name} - no defaults allowed")
+
+    # Use persona's conversation structure for session behavior
+    initial_instruction = session_instructions
+    logging.info(f"Using persona session instructions for: {persona_name}")
     
     # --- FINAL REVISED CONVERSATION LOGIC ---
 

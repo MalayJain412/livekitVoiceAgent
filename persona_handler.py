@@ -14,7 +14,7 @@ from typing import Dict, Optional, Tuple
 from livekit.agents import JobContext
 from livekit.api.room_service import RoomService
 
-from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
+from prompts import set_agent_instruction
 from transcript_logger import log_event
 
 def _extract_number_from_sip_uri(sip_uri: str) -> str:
@@ -144,14 +144,25 @@ def _sanitize_personality_prompt(raw_personality: str) -> str:
         "if the user needs more help before you end the call (e.g., \"Aur koi madad chahiye aapko?\")."
     )
 
-    # 5. Combine the new, clean rules into a single string
-    clean_personality = "\n\n".join([
-        "You are Xeny, a warm and professional AI sales assistant.", # Start with a clean intro
-        core_directive,
-        off_topic_handling,
-        language_rules,
-        conversation_rules
-    ])
+    # 5. Combine the API personality with our behavioral rules
+    if raw_personality and raw_personality.strip():
+        # Use the API personality as the base, then add our behavioral rules
+        clean_personality = "\n\n".join([
+            raw_personality,  # Start with the actual API personality
+            # core_directive,
+            off_topic_handling,
+            language_rules,
+            conversation_rules
+        ])
+    else:
+        # Fallback to generic if no API personality
+        clean_personality = "\n\n".join([
+            "You are a helpful AI assistant.",  # Generic fallback
+            # core_directive,
+            off_topic_handling,
+            language_rules,
+            conversation_rules
+        ])
 
     return clean_personality
 
@@ -302,19 +313,19 @@ async def load_persona_from_dialed_number(dialed_number: str) -> Tuple[str, Opti
     Load persona configuration from CRM API for a dialed number.
     Returns agent instructions, initial session instructions, closing message, persona name, and full config.
     """
-    # 1. Set default return values
-    agent_instructions = AGENT_INSTRUCTION  # Default instructions
-    session_instructions = SESSION_INSTRUCTION
-    closing_message = "Thank you for contacting us. Goodbye." # Default closing
-    persona_name = "default"
+    # 1. Initialize return values (no defaults - must come from API)
+    agent_instructions = ""
+    session_instructions = ""
+    closing_message = ""
+    persona_name = ""
     full_config = None
 
     try:
         # 2. Fetch config from the API
         config = await asyncio.to_thread(load_persona_from_api, dialed_number)
         if not config:
-            logging.info(f"No persona config found for dialed number {dialed_number}, using defaults.")
-            return agent_instructions, session_instructions, closing_message, persona_name, full_config
+            logging.error(f"No persona config found for dialed number {dialed_number}. API returned no data.")
+            raise ValueError(f"No persona configuration available for dialed number {dialed_number}")
 
         full_config = config
         logging.info(f"Successfully loaded config from API for {dialed_number}")
@@ -376,7 +387,7 @@ async def load_persona_from_dialed_number(dialed_number: str) -> Tuple[str, Opti
 
 def apply_persona_to_agent(agent, agent_instructions: str, persona_name: str):
     """Apply persona configuration to an agent"""
-    if agent_instructions != AGENT_INSTRUCTION:
+    if agent_instructions:  # Only apply if we have actual instructions from API
         try:
             agent.instructions = agent_instructions
             logging.info(f"Agent instructions updated with persona data for: {persona_name}")
