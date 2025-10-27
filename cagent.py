@@ -30,97 +30,166 @@ try:
     configure_logging()
 except Exception:
     logging.basicConfig(level=logging.INFO)
+    
+# async def get_sip_participant_and_number(ctx: JobContext) -> Tuple[Optional[str], Optional[str]]:
+#     """Extract SIP participant and dialed number from the room (prefer dialed number)."""
+#     try:
+#         if hasattr(ctx.room, "participants") and ctx.room.participants:
+#             participants = ctx.room.participants
+
+#             for participant in participants.values():
+#                 if participant.identity.startswith("sip_"):
+#                     # Prefer lk_sip_to (dialed number)
+#                     if hasattr(participant, "attributes") and participant.attributes:
+#                         dialed_number_attr = participant.attributes.get("lk_sip_to")
+#                         caller_number_attr = participant.attributes.get("lk_sip_from")
+
+#                         # 1️⃣ Try dialed number first
+#                         if dialed_number_attr:
+#                             dialed_number = _extract_number_from_sip_uri(dialed_number_attr)
+#                             if dialed_number:
+#                                 logging.info(f"Extracted dialed number from participant attributes: {dialed_number}")
+#                                 return participant.identity, dialed_number
+
+#                         # 2️⃣ Fallback to caller number if dialed number unavailable
+#                         if caller_number_attr:
+#                             caller_number = _extract_number_from_sip_uri(caller_number_attr)
+#                             if caller_number:
+#                                 logging.info(f"Fallback to caller number: {caller_number}")
+#                                 return participant.identity, caller_number
+
+#                     # 3️⃣ Last fallback: try parsing participant.identity directly
+#                     parsed_number = _extract_number_from_sip_uri(participant.identity)
+#                     if parsed_number:
+#                         logging.info(f"Extracted number from participant identity: {parsed_number}")
+#                         return participant.identity, parsed_number
+
+#         # 4️⃣ Final fallback: Extract from room name
+#         room_name = ctx.room.name
+#         logging.info(f"Trying fallback extraction from room name: {room_name}")
+
+#         # Example formats:
+#         #   number-+918123456789 or friday-call-+918123456789_abcXYZ
+#         for prefix in ["number-", "friday-call-", "callee-"]:
+#             if room_name.startswith(prefix):
+#                 number_part = room_name.replace(prefix, "").split("_")[0]
+#                 dialed_number = _extract_number_from_sip_uri(number_part)
+#                 if dialed_number:
+#                     logging.info(f"Extracted dialed number from room name: {dialed_number}")
+#                     return None, dialed_number
+
+#         logging.warning("No dialed number found in participants or room name.")
+#         return None, None
+
+#     except Exception as e:
+#         logging.error(f"Error extracting SIP participant and number: {e}")
+#         return None, None
+
+# def _extract_number_from_sip_uri(uri: str) -> Optional[str]:
+#     """Extract phone number from SIP URI format or participant identity."""
+#     try:
+#         if uri.startswith("sip_"):
+#             uri = uri[4:]
+#             if uri.startswith("+"):
+#                 uri = uri[1:]
+#             if uri.isdigit():
+#                 return uri
+
+#         if uri.startswith("sip:"):
+#             uri = uri[4:]
+#             if "@" in uri:
+#                 uri = uri.split("@")[0]
+#             if uri.startswith("+"):
+#                 uri = uri[1:]
+#             if uri.isdigit():
+#                 return uri
+
+#         if uri.startswith("+"):
+#             uri = uri[1:]
+#             if uri.isdigit():
+#                 return uri
+
+#         if uri.isdigit():
+#             return uri
+
+#         return None
+#     except Exception as e:
+#         logging.error(f"Error extracting number from URI {uri}: {e}")
+#         return None
+
+
+import os
+from dotenv import load_dotenv
+import logging
+from logging_config import configure_logging
+import asyncio
+from typing import Optional, Tuple
+import re
+
+load_dotenv()  # Load environment variables early
+
+from livekit import agents
+from livekit.agents import AgentSession, Agent, RoomInputOptions, RoomOutputOptions, JobContext
+from livekit.plugins import google, cartesia, deepgram, noise_cancellation, silero
+from prompts import set_agent_instruction
+from persona_handler import load_persona_from_dialed_number as load_persona_from_api
+from tools import (
+    create_lead, 
+    detect_lead_intent, 
+    HangupTool
+)
+import config
+from instances import get_instances_from_payload
+from session_manager import SessionManager
+from validation import validate_agent_availability, hangup_call
+
+# Centralized logging config
+try:
+    configure_logging()
+except Exception:
+    logging.basicConfig(level=logging.INFO)
+
+
+# --------------------------------------------
+# STRICT MODE: Extract number only from room name
+# --------------------------------------------
+def extract_number_from_room_name(room_name: str) -> Optional[str]:
+    """Extracts the dialed number from room name like 'number-_918655048643'."""
+    match = re.search(r'number-[_+]?(\d+)', room_name)
+    if match:
+        return '+' + match.group(1)
+    return None
 
 
 async def get_sip_participant_and_number(ctx: JobContext) -> Tuple[Optional[str], Optional[str]]:
-    """Extract SIP participant and dialed number from the room."""
+    """
+    Extract SIP participant and dialed number strictly from room name.
+    No metadata, no fallbacks, no defaults.
+    """
     try:
-        # First try to get participants directly from the room
-        if hasattr(ctx.room, 'participants') and ctx.room.participants:
-            participants = ctx.room.participants
-            
-            for participant in participants.values():
-                if participant.identity.startswith("sip_"):
-                    # Try to get dialed number from attributes first
-                    if hasattr(participant, 'attributes') and participant.attributes:
-                        dialed_number = participant.attributes.get("lk_sip_to")
-                        if dialed_number:
-                            return participant.identity, _extract_number_from_sip_uri(dialed_number)
-                    
-                    # Fallback to parsing identity (caller number)
-                    caller_number = _extract_number_from_sip_uri(participant.identity)
-                    if caller_number:
-                        # For now, return caller number, but ideally we want dialed number
-                        return participant.identity, caller_number
-        
-        # Fallback: Extract caller number from room name
-        # Room name format: friday-call-_+916232155888_8ebDVBAxK95T
         room_name = ctx.room.name
-        if "friday-call-_" in room_name:
-            # Extract the caller number part between "_+" and "_"
-            start = room_name.find("_+") + 1  # Skip the "_"
-            end = room_name.find("_", start + 1)  # Find next "_" after the number
-            if start > 0 and end > start:
-                number_part = room_name[start:end]
-                caller_number = _extract_number_from_sip_uri(number_part)
-                if caller_number:
-                    # TEMPORARY: Use the known dialed number instead of caller number
-                    # TODO: Extract dialed number from SIP metadata
-                    dialed_number = "918655054859"  # The number that has campaigns
-                    return f"sip_{number_part}", dialed_number
-        
-        return None, None
-    except Exception as e:
-        logging.error(f"Error extracting SIP participant and number: {e}")
-        return None, None
-def _extract_number_from_sip_uri(uri: str) -> Optional[str]:
-    """Extract phone number from SIP URI format or participant identity."""
-    try:
-        # Handle participant identity format: sip_+1234567890
-        if uri.startswith("sip_"):
-            # Remove sip_ prefix
-            uri = uri[4:]
-            
-            # Remove + if present
-            if uri.startswith("+"):
-                uri = uri[1:]
-            
-            # Should be digits only
-            if uri.isdigit():
-                return uri
-        
-        # Handle sip:+1234567890@domain format
-        if uri.startswith("sip:"):
-            # Remove sip: prefix
-            uri = uri[4:]
-            
-            # Remove @domain part
-            if "@" in uri:
-                uri = uri.split("@")[0]
-            
-            # Remove + if present
-            if uri.startswith("+"):
-                uri = uri[1:]
-            
-            # Should be digits only
-            if uri.isdigit():
-                return uri
-        
-        # Handle direct number format: +1234567890
-        if uri.startswith("+"):
-            uri = uri[1:]
-            if uri.isdigit():
-                return uri
-        
-        # Handle direct digits
-        if uri.isdigit():
-            return uri
-        
-        return None
-    except Exception as e:
-        logging.error(f"Error extracting number from URI {uri}: {e}")
-        return None
+        logging.info(f"Extracting dialed number from room name: {room_name}")
 
+        dialed_number = extract_number_from_room_name(room_name)
+        if not dialed_number:
+            logging.warning(f"Could not extract dialed number from room name: {room_name}")
+            return None, None
+
+        logging.info(f"Successfully extracted dialed number from room name: {dialed_number}")
+
+        # Find SIP participant identity (if exists)
+        participant_identity = None
+        if hasattr(ctx.room, "participants") and ctx.room.participants:
+            for p in ctx.room.participants.values():
+                if p.identity.startswith("sip_"):
+                    participant_identity = p.identity
+                    break
+
+        return participant_identity, dialed_number
+
+    except Exception as e:
+        logging.error(f"Error extracting number from room name: {e}")
+        return None, None
 
 async def load_persona_from_dialed_number(dialed_number: str):
     """Load persona configuration from CRM API using dialed number."""

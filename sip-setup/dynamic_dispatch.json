@@ -2,10 +2,11 @@
     "name": "Dynamic Room Routing",
     "trunk_ids": ["ST_CSFtgGo4bhHe"],
     "rule": {
-        "dispatchRuleIndividual": {
-            "roomPrefix": "friday-call-"
+        "dispatchRuleCallee": {
+          "roomPrefix": "number-",
+          "randomize": false
         }
-    },
+      },
     "roomConfig": {
         "metadata": "{\"dialed_number\": \"${sip.toUser}\"}",
         "agents": [{

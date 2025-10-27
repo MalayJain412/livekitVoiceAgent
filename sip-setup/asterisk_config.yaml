@@ -1,13 +1,15 @@
 # Updated config for Asterisk integration
 api_key: APIntavBoHTqApw
 api_secret: pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
-ws_url: ws://127.0.0.1:7880
+# ws_url: ws://127.0.0.1:7880
+ws_url: ws://192.168.109.66:7880
 redis:
-  address: 127.0.0.1:6379
+  # address: 127.0.0.1:6379
+  address: 192.168.109.66:6379
 sip_port: 5060
 rtp_port: 10000-20000
-use_external_ip: true
-local_ip: 172.30.184.7
+use_external_ip: false
+# local_ip: 172.30.184.7
 logging:
   level: debug
 

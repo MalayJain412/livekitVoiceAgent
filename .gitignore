@@ -36,6 +36,6 @@ conversations/
 leads/
 
 python_files/
-# tests/
+tests/
 
 sip/

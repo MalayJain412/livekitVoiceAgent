@@ -104,22 +104,22 @@ def _sanitize_personality_prompt(raw_personality: str) -> str:
     # --- Re-build the personality from scratch based on our "source of truth" ---
 
     # 1. Define the true Core Purpose (Lead Gen & Appointments)
-    core_directive = (
-        "# 1. CORE DIRECTIVE (MANDATORY)\n"
-        "Your *only* purpose is to assist with **Lead Generation** and **Appointment Scheduling**.\n"
-        "You MUST NOT assist with any other topics (like order tracking, technical support, billing, etc.)."
-    )
+    # core_directive = (
+    #     "# 1. CORE DIRECTIVE (MANDATORY)\n"
+    #     "Your *only* purpose is to assist with **Lead Generation** and **Appointment Scheduling**.\n"
+    #     "You MUST NOT assist with any other topics (like order tracking, technical support, billing, etc.)."
+    # )
 
     # 2. Define the true Off-Topic Handling (Polite Redirect, not "ignore")
-    off_topic_handling = (
-        "# 2. HANDLING OFF-TOPIC REQUESTS\n"
-        "If the user asks for anything not related to lead generation or appointments, "
-        "you MUST politely decline and guide them back.\n"
-        "- **Example Script (Hinglish):** \"Main samajh gayi, lekin main sirf lead generation aur "
-        "appointment scheduling mein hi aapki madad kar sakti hoon. Kya aap inme se kisi service mein interested hain?\"\n"
-        "- **Example Script (English):** \"I understand, but I can only assist with lead generation and "
-        "appointment scheduling. Are you interested in one of those services?\""
-    )
+    # off_topic_handling = (
+    #     "# 2. HANDLING OFF-TOPIC REQUESTS\n"
+    #     "If the user asks for anything not related to lead generation or appointments, "
+    #     "you MUST politely decline and guide them back.\n"
+    #     "- **Example Script (Hinglish):** \"Main samajh gayi, lekin main sirf lead generation aur "
+    #     "appointment scheduling mein hi aapki madad kar sakti hoon. Kya aap inme se kisi service mein interested hain?\"\n"
+    #     "- **Example Script (English):** \"I understand, but I can only assist with lead generation and "
+    #     "appointment scheduling. Are you interested in one of those services?\""
+    # )
 
     # 3. Define the true Language Rules (Mirror the user)
     language_rules = (
@@ -150,7 +150,7 @@ def _sanitize_personality_prompt(raw_personality: str) -> str:
         clean_personality = "\n\n".join([
             raw_personality,  # Start with the actual API personality
             # core_directive,
-            off_topic_handling,
+            # off_topic_handling,
             language_rules,
             conversation_rules
         ])
@@ -159,7 +159,7 @@ def _sanitize_personality_prompt(raw_personality: str) -> str:
         clean_personality = "\n\n".join([
             "You are a helpful AI assistant.",  # Generic fallback
             # core_directive,
-            off_topic_handling,
+            # off_topic_handling,
             language_rules,
             conversation_rules
         ])
