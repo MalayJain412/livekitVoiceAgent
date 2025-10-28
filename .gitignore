@@ -42,3 +42,6 @@ sip/
 
 
 egress_scripts/
+*.zip
+/livekit-records
+/open-sip-records

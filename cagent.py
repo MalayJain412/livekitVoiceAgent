@@ -4,128 +4,8 @@ import logging
 from logging_config import configure_logging
 import asyncio
 from typing import Optional, Tuple
-
-load_dotenv()  # Load environment variables early
-
-from livekit import agents
-from livekit.agents import AgentSession, Agent, RoomInputOptions, RoomOutputOptions, JobContext
-from livekit.plugins import google, cartesia, deepgram, noise_cancellation, silero
-from prompts import set_agent_instruction
-from persona_handler import load_persona_from_dialed_number as load_persona_from_api
-from tools import (
-    # get_weather, 
-    # search_web, 
-    # triotech_info,
-    create_lead, 
-    detect_lead_intent, 
-    HangupTool
-)
-import config
-from instances import get_instances_from_payload
-from session_manager import SessionManager
-from validation import validate_agent_availability, hangup_call
-
-# Centralized logging config
-try:
-    configure_logging()
-except Exception:
-    logging.basicConfig(level=logging.INFO)
-    
-# async def get_sip_participant_and_number(ctx: JobContext) -> Tuple[Optional[str], Optional[str]]:
-#     """Extract SIP participant and dialed number from the room (prefer dialed number)."""
-#     try:
-#         if hasattr(ctx.room, "participants") and ctx.room.participants:
-#             participants = ctx.room.participants
-
-#             for participant in participants.values():
-#                 if participant.identity.startswith("sip_"):
-#                     # Prefer lk_sip_to (dialed number)
-#                     if hasattr(participant, "attributes") and participant.attributes:
-#                         dialed_number_attr = participant.attributes.get("lk_sip_to")
-#                         caller_number_attr = participant.attributes.get("lk_sip_from")
-
-#                         # 1️⃣ Try dialed number first
-#                         if dialed_number_attr:
-#                             dialed_number = _extract_number_from_sip_uri(dialed_number_attr)
-#                             if dialed_number:
-#                                 logging.info(f"Extracted dialed number from participant attributes: {dialed_number}")
-#                                 return participant.identity, dialed_number
-
-#                         # 2️⃣ Fallback to caller number if dialed number unavailable
-#                         if caller_number_attr:
-#                             caller_number = _extract_number_from_sip_uri(caller_number_attr)
-#                             if caller_number:
-#                                 logging.info(f"Fallback to caller number: {caller_number}")
-#                                 return participant.identity, caller_number
-
-#                     # 3️⃣ Last fallback: try parsing participant.identity directly
-#                     parsed_number = _extract_number_from_sip_uri(participant.identity)
-#                     if parsed_number:
-#                         logging.info(f"Extracted number from participant identity: {parsed_number}")
-#                         return participant.identity, parsed_number
-
-#         # 4️⃣ Final fallback: Extract from room name
-#         room_name = ctx.room.name
-#         logging.info(f"Trying fallback extraction from room name: {room_name}")
-
-#         # Example formats:
-#         #   number-+918123456789 or friday-call-+918123456789_abcXYZ
-#         for prefix in ["number-", "friday-call-", "callee-"]:
-#             if room_name.startswith(prefix):
-#                 number_part = room_name.replace(prefix, "").split("_")[0]
-#                 dialed_number = _extract_number_from_sip_uri(number_part)
-#                 if dialed_number:
-#                     logging.info(f"Extracted dialed number from room name: {dialed_number}")
-#                     return None, dialed_number
-
-#         logging.warning("No dialed number found in participants or room name.")
-#         return None, None
-
-#     except Exception as e:
-#         logging.error(f"Error extracting SIP participant and number: {e}")
-#         return None, None
-
-# def _extract_number_from_sip_uri(uri: str) -> Optional[str]:
-#     """Extract phone number from SIP URI format or participant identity."""
-#     try:
-#         if uri.startswith("sip_"):
-#             uri = uri[4:]
-#             if uri.startswith("+"):
-#                 uri = uri[1:]
-#             if uri.isdigit():
-#                 return uri
-
-#         if uri.startswith("sip:"):
-#             uri = uri[4:]
-#             if "@" in uri:
-#                 uri = uri.split("@")[0]
-#             if uri.startswith("+"):
-#                 uri = uri[1:]
-#             if uri.isdigit():
-#                 return uri
-
-#         if uri.startswith("+"):
-#             uri = uri[1:]
-#             if uri.isdigit():
-#                 return uri
-
-#         if uri.isdigit():
-#             return uri
-
-#         return None
-#     except Exception as e:
-#         logging.error(f"Error extracting number from URI {uri}: {e}")
-#         return None
-
-
-import os
-from dotenv import load_dotenv
-import logging
-from logging_config import configure_logging
-import asyncio
-from typing import Optional, Tuple
 import re
-
+import time
 load_dotenv()  # Load environment variables early
 
 from livekit import agents
@@ -142,6 +22,11 @@ import config
 from instances import get_instances_from_payload
 from session_manager import SessionManager
 from validation import validate_agent_availability, hangup_call
+
+try:
+    from livekit.api import LiveKitAPI, RoomCompositeEgressRequest, EncodedFileOutput
+except ImportError:
+    logging.critical("Could not import LiveKitAPI. Please run: pip install livekit-api")
 
 # Centralized logging config
 try:
@@ -195,12 +80,10 @@ async def load_persona_from_dialed_number(dialed_number: str):
     """Load persona configuration from CRM API using dialed number."""
     return await load_persona_from_api(dialed_number)
 
-
 def apply_persona_to_agent(agent: Agent, persona_config: dict):
     """Apply persona configuration to the agent."""
     # This function can be used if needed to modify agent after creation
     pass
-
 
 def attach_persona_to_session(session: AgentSession, full_config: dict, persona_name: str, session_instructions: str, closing_message: str):
     """Attach persona configuration to the session for later use."""
@@ -208,7 +91,6 @@ def attach_persona_to_session(session: AgentSession, full_config: dict, persona_
     session.persona_name = persona_name
     session.session_instructions = session_instructions
     session.closing_message = closing_message
-
 
 class Assistant(Agent):
     def __init__(self, custom_instructions=None, end_call_tool=None):
@@ -254,6 +136,57 @@ class Assistant(Agent):
 async def entrypoint(ctx: JobContext):
     # Setup conversation logging
     config.setup_conversation_log()
+    
+    # -----------------------------------------------------------------
+    # --- RECORDING (Egress) BLOCK ---
+    # -----------------------------------------------------------------
+    lkapi = None
+    try:
+        logging.info(f"Starting recording for room: {ctx.room.name}")
+
+        livekit_url = os.getenv("LIVEKIT_URL")
+        livekit_api_key = os.getenv("LIVEKIT_API_KEY")
+        livekit_api_secret = os.getenv("LIVEKIT_API_SECRET")
+
+        if not (livekit_url and livekit_api_key and livekit_api_secret):
+            logging.error("Recording skipped: LIVEKIT_URL / API_KEY / API_SECRET not all set")
+        else:
+            # Ensure HTTP host
+            http_host = livekit_url
+            if http_host.startswith("ws://"):
+                http_host = "http://" + http_host[len("ws://"):]
+            elif http_host.startswith("wss://"):
+                http_host = "https://" + http_host[len("wss://"):]
+
+            logging.info(f"Recording: LiveKit API host = {http_host}")
+
+            lkapi = LiveKitAPI(http_host, livekit_api_key, livekit_api_secret)
+
+            filename = f"recordings/{ctx.room.name}-{int(time.time())}.mp4"
+
+            file_output = EncodedFileOutput(
+                filepath=filename
+                # Optionally: azure=AzureBlobUpload(...), s3=..., gcp=...
+            )
+
+            req = RoomCompositeEgressRequest(
+                room_name=ctx.room.name,
+                audio_only=True,
+                file_outputs=[file_output]
+            )
+
+            info = await lkapi.egress.start_room_composite_egress(req)
+            logging.info(f"Recording started: egress_id={info.egress_id}, file={filename}")
+
+    except Exception as e:
+        logging.error(f"Recording error for room {ctx.room.name}: {e}")
+    finally:
+        if lkapi:
+            await lkapi.aclose()
+    # -----------------------------------------------------------------
+    # --- END OF RECORDING BLOCK ---
+    # -----------------------------------------------------------------
+
     
     # Extract dialed number from SIP participant in the room
     participant_identity, dialed_number = await get_sip_participant_and_number(ctx)
