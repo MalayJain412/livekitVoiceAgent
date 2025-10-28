@@ -39,3 +39,6 @@ python_files/
 tests/
 
 sip/
+
+
+egress_scripts/
