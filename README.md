@@ -1,227 +1,253 @@
 # Friday AI — Voice Agent with SIP Telephony + RAG
 
-Friday AI is an intelligent voice assistant built for **Triotech Bizserve Pvt. Ltd.**  
-It combines SIP telephony, RAG-based knowledge retrieval, and lead capture automation, all powered by LiveKit infrastructure.
+Friday AI is an intelligent voice assistant built for **Triotech Bizserve Pvt. Ltd.**
+It combines SIP telephony, RAG-based knowledge retrieval, and lead capture automation — all powered by LiveKit infrastructure.
+
+---
 
 ## 🚀 Features
 
-- SIP Telephony Integration (Zoiper ↔ LiveKit ↔ AI Agent)  
-- Hybrid Knowledge System (JSON + RAG/ChromaDB)  
-- Real-Time Voice Communication via WebRTC & Redis  
-- Lead Management & Detection in Hinglish  
-- Conversation Logging & Analytics  
-- REST API for RAG Queries  
-- Plugin-Ready Architecture for STT, TTS, and LLM providers
+* **SIP Telephony Integration** (Zoiper ↔ LiveKit ↔ AI Agent)
+* **Hybrid Knowledge System** (JSON + RAG/ChromaDB)
+* **Real-Time Voice Communication** via WebRTC & Redis
+* **Lead Detection & Logging** in Hinglish
+* **Local Audio Recording** via Docker Egress
+* **Conversation Analytics + CRM Integration**
+* **Plugin-Ready** for STT, TTS, and LLM Providers
+
+---
 
 ## 🧩 System Overview
 
 ```mermaid
 graph TD
-    A[SIP Client /Zoiper] -->|5060| B[LiveKit SIP Bridge]
+    A[SIP Client / Zoiper] -->|5060| B[LiveKit SIP Bridge]
     B -->|WebRTC| C[LiveKit Server]
     C -->|Redis Bus| D[Redis]
-    C -->|Agent Session| E[cagent.py]
-    E -->|Knowledge Queries| F[RAG API + Chroma DB]
+    C -->|Session Control| E[cagent.py]
+    E -->|Knowledge Queries| F[RAG + Chroma DB]
     E -->|Tools & Rules| G[tools.py]
-    E -->|Logs| H[conversations/]
     E -->|Leads| I[leads/]
+    C -->|Recording Request| J[LiveKit Egress = Docker]
+    J -->|Audio Files| K[recordings/]
 ```
 
 ---
 
 ## ⚙️ Deployment Guide
 
-This guide details the complete manual steps to deploy the full stack.
+This guide documents the **tested and stable deployment flow** verified on a VPS using Docker and screen.
+
+---
 
 ### Step 1: System Prerequisites
 
-Update your system and install all required packages, including Go and tools for building from source.
-
 ```bash
 sudo apt update
-sudo apt install -y curl wget git redis-server python3 python3-venv python3-pip screen build-essential pkg-config libopus-dev libopusfile-dev libsoxr-dev jq
-```
-
-# Install Go
-```bash
-wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
-sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
-echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.profile
-source ~/.profile
-go version
+sudo apt install -y curl wget git redis-server python3 python3-venv python3-pip screen build-essential pkg-config libopus-dev libopusfile-dev libsoxr-dev jq docker.io
 ```
 
 ### Step 2: Setup Redis
 
-Enable and start the Redis server. Verify that it's running correctly.
-
 ```bash
 sudo systemctl enable redis-server
 sudo systemctl start redis-server
-redis-cli ping  # Expected output: PONG
+redis-cli ping  # Expected: PONG
 ```
 
-### Step 3: Setup the Application
+---
 
-Clone the repository and set up the Python environment.
+### Step 3: Clone & Prepare Friday AI
 
 ```bash
-# Clone your repository
+# Clone the repository
 git clone <your-repo-url>
 cd <your-repo-directory>
 
-# Setup Python environment and activate it
+# Create Python virtual environment
 python3 -m venv ainvenv
 source ainvenv/bin/activate
 
-# Install Python dependencies
-pip3 install -r requirements.txt
+# Install dependencies
+pip install -r requirements.txt
 ```
+
+---
 
 ### Step 4: Install LiveKit Components
 
-Download the server binary, build the SIP bridge from source, and install the CLI.
-
 ```bash
-# Install LiveKit Server v1.9.1
+# Install LiveKit Server (v1.9.1)
 wget https://github.com/livekit/livekit/releases/download/v1.9.1/livekit-server_1.9.1_linux_amd64.tar.gz
 tar -xzf livekit-server_1.9.1_linux_amd64.tar.gz
 sudo mv livekit-server /usr/local/bin/
 sudo chmod +x /usr/local/bin/livekit-server
 
-# Build LiveKit SIP Bridge from source
+# Build SIP Bridge
 git clone https://github.com/livekit/sip.git
 cd sip
 go build -o livekit-sip ./cmd/livekit-sip
 sudo mv livekit-sip /usr/local/bin/
 cd ..
-
-# Install LiveKit CLI using official installer
-curl -sSL https://get.livekit.io/cli | bash
-echo 'alias lk="livekit-cli"' >> ~/.bashrc
-source ~/.bashrc
 ```
 
-### Step 5: Start LiveKit Server
+---
 
-Start the core LiveKit server first. It must be running before configuring projects and trunks.
+### Step 5: Run LiveKit Server
 
 ```bash
-# Start LiveKit Server in a detached screen session
+# Start LiveKit Server in a detached session
 screen -dmS livekit-server livekit-server --config sip-setup/livekit.yaml
 ```
 
-### Step 6: Configure SIP Routing & Verify
+---
 
-Follow these numbered steps to create a LiveKit project, provision an inbound SIP trunk, inject the produced trunk ID into your dispatch rule, and verify everything is correct.
+### Step 6: Start LiveKit SIP Bridge
 
 ```bash
-# 1. Create a Project
-# This command creates a new workspace called "friday" on your LiveKit server.
-lk project add --name friday --url ws://127.0.0.1:7880 --api-key APIntavBoHTqApw --api-secret pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
-
-# 2. Create a SIP Trunk and Automatically Get its ID
-# This creates the secure entry point for your SIP client (like Zoiper) and uses the 'jq' tool
-# to automatically save its unique ID into a variable.
-TRUNK_ID=$(lk sip inbound create --project friday sip-setup/inbound_trunk.json | jq -r '.sip_trunk_id')
-echo "Successfully created SIP Trunk with ID: $TRUNK_ID" # Example: ST_AbcDEfg123hIJ
-
-# 3. Automatically Update the Routing Rule
-# This command finds the placeholder 'REPLACE_WITH_TRUNK_ID' in your dispatch
-# rule file and replaces it with the actual ID we just captured.
-sed -i "s/REPLACE_WITH_TRUNK_ID/$TRUNK_ID/g" sip-setup/sip_dispatch.json
-
-# 4. Create the Final Dispatch Rule
-# Now that the rule is updated with the correct Trunk ID, this command uploads it to the server,
-# creating the final link between your phone line and the AI agent's room.
-lk sip dispatch create --project friday sip-setup/sip_dispatch.json
-
-# 5. Verify Everything is Correct
-# These commands let you see the project, trunk, and rule you just created on the server to confirm success.
-echo "--- Verifying Configuration ---"
-lk project list
-lk sip inbound-trunk list
-lk sip dispatch list
+# Run SIP Bridge
+screen -dmS livekit-sip livekit-sip --config sip-setup/config.yaml
 ```
 
-### Step 7: Start Remaining Services
-
-Now that the server is running and configured, start the SIP bridge and the Python agent.
+Confirm both are active:
 
 ```bash
-# Start LiveKit SIP Bridge
-screen -dmS sip-bridge livekit-sip --config sip-setup/config.yaml
-
-# Start the Python Backend Agent
-screen -dmS backend bash -c "source ainvenv/bin/activate && python cagent.py dev"
-```
-
-### Step 8: Final Verification
-
-```bash
-# 1. Check active screen sessions
 screen -ls
-
-# 2. Check listening ports
-sudo netstat -tunlp | grep -E '7880|5060|6379'
-
-# 3. Verify Redis
-redis-cli ping
+sudo netstat -tunlp | grep -E '7880|5060'
 ```
+
+---
+
+### Step 7: Start LiveKit Egress (Docker)
+
+Friday AI uses Dockerized LiveKit Egress for **audio-only local recording**.
+
+**egress.yaml**
+
+```yaml
+api_key: APIntavBoHTqApw
+api_secret: pRkd16t4uYVUs9nSlNeMawSE1qmUzfV2ZkSrMT2aiFM
+ws_url: ws://127.0.0.1:7880
+
+redis:
+  address: '127.0.0.1:6379'
+
+# Default Storage (optional Azure config)
+azure:
+  account_name: xenystorage
+  account_key: <REDACTED>
+  container_name: livekit-recordings
+```
+
+**Run Egress:**
+
+```bash
+docker run -d \
+  --name livekit-egress \
+  --network="host" \
+  -v $(pwd)/recordings:/recordings \
+  -v $(pwd)/egress.yaml:/out/egress.yaml \
+  livekit/egress
+```
+
+🟢 The system now records audio locally to:
+`recordings/<room_name>-<timestamp>.ogg`
+
+---
+
+### Step 8: Start the Python Agent
+
+```bash
+screen -dmS livekit-backend bash -c "source ainvenv/bin/activate && python cagent.py"
+```
+
+---
+
+### Step 9: Verification
+
+```bash
+# Check all running processes
+screen -ls
+sudo netstat -tunlp | grep -E '7880|5060|6379'
+redis-cli ping
+docker ps | grep livekit
+```
+
+🟢 Expected:
+
+* LiveKit server on port `7880`
+* SIP bridge on `5060`
+* Redis on `6379`
+* Egress container running and writing `.ogg` files
 
 ---
 
 ## 📞 SIP Client Setup (Zoiper)
 
-| Setting  | Value         |
-| :------- | :------------ |
-| Host     | `<YOUR-SERVER-IP>` |
-| Port     | `5060`        |
-| Username | `1001`        |
-| Password | `1001`        |
-| Protocol | `SIP (UDP)`   |
+| Setting  | Value              |
+| -------- | ------------------ |
+| Host     | `<YOUR_SERVER_IP>` |
+| Port     | 5060               |
+| Username | 1001               |
+| Password | 1001               |
+| Protocol | SIP (UDP)          |
 
-> Note: Once registered, dial any number to connect to the Friday AI agent.
+> Dial any number (e.g., `+91XXXXXXXXXX`) to connect with the AI agent.
+> Egress will automatically record the audio session locally.
+
+---
+
+## 🧠 Knowledge & Persona Handling
+
+* The agent loads **persona settings dynamically** from the CRM endpoint via
+  `load_persona_from_dialed_number()`.
+* Knowledge retrieval uses **ChromaDB-based RAG** with a fallback JSON rule base.
+* Logs and leads are stored locally under:
+
+  * `conversations/`
+  * `leads/`
+
+---
 
 ## 🖥️ Service Management
 
-### Check Running Services
 ```bash
+# View running services
 screen -ls
-redis-cli ping
-```
 
-### Attach to Service Logs
-```bash
+# Attach to a service
 screen -r livekit-server
-screen -r sip-bridge
-screen -r backend
-# Detach: Ctrl+A then D
+screen -r livekit-sip
+screen -r livekit-backend
+
+# Detach (Ctrl + A then D)
+# Stop a service
+screen -S livekit-sip -X quit
 ```
 
-### Stop Services
-```bash
-screen -S livekit-server -X quit
-screen -S sip-bridge -X quit
-screen -S backend -X quit
-```
+---
 
---- 
+## 🧾 Configuration Summary
 
-## 🔧 Configuration Files
-
-- `.env` — API keys & environment variables  
-- `sip-setup/livekit.yaml` — LiveKit server config  
-- `sip-setup/config.yaml` — SIP bridge config  
-- `sip-setup/inbound_trunk.json` — Inbound trunk definition  
-- `sip-setup/sip_dispatch.json` — Dispatch rules
+| File                     | Purpose                          |
+| ------------------------ | -------------------------------- |
+| `.env`                   | API keys & environment variables |
+| `sip-setup/livekit.yaml` | Core LiveKit server config       |
+| `sip-setup/config.yaml`  | SIP bridge config                |
+| `egress.yaml`            | Egress recording configuration   |
+| `cagent.py`              | Main AI voice agent              |
+| `tools.py`               | Custom rules & helper functions  |
 
 ---
 
 ## 📝 Notes
 
-- Add `REPLACE_WITH_TRUNK_ID` placeholder to `sip-setup/sip_dispatch.json` before running trunk creation step.  
-- Protect PII in `leads/` and `conversations/`.  
-- For production, prefer systemd units instead of `screen`.
+* Audio files are **stored locally** in `recordings/`.
+  Azure upload can be re-enabled later by uncommenting cloud paths in `egress.yaml`.
+* Make sure Redis and LiveKit ports (`6379`, `7880`, `5060`) are open on your VPS.
+* UFW should remain **disabled** or configured to allow UDP 10000–60000.
+* For long-term stability, convert `screen` sessions to `systemd` services.
+
+---
 
 **© 2025 Triotech Bizserve Pvt. Ltd. — All rights reserved.**

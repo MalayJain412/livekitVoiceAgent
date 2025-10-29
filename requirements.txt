@@ -29,6 +29,8 @@ flask-cors==6.0.1
 gunicorn==23.0.0
 requests==2.32.5
 python-dotenv==1.1.1
+aiohttp>=3.8.0,<3.10.0
+aiofiles==24.1.0
 
 # Search & Data Processing
 duckduckgo-search==8.1.1
@@ -76,3 +78,7 @@ pymongo==4.15.3
 
 # Timezone Support
 pytz==2025.2
+
+# scheduler
+fastapi
+uvicorn

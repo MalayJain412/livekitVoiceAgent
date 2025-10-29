@@ -34,7 +34,6 @@ except ImportError:
 
 # Global variables for campaign metadata (set by agent)
 _current_campaign_metadata = {}
-_current_session_manager = None
 
 def set_campaign_metadata_for_tools(metadata: dict):
     """Set campaign metadata for use in lead file naming"""
@@ -45,16 +44,6 @@ def set_campaign_metadata_for_tools(metadata: dict):
 def get_campaign_metadata_for_tools() -> dict:
     """Get current campaign metadata"""
     return _current_campaign_metadata.copy()
-
-def set_session_manager_for_tools(session_manager):
-    """Set session manager reference for tools to update metadata"""
-    global _current_session_manager
-    _current_session_manager = session_manager
-    logging.info(f"SessionManager reference set for tools")
-
-def get_session_manager_for_tools():
-    """Get current session manager reference"""
-    return _current_session_manager
 
 try:
     if USE_MONGODB:
@@ -376,14 +365,6 @@ async def create_lead(name: str, email: str, company: str, interest: str, phone:
     try:
         # Save lead
         file_path = save_lead(lead_data)
-        
-        # Update SessionManager with lead file path for metadata tracking
-        try:
-            if _current_session_manager:
-                _current_session_manager.set_lead_file_path(file_path)
-                logging.info(f"Lead file path updated in session metadata: {file_path}")
-        except Exception as e:
-            logging.warning(f"Could not update session manager with lead path: {e}")
         
         # Return success message
         return f"धन्यवाद {name}! आपकी जानकारी सुरक्षित कर ली गई है। हमारी सेल्स टीम जल्द ही {company} के लिए {interest} के बारे में आपसे संपर्क करेगी।"

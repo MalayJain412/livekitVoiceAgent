@@ -1,0 +1,133 @@
+{
+  "session_id": "session_20251029_101619_b4ce4c7b",
+  "start_time": "2025-10-29 10:16:19.574407+00:00",
+  "end_time": "2025-10-29 10:16:52.652193+00:00",
+  "items": [
+    {
+      "_id": "6901e974012f0a3967a87830",
+      "type": "persona_applied",
+      "persona_name": "Malay Jain",
+      "has_config": true,
+      "has_session_instructions": true,
+      "has_closing": true,
+      "timestamp": "2025-10-29T10:16:19.574407Z",
+      "session_id": "session_20251029_101619_b4ce4c7b",
+      "created_at": "2025-10-29 10:16:20.673000"
+    },
+    {
+      "_id": "6901e979012f0a3967a87831",
+      "role": "unknown",
+      "content": "",
+      "timestamp": "2025-10-29T10:16:25.608060Z",
+      "source": "session_history",
+      "item_type": null,
+      "raw": "id='item_98f2ee35e252' type='message' role='assistant' content=['Hi I am assistant of Malay Jain'] interrupted=False transcript_confidence=None hash=None created_at=1761732980.6023705",
+      "session_id": "session_20251029_101619_b4ce4c7b",
+      "created_at": "2025-10-29 10:16:25.612000"
+    },
+    {
+      "_id": "6901e97d012f0a3967a87832",
+      "role": "unknown",
+      "content": "",
+      "timestamp": "2025-10-29T10:16:29.113097Z",
+      "source": "session_history",
+      "item_type": null,
+      "raw": "id='item_39ca4b45badf' type='message' role='user' content=['Hello?'] interrupted=False transcript_confidence=0.9406738 hash=None created_at=1761732988.8195968",
+      "session_id": "session_20251029_101619_b4ce4c7b",
+      "created_at": "2025-10-29 10:16:29.118000"
+    },
+    {
+      "_id": "6901e982012f0a3967a87833",
+      "role": "unknown",
+      "content": "",
+      "timestamp": "2025-10-29T10:16:34.623582Z",
+      "source": "session_history",
+      "item_type": null,
+      "raw": "id='item_d56d13629d6e' type='message' role='assistant' content=['Hello! Kaise ho aap? Kaise madad kar sakti hoon?'] interrupted=False transcript_confidence=None hash=None created_at=1761732988.8315089",
+      "session_id": "session_20251029_101619_b4ce4c7b",
+      "created_at": "2025-10-29 10:16:34.628000"
+    },
+    {
+      "_id": "6901e988012f0a3967a87834",
+      "role": "unknown",
+      "content": "",
+      "timestamp": "2025-10-29T10:16:40.131615Z",
+      "source": "session_history",
+      "item_type": null,
+      "raw": "id='item_444446b238a1' type='message' role='user' content=['Test number 10.'] interrupted=False transcript_confidence=0.6196289 hash=None created_at=1761732999.788716",
+      "session_id": "session_20251029_101619_b4ce4c7b",
+      "created_at": "2025-10-29 10:16:40.136000"
+    },
+    {
+      "_id": "6901e98b012f0a3967a87835",
+      "role": "unknown",
+      "content": "",
+      "timestamp": "2025-10-29T10:16:43.636516Z",
+      "source": "session_history",
+      "item_type": null,
+      "raw": "id='item_971def439163' type='message' role='user' content=['And I think the thing is you can'] interrupted=False transcript_confidence=0.84814453 hash=None created_at=1761733003.238676",
+      "session_id": "session_20251029_101619_b4ce4c7b",
+      "created_at": "2025-10-29 10:16:43.641000"
+    },
+    {
+      "_id": "6901e98b012f0a3967a87836",
+      "role": "unknown",
+      "content": "",
+      "timestamp": "2025-10-29T10:16:43.636563Z",
+      "source": "session_history",
+      "item_type": null,
+      "raw": "id='item_e58f444bbfdc' type='message' role='user' content=['end the call now.'] interrupted=False transcript_confidence=0.9851074 hash=None created_at=1761733003.3352838",
+      "session_id": "session_20251029_101619_b4ce4c7b",
+      "created_at": "2025-10-29 10:16:43.653000"
+    },
+    {
+      "_id": "6901e98f012f0a3967a87837",
+      "role": "unknown",
+      "content": "",
+      "timestamp": "2025-10-29T10:16:47.642200Z",
+      "source": "session_history",
+      "item_type": null,
+      "raw": "id='item_14fef361b91d' type='message' role='assistant' content=['Is there anything else I can help you with?'] interrupted=False transcript_confidence=None hash=None created_at=1761733003.3563173",
+      "session_id": "session_20251029_101619_b4ce4c7b",
+      "created_at": "2025-10-29 10:16:47.646000"
+    },
+    {
+      "_id": "6901e992012f0a3967a87838",
+      "role": "unknown",
+      "content": "",
+      "timestamp": "2025-10-29T10:16:50.147405Z",
+      "source": "session_history",
+      "item_type": null,
+      "raw": "id='item_4892744a4641' type='message' role='user' content=['No. Nothing else.'] interrupted=False transcript_confidence=0.9343262 hash=None created_at=1761733009.7635624",
+      "session_id": "session_20251029_101619_b4ce4c7b",
+      "created_at": "2025-10-29 10:16:50.152000"
+    },
+    {
+      "_id": "6901e994012f0a3967a87839",
+      "role": "unknown",
+      "content": "",
+      "timestamp": "2025-10-29T10:16:52.652193Z",
+      "source": "session_history",
+      "item_type": null,
+      "raw": "id='item_f53b6ff7c9be' type='message' role='assistant' content=['Thank you contacting'] interrupted=False transcript_confidence=None hash=None created_at=1761733012.5964844",
+      "session_id": "session_20251029_101619_b4ce4c7b",
+      "created_at": "2025-10-29 10:16:52.657000"
+    }
+  ],
+  "total_items": 10,
+  "duration_seconds": 33.077786,
+  "lead_generated": false,
+  "metadata": {
+    "auto_saved": true,
+    "campaign_metadata": {
+      "campaignId": "68ff5c0f015cbf44dd9f336c",
+      "voiceAgentId": "68ff5b90015cbf44dd9f3269",
+      "clientId": "68ff5a88015cbf44dd9f3006",
+      "sessionId": "session_20251029_101619_b4ce4c7b",
+      "dialedNumber": "+918655066243"
+    }
+  },
+  "created_at": "2025-10-29 10:16:54.749901",
+  "updated_at": "2025-10-29 10:16:54.749901",
+  "_id": "6901e996012f0a3967a8783a"
+}

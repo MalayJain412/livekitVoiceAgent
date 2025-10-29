@@ -49,7 +49,6 @@ _STOP = object()
 USE_MONGODB = os.getenv("USE_MONGODB", "true").lower() == "true"
 _current_session_id = None
 _current_dialed_number = None  # For metadata-based file naming
-_current_session_manager = None  # For accessing final metadata with lead file path
 
 try:
     if USE_MONGODB:
@@ -213,12 +212,6 @@ def set_dialed_number(dialed_number: str) -> None:
     _current_dialed_number = dialed_number
     logging.info(f"Dialed number set for transcript logging: {dialed_number}")
 
-def set_session_manager(session_manager) -> None:
-    """Set the current session manager for accessing final metadata"""
-    global _current_session_manager
-    _current_session_manager = session_manager
-    logging.info(f"SessionManager set for transcript logging")
-
 def get_session_id() -> Optional[str]:
     """Get the current session ID"""
     return _current_session_id
@@ -236,31 +229,6 @@ def generate_session_id() -> str:
     session_id = f"session_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
     set_session_id(session_id)
     return session_id
-
-def extract_recording_path_from_egress(egress_id: str) -> Optional[str]:
-    """Extract recording file path from egress ID by reading the egress metadata file"""
-    if not egress_id:
-        return None
-    
-    try:
-        # Look for egress metadata file
-        recordings_dir = Path(__file__).parent / "recordings"
-        egress_file = recordings_dir / f"EG_{egress_id}.json"
-        
-        if egress_file.exists():
-            with open(egress_file, 'r', encoding='utf-8') as f:
-                egress_data = json.load(f)
-                
-            # Extract recording filename from egress metadata
-            if 'file_path' in egress_data:
-                return egress_data['file_path']
-            elif 'filename' in egress_data:
-                return f"recordings/{egress_data['filename']}"
-                
-    except Exception as e:
-        logging.warning(f"Could not extract recording path from egress {egress_id}: {e}")
-    
-    return None
 
 # Global flag to track if session has already been saved
 _session_saved = False
@@ -310,29 +278,14 @@ def save_conversation_session(items: list, metadata: Optional[dict] = None, dial
             if end_time is None or timestamp > end_time:
                 end_time = timestamp
 
-    # Get final metadata from SessionManager (includes lead file if created)
+    # Get campaign metadata for filename generation
     campaign_metadata = {}
-    if _current_session_manager:
+    if MOBILE_API_AVAILABLE and dialed_number:
         try:
-            campaign_metadata = _current_session_manager.get_campaign_metadata()
-            logging.info(f"Using final metadata from SessionManager: {campaign_metadata}")
+            campaign_metadata = get_campaign_metadata_for_call(dialed_number, session_id)
+            logging.info(f"Using campaign metadata for file naming: {campaign_metadata}")
         except Exception as e:
-            logging.warning(f"Could not get metadata from SessionManager: {e}")
-            # Fallback to API call
-            if MOBILE_API_AVAILABLE and dialed_number:
-                try:
-                    campaign_metadata = get_campaign_metadata_for_call(dialed_number, session_id)
-                    logging.info(f"Using campaign metadata from API fallback: {campaign_metadata}")
-                except Exception as e:
-                    logging.error(f"Error getting campaign metadata from API: {e}")
-    else:
-        # Fallback to API call if no session manager
-        if MOBILE_API_AVAILABLE and dialed_number:
-            try:
-                campaign_metadata = get_campaign_metadata_for_call(dialed_number, session_id)
-                logging.info(f"Using campaign metadata from API: {campaign_metadata}")
-            except Exception as e:
-                logging.error(f"Error getting campaign metadata: {e}")
+            logging.error(f"Error getting campaign metadata: {e}")
     
     # Prepare session data with embedded metadata
     session_data = {
@@ -383,41 +336,6 @@ def save_conversation_session(items: list, metadata: Optional[dict] = None, dial
         logging.info(f"Conversation session saved to file: {session_file}")
         if campaign_metadata:
             logging.info(f"File contains campaign metadata: campaignId={campaign_metadata.get('campaignId')}, voiceAgentId={campaign_metadata.get('voiceAgentId')}, sessionId={campaign_metadata.get('sessionId')}")
-        
-        # Create central metadata.json file
-        try:
-            # Create complete metadata structure (recording path will be resolved by cron)
-            complete_metadata = {
-                "session_id": session_id,
-                "dialed_number": _current_dialed_number,
-                "campaign_metadata": campaign_metadata,
-                "files": {
-                    "recording": None,  # Will be resolved by cron from egressId
-                    "conversation": str(session_file),
-                    "lead": campaign_metadata.get('lead_file')  # Will be set by SessionManager if lead created
-                },
-                "timestamps": {
-                    "call_start": start_time.isoformat() + "Z" if start_time else datetime.utcnow().isoformat() + "Z",
-                    "call_end": end_time.isoformat() + "Z" if end_time else datetime.utcnow().isoformat() + "Z",
-                    "metadata_saved": datetime.utcnow().isoformat() + "Z"
-                },
-                "status": "ready_for_upload",
-                "upload_attempts": 0,
-                "last_upload_attempt": None
-            }
-            
-            # Save metadata.json
-            metadata_dir = Path(__file__).parent / "call_metadata"
-            metadata_dir.mkdir(exist_ok=True)
-            metadata_file = metadata_dir / f"metadata_{session_id}.json"
-            
-            with open(metadata_file, 'w', encoding='utf-8') as f:
-                json.dump(complete_metadata, f, indent=2, ensure_ascii=False)
-            
-            logging.info(f"Central metadata saved: {metadata_file}")
-            
-        except Exception as e:
-            logging.error(f"Failed to create central metadata.json: {e}")
         
         # Mark session as saved to prevent duplicates
         _session_saved = True

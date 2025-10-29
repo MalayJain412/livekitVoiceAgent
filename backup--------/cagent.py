@@ -7,7 +7,6 @@ from typing import Optional, Tuple
 import re
 import time
 load_dotenv()  # Load environment variables early
-from transcript_logger import set_current_session_id, get_current_session_id, set_dialed_number, set_session_manager
 
 from livekit import agents
 from livekit.agents import AgentSession, Agent, RoomInputOptions, RoomOutputOptions, JobContext
@@ -116,9 +115,6 @@ async def entrypoint(ctx: JobContext):
     # Setup conversation logging
     config.setup_conversation_log()
     
-    # Initialize variables
-    egress_id = None
-    
     # -----------------------------------------------------------------
     # --- RECORDING (Egress) BLOCK ---
     # -----------------------------------------------------------------
@@ -144,7 +140,6 @@ async def entrypoint(ctx: JobContext):
 
             lkapi = LiveKitAPI(http_host, livekit_api_key, livekit_api_secret)
 
-            # Use timestamp-based filename initially (will be renamed in egress callback)
             filename = f"recordings/{ctx.room.name}-{int(time.time())}.mp4"
 
             file_output = EncodedFileOutput(
@@ -159,8 +154,7 @@ async def entrypoint(ctx: JobContext):
             )
 
             info = await lkapi.egress.start_room_composite_egress(req)
-            egress_id = info.egress_id
-            logging.info(f"Recording started: egress_id={egress_id}, file={filename}")
+            logging.info(f"Recording started: egress_id={info.egress_id}, file={filename}")
 
     except Exception as e:
         logging.error(f"Recording error for room {ctx.room.name}: {e}")
@@ -206,16 +200,12 @@ async def entrypoint(ctx: JobContext):
         logging.info(f"Successfully loaded persona for dialed number {dialed_number}: {persona_name}")
         
         # Get campaign metadata for file naming and matching
+        from transcript_logger import set_current_session_id, get_current_session_id, set_dialed_number
         session_id = get_current_session_id() or f"session_{int(time.time())}"
         set_current_session_id(session_id)
         set_dialed_number(dialed_number)
         
         campaign_metadata = get_campaign_metadata_for_call(dialed_number, session_id)
-        
-        # Add egress_id if recording was started
-        if egress_id:
-            campaign_metadata['egressId'] = egress_id
-            logging.info(f"Added egress_id to campaign metadata: {egress_id}")
         
         logging.info(f"Campaign metadata collected: {campaign_metadata}")
         logging.info(f"Session ID: {session_id}, Dialed Number: {dialed_number}")
@@ -318,9 +308,6 @@ async def entrypoint(ctx: JobContext):
     
     # Set campaign metadata in session manager for file naming
     session_manager.set_campaign_metadata(campaign_metadata)
-    
-    # Set session manager reference for transcript logger
-    set_session_manager(session_manager)
     
     logging.info("SessionManager created successfully with campaign metadata")
     

@@ -1,0 +1,19 @@
+{
+  "dispatch_rule": {
+    "name": "Callee Rule with Bot and 1-User Limit",
+    "rule": {
+      "dispatchRuleCallee": {
+        "roomPrefix": "support-call-",
+        "randomize": false
+      }
+    },
+    "room_config": {
+      "max_participants": 2,
+      "agents": [
+        {
+          "agent_name": "your-assistant-bot"
+        }
+      ]
+    }
+  }
+}

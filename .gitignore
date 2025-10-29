@@ -40,8 +40,8 @@ tests/
 
 sip/
 
-
 egress_scripts/
-*.zip
+/custom-recording
 /livekit-records
 /open-sip-records
+/recordings

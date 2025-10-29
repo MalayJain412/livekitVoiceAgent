@@ -7,12 +7,122 @@ import logging
 import requests
 import json
 import os
+import asyncio
+import aiohttp
+import aiofiles
 from typing import Dict, Any, Optional
 from datetime import datetime
 from pathlib import Path
 
-# API endpoint
+# API endpoints
 CRM_UPLOAD_URL = "https://devcrm.xeny.ai/apis/api/public/call-data"
+CRM_FILE_UPLOAD_URL = "https://devcrm.xeny.ai/apis/api/public/upload"
+
+async def upload_recording_file(file_path: str) -> Optional[str]:
+    """
+    Upload recording file to CRM storage API.
+    
+    Args:
+        file_path: Path to the recording file (.ogg)
+        
+    Returns:
+        str: Recording URL if upload successful, None otherwise
+    """
+    try:
+        if not os.path.exists(file_path):
+            logging.error(f"Recording file not found: {file_path}")
+            return None
+            
+        file_size = os.path.getsize(file_path)
+        logging.info(f"Uploading recording file: {file_path} ({file_size} bytes)")
+        
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=60)) as session:
+            # Prepare multipart form data
+            with open(file_path, 'rb') as f:
+                form_data = aiohttp.FormData()
+                form_data.add_field('file', f, 
+                                  filename=os.path.basename(file_path),
+                                  content_type='audio/ogg')
+                
+                async with session.post(CRM_FILE_UPLOAD_URL, data=form_data) as response:
+                    if response.status >= 200 and response.status < 300:
+                        response_data = await response.json()
+                        
+                        if response_data.get('success'):
+                            recording_url = response_data['data']['url']
+                            original_name = response_data['data']['originalName']
+                            uploaded_size = response_data['data']['size']
+                            
+                            logging.info(f"Recording uploaded successfully:")
+                            logging.info(f"  Original: {original_name}")
+                            logging.info(f"  URL: {recording_url}")
+                            logging.info(f"  Size: {uploaded_size} bytes")
+                            
+                            return recording_url
+                        else:
+                            logging.error(f"Upload failed: {response_data}")
+                            return None
+                    else:
+                        error_text = await response.text()
+                        logging.error(f"Failed to upload recording. Status: {response.status}, Error: {error_text}")
+                        return None
+                        
+    except Exception as e:
+        logging.error(f"Error uploading recording file {file_path}: {e}", exc_info=True)
+        return None
+
+def upload_recording_file_sync(file_path: str) -> Optional[str]:
+    """
+    Synchronous wrapper for upload_recording_file.
+    
+    Args:
+        file_path: Path to the recording file (.ogg)
+        
+    Returns:
+        str: Recording URL if upload successful, None otherwise
+    """
+    try:
+        if not os.path.exists(file_path):
+            logging.error(f"Recording file not found: {file_path}")
+            return None
+            
+        file_size = os.path.getsize(file_path)
+        logging.info(f"Uploading recording file: {file_path} ({file_size} bytes)")
+        
+        # Prepare multipart form data
+        with open(file_path, 'rb') as f:
+            files = {'file': (os.path.basename(file_path), f, 'audio/ogg')}
+            
+            response = requests.post(
+                CRM_FILE_UPLOAD_URL,
+                files=files,
+                timeout=60
+            )
+            
+            if response.status_code >= 200 and response.status_code < 300:
+                response_data = response.json()
+                
+                if response_data.get('success'):
+                    recording_url = response_data['data']['url']
+                    original_name = response_data['data']['originalName']
+                    uploaded_size = response_data['data']['size']
+                    
+                    logging.info(f"Recording uploaded successfully:")
+                    logging.info(f"  Original: {original_name}")
+                    logging.info(f"  URL: {recording_url}")
+                    logging.info(f"  Size: {uploaded_size} bytes")
+                    
+                    return recording_url
+                else:
+                    logging.error(f"Upload failed: {response_data}")
+                    return None
+            else:
+                logging.error(f"Failed to upload recording. Status: {response.status_code}, Error: {response.text}")
+                return None
+                
+    except Exception as e:
+        logging.error(f"Error uploading recording file {file_path}: {e}", exc_info=True)
+        return None
 
 def upload_call_data(
     campaign_id: str,
@@ -192,6 +302,382 @@ def convert_lead_to_api_format(lead_data: Dict[str, Any]) -> Dict[str, Any]:
         "status": lead_data.get("status", "new")
     }
 
+async def upload_complete_call_data(
+    campaign_id: str,
+    voice_agent_id: str,
+    client_id: str,
+    call_id: str,
+    caller_phone: str,
+    conversation_data: Dict[str, Any],
+    recording_file_path: Optional[str] = None,
+    direction: str = "inbound",
+    status: str = "completed"
+) -> bool:
+    """
+    Complete upload workflow: Upload recording file first, then upload call data with recording URL.
+    This is the recommended function for the directory-based cron approach.
+    
+    Args:
+        campaign_id: Campaign ID
+        voice_agent_id: Voice Agent ID  
+        client_id: Client ID
+        call_id: Unique call identifier
+        caller_phone: Caller's phone number
+        conversation_data: MongoDB conversation data (conversation file format)
+        recording_file_path: Path to recording file (.ogg) - will upload first to get URL
+        direction: Call direction (inbound/outbound)
+        status: Call status
+        
+    Returns:
+        bool: True if complete upload successful, False otherwise
+    """
+    recording_url = None
+    recording_size = None
+    
+    # Step 1: Upload recording file if provided
+    if recording_file_path and os.path.exists(recording_file_path):
+        logging.info(f"Step 1: Uploading recording file: {recording_file_path}")
+        recording_url = await upload_recording_file(recording_file_path)
+        
+        if recording_url:
+            recording_size = os.path.getsize(recording_file_path)
+            logging.info(f"Recording upload successful, URL: {recording_url}")
+        else:
+            logging.error(f"Recording upload failed for: {recording_file_path}")
+            # Continue without recording URL - call data can still be uploaded
+    else:
+        logging.warning(f"No recording file provided or file not found: {recording_file_path}")
+    
+    # Step 2: Upload call data with recording URL
+    logging.info(f"Step 2: Uploading call data with recording URL")
+    success = await upload_call_data_from_conversation(
+        campaign_id=campaign_id,
+        voice_agent_id=voice_agent_id,
+        client_id=client_id,
+        call_id=call_id,
+        caller_phone=caller_phone,
+        conversation_data=conversation_data,
+        recording_url=recording_url,
+        recording_size=recording_size,
+        direction=direction,
+        status=status
+    )
+    
+    if success:
+        logging.info(f"Complete upload successful for call ID: {call_id}")
+    else:
+        logging.error(f"Call data upload failed for call ID: {call_id}")
+    
+    return success
+
+def upload_complete_call_data_sync(
+    campaign_id: str,
+    voice_agent_id: str,
+    client_id: str,
+    call_id: str,
+    caller_phone: str,
+    conversation_data: Dict[str, Any],
+    recording_file_path: Optional[str] = None,
+    direction: str = "inbound",
+    status: str = "completed"
+) -> bool:
+    """
+    Synchronous wrapper for upload_complete_call_data.
+    Perfect for cron jobs that need simple sync operation.
+    
+    Args:
+        campaign_id: Campaign ID
+        voice_agent_id: Voice Agent ID  
+        client_id: Client ID
+        call_id: Unique call identifier
+        caller_phone: Caller's phone number
+        conversation_data: MongoDB conversation data
+        recording_file_path: Path to recording file (.ogg)
+        direction: Call direction (inbound/outbound)
+        status: Call status
+        
+    Returns:
+        bool: True if complete upload successful, False otherwise
+    """
+    recording_url = None
+    recording_size = None
+    
+    # Step 1: Upload recording file if provided
+    if recording_file_path and os.path.exists(recording_file_path):
+        logging.info(f"Step 1: Uploading recording file: {recording_file_path}")
+        recording_url = upload_recording_file_sync(recording_file_path)
+        
+        if recording_url:
+            recording_size = os.path.getsize(recording_file_path)
+            logging.info(f"Recording upload successful, URL: {recording_url}")
+        else:
+            logging.error(f"Recording upload failed for: {recording_file_path}")
+            # Continue without recording URL - call data can still be uploaded
+    else:
+        logging.warning(f"No recording file provided or file not found: {recording_file_path}")
+    
+    # Step 2: Upload call data with recording URL (using sync version)
+    logging.info(f"Step 2: Uploading call data with recording URL")
+    
+    # Convert conversation data and upload
+    try:
+        # Use the existing sync upload_call_data_from_conversation logic but with recording URL
+        # We'll reuse the format conversion from the async version
+        
+        # Extract conversation items in the proper format
+        conversation_items = []
+        for item in conversation_data.get('items', []):
+            role = item.get('role', 'unknown')
+            if role == 'unknown' and item.get('type'):
+                role = item.get('type')
+            
+            content = item.get('content', '')
+            if isinstance(content, list):
+                content = ' '.join(str(c) for c in content)
+            
+            # Skip empty content items (like persona_applied)
+            if not content and role in ['persona_applied', 'unknown']:
+                continue
+                
+            conversation_items.append({
+                "role": role,
+                "content": str(content),
+                "timestamp": item.get('timestamp', ''),
+                "source": item.get('source', 'unknown'),
+                "transcript_confidence": item.get('transcript_confidence')
+            })
+        
+        # Extract timing information
+        start_time = conversation_data.get('start_time', '')
+        end_time = conversation_data.get('end_time', '')
+        duration = int(conversation_data.get('duration_seconds', 0))
+        
+        # Ensure proper ISO format for CRM API
+        def parse_timestamp_robust(timestamp):
+            """Robust timestamp parsing for CRM API compatibility"""
+            try:
+                if not timestamp:
+                    return datetime.utcnow().isoformat() + "Z"
+                    
+                if isinstance(timestamp, str):
+                    # Handle format: "2025-10-28 06:27:29.508221+00:00"
+                    if ' ' in timestamp and '+' in timestamp:
+                        # Replace space with T and ensure Z ending
+                        timestamp = timestamp.replace(' ', 'T').replace('+00:00', 'Z')
+                    elif 'T' in timestamp and timestamp.endswith('+00:00'):
+                        # Replace timezone with Z
+                        timestamp = timestamp.replace('+00:00', 'Z')
+                    elif 'T' in timestamp and not timestamp.endswith('Z'):
+                        # Ensure Z ending for UTC
+                        timestamp = timestamp.rstrip('Z') + 'Z'
+                        
+                return timestamp
+            except Exception as e:
+                logging.warning(f"Error parsing timestamp {timestamp}: {e}")
+                return datetime.utcnow().isoformat() + "Z"
+        
+        start_time = parse_timestamp_robust(start_time)
+        end_time = parse_timestamp_robust(end_time)
+        
+        # Build the exact payload structure that worked in tests
+        payload = {
+            "campaignId": campaign_id,
+            "voiceAgentId": voice_agent_id,
+            "client": client_id,
+            "callDetails": {
+                "callId": call_id,
+                "direction": direction,
+                "startTime": start_time,
+                "endTime": end_time,
+                "duration": duration,
+                "status": status,
+                "callerNumber": caller_phone,
+                "recordingUrl": recording_url,
+                "recordingDuration": duration,
+                "recordingSize": recording_size
+            },
+            "caller": {
+                "phoneNumber": caller_phone
+            },
+            "transcription": {
+                "session_id": conversation_data.get('session_id'),
+                "start_time": start_time,
+                "end_time": end_time,
+                "duration_seconds": conversation_data.get('duration_seconds'),
+                "total_items": len(conversation_items),
+                "conversation_items": conversation_items,
+                "lead_generated": conversation_data.get('lead_generated', False),
+                "metadata": conversation_data.get('metadata', {})
+            },
+            "lead": conversation_data.get('lead', {})
+        }
+        
+        logging.info(f"Uploading call data for call ID: {call_id}")
+        logging.info(f"Payload size: {len(json.dumps(payload))} characters")
+        logging.info(f"Conversation items: {len(conversation_items)}")
+        
+        # Upload to CRM API using requests
+        response = requests.post(
+            CRM_UPLOAD_URL,
+            json=payload,
+            timeout=30
+        )
+        
+        if response.status_code >= 200 and response.status_code < 300:
+            logging.info(f"Successfully uploaded call data to CRM. Response: {response.status_code}")
+            logging.info(f"Complete upload successful for call ID: {call_id}")
+            return True
+        else:
+            logging.error(f"Failed to upload call data to CRM. Status: {response.status_code}, Error: {response.text}")
+            return False
+            
+    except Exception as e:
+        logging.error(f"Error uploading call data to CRM: {e}", exc_info=True)
+        return False
+
+async def upload_call_data_from_conversation(
+    campaign_id: str,
+    voice_agent_id: str,
+    client_id: str,
+    call_id: str,
+    caller_phone: str,
+    conversation_data: Dict[str, Any],
+    recording_url: Optional[str] = None,
+    recording_size: Optional[int] = None,
+    direction: str = "inbound",
+    status: str = "completed"
+) -> bool:
+    """
+    Upload call data using MongoDB conversation format (working format).
+    This matches the successful test payload structure.
+    
+    Args:
+        campaign_id: Campaign ID
+        voice_agent_id: Voice Agent ID  
+        client_id: Client ID
+        call_id: Unique call identifier
+        caller_phone: Caller's phone number
+        conversation_data: MongoDB conversation data (conversation file format)
+        recording_url: URL to call recording
+        recording_size: Recording file size in bytes
+        direction: Call direction (inbound/outbound)
+        status: Call status
+        
+    Returns:
+        bool: True if upload successful, False otherwise
+    """
+    import aiohttp
+    
+    try:
+        # Extract conversation items in the proper format
+        conversation_items = []
+        for item in conversation_data.get('items', []):
+            role = item.get('role', 'unknown')
+            if role == 'unknown' and item.get('type'):
+                role = item.get('type')
+            
+            content = item.get('content', '')
+            if isinstance(content, list):
+                content = ' '.join(str(c) for c in content)
+            
+            # Skip empty content items (like persona_applied)
+            if not content and role in ['persona_applied', 'unknown']:
+                continue
+                
+            conversation_items.append({
+                "role": role,
+                "content": str(content),
+                "timestamp": item.get('timestamp', ''),
+                "source": item.get('source', 'unknown'),
+                "transcript_confidence": item.get('transcript_confidence')
+            })
+        
+        # Extract timing information
+        start_time = conversation_data.get('start_time', '')
+        end_time = conversation_data.get('end_time', '')
+        duration = int(conversation_data.get('duration_seconds', 0))
+        
+        # Ensure proper ISO format for CRM API
+        def parse_timestamp_robust(timestamp):
+            """Robust timestamp parsing for CRM API compatibility"""
+            try:
+                if not timestamp:
+                    return datetime.utcnow().isoformat() + "Z"
+                    
+                if isinstance(timestamp, str):
+                    # Handle format: "2025-10-28 06:27:29.508221+00:00"
+                    if ' ' in timestamp and '+' in timestamp:
+                        # Replace space with T and ensure Z ending
+                        timestamp = timestamp.replace(' ', 'T').replace('+00:00', 'Z')
+                    elif 'T' in timestamp and timestamp.endswith('+00:00'):
+                        # Replace timezone with Z
+                        timestamp = timestamp.replace('+00:00', 'Z')
+                    elif 'T' in timestamp and not timestamp.endswith('Z'):
+                        # Ensure Z ending for UTC
+                        timestamp = timestamp.rstrip('Z') + 'Z'
+                        
+                return timestamp
+            except Exception as e:
+                logging.warning(f"Error parsing timestamp {timestamp}: {e}")
+                return datetime.utcnow().isoformat() + "Z"
+        
+        start_time = parse_timestamp_robust(start_time)
+        end_time = parse_timestamp_robust(end_time)
+        
+        # Build the exact payload structure that worked in tests
+        payload = {
+            "campaignId": campaign_id,
+            "voiceAgentId": voice_agent_id,
+            "client": client_id,
+            "callDetails": {
+                "callId": call_id,
+                "direction": direction,
+                "startTime": start_time,
+                "endTime": end_time,
+                "duration": duration,
+                "status": status,
+                "callerNumber": caller_phone,
+                "recordingUrl": recording_url,
+                "recordingDuration": duration,
+                "recordingSize": recording_size
+            },
+            "caller": {
+                "phoneNumber": caller_phone
+            },
+            "transcription": {
+                "session_id": conversation_data.get('session_id'),
+                "start_time": start_time,
+                "end_time": end_time,
+                "duration_seconds": conversation_data.get('duration_seconds'),
+                "total_items": len(conversation_items),
+                "conversation_items": conversation_items,
+                "lead_generated": conversation_data.get('lead_generated', False),
+                "metadata": conversation_data.get('metadata', {})
+            },
+            "lead": conversation_data.get('lead', {})
+        }
+        
+        logging.info(f"Uploading call data for call ID: {call_id}")
+        logging.info(f"Payload size: {len(json.dumps(payload))} characters")
+        logging.info(f"Conversation items: {len(conversation_items)}")
+        
+        # Upload to CRM API
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30)) as session:
+            async with session.post(CRM_UPLOAD_URL, json=payload) as response:
+                if response.status >= 200 and response.status < 300:
+                    response_data = await response.json()
+                    logging.info(f"Successfully uploaded call data to CRM. Response: {response.status}")
+                    logging.debug(f"CRM response: {response_data}")
+                    return True
+                else:
+                    error_text = await response.text()
+                    logging.error(f"Failed to upload call data to CRM. Status: {response.status}, Error: {error_text}")
+                    return False
+                    
+    except Exception as e:
+        logging.error(f"Error uploading call data to CRM: {e}", exc_info=True)
+        return False
+
 def upload_call_data_from_session(
     campaign_id: str,
     voice_agent_id: str,
@@ -209,6 +695,9 @@ def upload_call_data_from_session(
     recording_size: Optional[int] = None
 ) -> bool:
     """
+    DEPRECATED: Use upload_call_data_from_conversation instead.
+    This is kept for backward compatibility.
+    
     Upload complete call data from a session to CRM API.
     
     Args:
@@ -375,10 +864,28 @@ def bulk_upload_from_directory(
         conversations_path = Path(conversations_dir)
         leads_path = Path(leads_dir)
         
-        # Get all transcript session files
+        # Get all MongoDB-formatted transcript session files (ignore raw transcript dumps)
         transcript_files = list(conversations_path.glob("transcript_session_*.json"))
         
+        # Filter out raw transcript files (they don't have proper session structure)
+        mongodb_files = []
         for transcript_file in transcript_files:
+            # Only include files that match the MongoDB session format
+            if transcript_file.name.startswith("transcript_session_"):
+                # Verify it's a MongoDB-formatted file by checking structure
+                try:
+                    with open(transcript_file, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                    # Check if it has MongoDB format fields
+                    if isinstance(data, dict) and 'session_id' in data and 'items' in data:
+                        mongodb_files.append(transcript_file)
+                except:
+                    # Skip files that can't be parsed or don't have the right structure
+                    continue
+        
+        logging.info(f"Found {len(mongodb_files)} MongoDB-formatted transcript files to upload")
+        
+        for transcript_file in mongodb_files:
             results["total"] += 1
             
             try:

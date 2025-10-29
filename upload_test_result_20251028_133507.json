@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-10-28T13:35:07.964547",
+  "file_path": "recordings\\number-_918655200389-1761633666.ogg",
+  "file_size": 2065148,
+  "upload_duration_seconds": 1.866088,
+  "http_status": 200,
+  "api_url": "https://devcrm.xeny.ai/apis/api/public/upload",
+  "response": {
+    "success": true,
+    "data": {
+      "filename": "1761638707911.ogg",
+      "originalName": "number-_918655200389-1761633666.ogg",
+      "size": 2065148,
+      "url": "http://devcrm.xeny.ai/apis/uploads/recordings/1761638707911.ogg",
+      "relativeUrl": "/uploads/recordings/1761638707911.ogg"
+    }
+  }
+}

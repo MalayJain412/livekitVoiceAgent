@@ -7,14 +7,12 @@ from typing import Optional, Tuple
 import re
 import time
 load_dotenv()  # Load environment variables early
-from transcript_logger import set_current_session_id, get_current_session_id, set_dialed_number, set_session_manager
 
 from livekit import agents
 from livekit.agents import AgentSession, Agent, RoomInputOptions, RoomOutputOptions, JobContext
 from livekit.plugins import google, cartesia, deepgram, noise_cancellation, silero
 from prompts import set_agent_instruction
 from persona_handler import load_persona_from_dialed_number as load_persona_from_api
-from mobile_api import get_campaign_metadata_for_call
 from tools import (
     create_lead, 
     detect_lead_intent, 
@@ -110,14 +108,34 @@ class Assistant(Agent):
                 detect_lead_intent, 
                 end_call_tool],
         )
+    
+    # Capture realtime transcriptions via transcription_node (called by AgentSession)
+    async def transcription_node(self, text, model_settings):
+        from transcript_logger import log_user_message
+        # text is an async iterable of strings or TimedString-like objects
+        async for chunk in text:
+            try:
+                # TimedString may have text, start_time, end_time
+                if hasattr(chunk, "text"):
+                    content = getattr(chunk, "text")
+                    meta = {
+                        "start_time": getattr(chunk, "start_time", None),
+                        "end_time": getattr(chunk, "end_time", None),
+                    }
+                    log_user_message(content, source="transcription_node", meta=meta)
+                else:
+                    # plain string
+                    log_user_message(str(chunk), source="transcription_node")
+            except Exception:
+                # swallow to avoid breaking pipeline
+                pass
+
+            yield chunk
 
 
 async def entrypoint(ctx: JobContext):
     # Setup conversation logging
     config.setup_conversation_log()
-    
-    # Initialize variables
-    egress_id = None
     
     # -----------------------------------------------------------------
     # --- RECORDING (Egress) BLOCK ---
@@ -144,7 +162,6 @@ async def entrypoint(ctx: JobContext):
 
             lkapi = LiveKitAPI(http_host, livekit_api_key, livekit_api_secret)
 
-            # Use timestamp-based filename initially (will be renamed in egress callback)
             filename = f"recordings/{ctx.room.name}-{int(time.time())}.mp4"
 
             file_output = EncodedFileOutput(
@@ -159,8 +176,7 @@ async def entrypoint(ctx: JobContext):
             )
 
             info = await lkapi.egress.start_room_composite_egress(req)
-            egress_id = info.egress_id
-            logging.info(f"Recording started: egress_id={egress_id}, file={filename}")
+            logging.info(f"Recording started: egress_id={info.egress_id}, file={filename}")
 
     except Exception as e:
         logging.error(f"Recording error for room {ctx.room.name}: {e}")
@@ -185,8 +201,9 @@ async def entrypoint(ctx: JobContext):
             tts=instances["tts"],
             vad=instances["vad"],
         )
-        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")
+        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")  # Minimal error handling agent
         
+        # Start session with dummy agent
         await session.start(
             room=ctx.room,
             agent=dummy_agent,
@@ -194,6 +211,7 @@ async def entrypoint(ctx: JobContext):
             room_output_options=RoomOutputOptions(audio_enabled=True),
         )
         
+        # Play error message and hang up
         await session.say("Sorry, we could not identify your call. Please try again.")
         await hangup_call()
         return
@@ -204,22 +222,6 @@ async def entrypoint(ctx: JobContext):
     try:
         agent_instructions, session_instructions, closing_message, persona_name, full_config = await load_persona_from_dialed_number(dialed_number)
         logging.info(f"Successfully loaded persona for dialed number {dialed_number}: {persona_name}")
-        
-        # Get campaign metadata for file naming and matching
-        session_id = get_current_session_id() or f"session_{int(time.time())}"
-        set_current_session_id(session_id)
-        set_dialed_number(dialed_number)
-        
-        campaign_metadata = get_campaign_metadata_for_call(dialed_number, session_id)
-        
-        # Add egress_id if recording was started
-        if egress_id:
-            campaign_metadata['egressId'] = egress_id
-            logging.info(f"Added egress_id to campaign metadata: {egress_id}")
-        
-        logging.info(f"Campaign metadata collected: {campaign_metadata}")
-        logging.info(f"Session ID: {session_id}, Dialed Number: {dialed_number}")
-        
     except ValueError as e:
         logging.warning(f"Persona validation failed for {dialed_number}: {e}")
         # Create minimal session for error message
@@ -230,8 +232,9 @@ async def entrypoint(ctx: JobContext):
             tts=instances["tts"],
             vad=instances["vad"],
         )
-        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")
+        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")  # Minimal error handling agent
         
+        # Start session with dummy agent
         await session.start(
             room=ctx.room,
             agent=dummy_agent,
@@ -239,6 +242,7 @@ async def entrypoint(ctx: JobContext):
             room_output_options=RoomOutputOptions(audio_enabled=True),
         )
         
+        # Play error message and hang up
         await session.say("Sorry, this number is not configured for service. Please contact support.")
         await hangup_call()
         return
@@ -252,8 +256,9 @@ async def entrypoint(ctx: JobContext):
             tts=instances["tts"],
             vad=instances["vad"],
         )
-        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")
+        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")  # Minimal error handling agent
         
+        # Start session with dummy agent
         await session.start(
             room=ctx.room,
             agent=dummy_agent,
@@ -261,6 +266,7 @@ async def entrypoint(ctx: JobContext):
             room_output_options=RoomOutputOptions(audio_enabled=True),
         )
         
+        # Play error message and hang up
         await session.say("Sorry, there was an error loading the service configuration. Please try again later.")
         await hangup_call()
         return
@@ -279,8 +285,9 @@ async def entrypoint(ctx: JobContext):
             vad=instances["vad"],
         )
         
-        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")
+        dummy_agent = Assistant(custom_instructions="You are a helpful assistant. Keep responses brief and polite.")  # Minimal error handling agent
         
+        # Start session with dummy agent
         await session.start(
             room=ctx.room,
             agent=dummy_agent,
@@ -288,19 +295,23 @@ async def entrypoint(ctx: JobContext):
             room_output_options=RoomOutputOptions(audio_enabled=True),
         )
         
+        # Play apology message and hang up
         await session.say("Sorry, currently the agent is not available. Please try later.")
         await hangup_call()
         return
     
-    # Create the hangup event and tool
+    # NEW: Create the hangup event (our digital flag)
     hangup_event = asyncio.Event()
+
+    # NEW: Create an instance of our HangupTool, giving it the event
     hangup_tool = HangupTool(hangup_event=hangup_event)
 
-    # Create agent with persona instructions
+    # Continue with normal flow if validation passes
+    # Create agent with persona instructions from the start
     agent = Assistant(custom_instructions=agent_instructions, end_call_tool=hangup_tool.end_call)
     logging.info(f"Created agent with persona instructions for: {persona_name}")
 
-    # Get AI service instances
+    # Get default AI service instances
     instances = get_instances_from_payload(full_config)
     
     session = AgentSession(
@@ -315,14 +326,7 @@ async def entrypoint(ctx: JobContext):
     
     # Initialize session manager
     session_manager = SessionManager(session)
-    
-    # Set campaign metadata in session manager for file naming
-    session_manager.set_campaign_metadata(campaign_metadata)
-    
-    # Set session manager reference for transcript logger
-    set_session_manager(session_manager)
-    
-    logging.info("SessionManager created successfully with campaign metadata")
+    logging.info("SessionManager created successfully")
     
     # Setup session logging and monitoring
     await session_manager.setup_session_logging()
@@ -351,14 +355,18 @@ async def entrypoint(ctx: JobContext):
     initial_instruction = session_instructions
     logging.info(f"Using persona session instructions for: {persona_name}")
     
+    # --- FINAL REVISED CONVERSATION LOGIC ---
+
     logging.info("Agent is running, waiting for user input or hangup signal...")
     
     # Generate the initial reply to start the conversation
     await session.generate_reply(instructions=initial_instruction)
     
-    # Wait for the hangup signal
+    # Now wait for the hangup signal (the agent framework handles ongoing conversation)
     await hangup_event.wait()
     
+    # --- END OF REVISED BLOCK ---
+
     logging.info("Hangup signal received.")
 
     # --- HANGUP SEQUENCE ---
@@ -366,19 +374,17 @@ async def entrypoint(ctx: JobContext):
     if closing_message:
         logging.info(f"Playing closing message: {closing_message}")
         await session.say(closing_message)
-        # Add a small delay to ensure message finishes playing before hangup
-        await asyncio.sleep(2)
     
     await hangup_call()
     logging.info("Call has been successfully terminated.")
-
-    logging.info("Agent entrypoint finished.")
+    # No need for return, the function will end naturally
 
 
 if __name__ == "__main__":
-    agents.cli.run_app(
-        agents.WorkerOptions(
-            entrypoint_fnc=entrypoint,
-            agent_name="friday-assistant"
+    opts = agents.cli.run_app(agents.WorkerOptions
+        (
+        entrypoint_fnc=entrypoint,
+        agent_name="friday-assistant"
         )
     )
+    agents.cli.run_app(opts)

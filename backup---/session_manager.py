@@ -69,10 +69,6 @@ class SessionManager:
         self.hangup_task: Optional[asyncio.Task] = None
         self.last_user_activity: Optional[datetime] = None
         self._closing_detected_time: Optional[datetime] = None
-        # Enhanced storage for recording metadata
-        self.recording_metadata = {}
-        self.call_metadata = {}
-        self.campaign_metadata = {}  # For campaign/voice/session IDs
         
     async def setup_session_logging(self):
         """Setup session logging and generate session ID"""
@@ -98,7 +94,7 @@ class SessionManager:
                         except Exception:
                             payload = str(self.session.history)
 
-                # Save raw transcript (backup file for debugging - NOT used for CRM upload)
+                # Save raw transcript (first file)
                 timestamp = datetime.utcnow().isoformat().replace(":", "-")
                 room_name = getattr(self.session, "room", None)
                 room_name = getattr(room_name, "name", "session") if room_name else "session"
@@ -108,7 +104,6 @@ class SessionManager:
                 print(f"Transcript saved to {fname}")
                 
                 # Note: Do NOT call save_conversation_session here as flush_and_stop() will handle it
-                # The MongoDB-formatted session will be created by transcript_logger.py and used for CRM upload
                 
             except Exception as e:
                 # fallback: log an event indicating save failed
@@ -519,141 +514,3 @@ class SessionManager:
         except Exception as e:
             logging.error(f"SessionManager: Failed to update session with recording data: {e}", exc_info=True)
             raise
-
-    def set_campaign_metadata(self, metadata: dict):
-        """Store campaign metadata for file naming and matching"""
-        self.campaign_metadata = metadata.copy()
-        logging.info(f"SessionManager: Campaign metadata set: {metadata}")
-        
-        # Also set it for tools module
-        try:
-            from tools import set_campaign_metadata_for_tools, set_session_manager_for_tools
-            set_campaign_metadata_for_tools(metadata)
-            set_session_manager_for_tools(self)  # Pass self reference for tools to call back
-        except Exception as e:
-            logging.warning(f"Could not set campaign metadata for tools: {e}")
-    
-    def get_campaign_metadata(self) -> dict:
-        """Get current campaign metadata"""
-        return self.campaign_metadata.copy()
-
-    def set_lead_file_path(self, lead_path: str):
-        """Store lead file path for metadata inclusion"""
-        self.campaign_metadata['lead_file'] = lead_path
-        logging.info(f"SessionManager: Lead file path stored: {lead_path}")
-
-    def get_lead_file_path(self) -> Optional[str]:
-        """Get stored lead file path"""
-        return self.campaign_metadata.get('lead_file')
-
-    # Enhanced recording metadata methods for CRM upload strategy
-    def set_recording_metadata(self, metadata: dict):
-        """Store recording metadata including egress_id and API client reference"""
-        try:
-            self.recording_metadata.update(metadata)
-            
-            # Merge with campaign metadata for complete context
-            if self.campaign_metadata:
-                self.recording_metadata["campaign_metadata"] = self.campaign_metadata.copy()
-            
-            # Log the recording metadata event
-            self.log_event({
-                "type": "recording_metadata",
-                "metadata": metadata
-            })
-            
-            logging.info(f"SessionManager: Recording metadata updated: {metadata}")
-            
-        except Exception as e:
-            logging.error(f"SessionManager: Failed to set recording metadata: {e}", exc_info=True)
-        try:
-            self.recording_metadata.update(metadata)
-            
-            # Log the recording metadata event
-            log_event({
-                "type": "recording_metadata_stored",
-                "egress_id": metadata.get("egress_id"),
-                "recording_filename": metadata.get("recording_filename"),
-                "recording_start_time": metadata.get("recording_start_time"),
-                "timestamp": datetime.utcnow().isoformat() + "Z",
-                "persona": getattr(self.session, "persona_name", None),
-                "room": getattr(getattr(self.session, "room", None), "name", None)
-            })
-            
-            logging.info(f"SessionManager: Recording metadata stored - egress_id: {metadata.get('egress_id')}")
-            
-        except Exception as e:
-            logging.error(f"SessionManager: Failed to store recording metadata: {e}", exc_info=True)
-            raise
-
-    def get_recording_metadata(self) -> dict:
-        """Retrieve stored recording metadata"""
-        return self.recording_metadata.copy()
-
-    def set_call_metadata(self, metadata: dict):
-        """Store call-level metadata (dialed_number, full_config, etc.)"""
-        try:
-            self.call_metadata.update(metadata)
-            
-            # Log the call metadata event
-            log_event({
-                "type": "call_metadata_stored",
-                "dialed_number": metadata.get("dialed_number"),
-                "campaign_id": metadata.get("campaign_id"),
-                "voice_agent_id": metadata.get("voice_agent_id"),
-                "timestamp": datetime.utcnow().isoformat() + "Z",
-                "persona": getattr(self.session, "persona_name", None),
-                "room": getattr(getattr(self.session, "room", None), "name", None)
-            })
-            
-            logging.info(f"SessionManager: Call metadata stored - dialed_number: {metadata.get('dialed_number')}")
-            
-        except Exception as e:
-            logging.error(f"SessionManager: Failed to store call metadata: {e}", exc_info=True)
-            raise
-
-    def get_call_metadata(self) -> dict:
-        """Retrieve stored call metadata"""
-        return self.call_metadata.copy()
-
-    def link_lead_to_session(self, lead_id: str):
-        """Link a lead ID to this session"""
-        try:
-            self.call_metadata["lead_id"] = lead_id
-            
-            # Log the lead linking event
-            log_event({
-                "type": "lead_linked_to_session",
-                "lead_id": lead_id,
-                "timestamp": datetime.utcnow().isoformat() + "Z",
-                "persona": getattr(self.session, "persona_name", None),
-                "room": getattr(getattr(self.session, "room", None), "name", None)
-            })
-            
-            logging.info(f"SessionManager: Lead linked to session - lead_id: {lead_id}")
-            
-        except Exception as e:
-            logging.error(f"SessionManager: Failed to link lead to session: {e}", exc_info=True)
-            raise
-
-    def get_complete_session_data(self) -> dict:
-        """Get complete session data for CRM upload"""
-        try:
-            # Combine all metadata
-            complete_data = {
-                "recording_metadata": self.get_recording_metadata(),
-                "call_metadata": self.get_call_metadata(),
-                "session_info": {
-                    "persona_name": getattr(self.session, "persona_name", None),
-                    "room_name": getattr(getattr(self.session, "room", None), "name", None),
-                    "session_start": getattr(self.session, "session_start", None),
-                    "recording_url": getattr(self.session, "recording_url", None)
-                }
-            }
-            
-            logging.info(f"SessionManager: Complete session data compiled for CRM upload")
-            return complete_data
-            
-        except Exception as e:
-            logging.error(f"SessionManager: Failed to compile complete session data: {e}", exc_info=True)
-            return {}

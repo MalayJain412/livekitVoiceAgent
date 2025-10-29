@@ -1,0 +1,83 @@
+{
+  "campaignId": "68c91223fde0aa95caa3dbe4",
+  "voiceAgentId": "68c9105cfde0aa95caa3db64",
+  "client": "68c90d626052ee95ac77059d",
+  "callDetails": {
+    "callId": "CALL-20251028-163927-b87cf3c4",
+    "direction": "inbound",
+    "startTime": "2025-10-28T06:27:29.508221Z",
+    "endTime": "2025-10-28T06:27:35.205785Z",
+    "duration": 5,
+    "status": "completed",
+    "callerNumber": "+919876543210",
+    "recordingUrl": "https://devcrm.xeny.ai/apis/uploads/recordings/1761646722349.ogg",
+    "recordingDuration": 5,
+    "recordingSize": 2048000
+  },
+  "caller": {
+    "phoneNumber": "+919876543210"
+  },
+  "transcription": {
+    "session_id": "session_20251028_062729_b87cf3c4",
+    "start_time": "2025-10-28T06:27:29.508221Z",
+    "end_time": "2025-10-28T06:27:35.205785Z",
+    "duration_seconds": 5.697564,
+    "total_items": 7,
+    "conversation_items": [
+      {
+        "role": "user",
+        "content": "Hi",
+        "timestamp": "2025-10-28T06:27:32.240518Z",
+        "source": "transcription_node",
+        "transcript_confidence": null
+      },
+      {
+        "role": "user",
+        "content": " I",
+        "timestamp": "2025-10-28T06:27:32.247518Z",
+        "source": "transcription_node",
+        "transcript_confidence": null
+      },
+      {
+        "role": "user",
+        "content": " am",
+        "timestamp": "2025-10-28T06:27:32.251517Z",
+        "source": "transcription_node",
+        "transcript_confidence": null
+      },
+      {
+        "role": "user",
+        "content": " assistant",
+        "timestamp": "2025-10-28T06:27:32.251517Z",
+        "source": "transcription_node",
+        "transcript_confidence": null
+      },
+      {
+        "role": "user",
+        "content": " of",
+        "timestamp": "2025-10-28T06:27:32.251517Z",
+        "source": "transcription_node",
+        "transcript_confidence": null
+      },
+      {
+        "role": "user",
+        "content": " Malay",
+        "timestamp": "2025-10-28T06:27:32.268518Z",
+        "source": "transcription_node",
+        "transcript_confidence": null
+      },
+      {
+        "role": "user",
+        "content": " Jain",
+        "timestamp": "2025-10-28T06:27:32.268518Z",
+        "source": "transcription_node",
+        "transcript_confidence": null
+      }
+    ],
+    "lead_generated": false,
+    "metadata": {
+      "auto_saved": true
+    }
+  },
+  "lead": {}
+}

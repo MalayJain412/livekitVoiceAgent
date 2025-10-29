@@ -7,7 +7,7 @@ from typing import Optional, Tuple
 import re
 import time
 load_dotenv()  # Load environment variables early
-from transcript_logger import set_current_session_id, get_current_session_id, set_dialed_number, set_session_manager
+from transcript_logger import set_current_session_id, get_current_session_id, set_dialed_number
 
 from livekit import agents
 from livekit.agents import AgentSession, Agent, RoomInputOptions, RoomOutputOptions, JobContext
@@ -318,9 +318,6 @@ async def entrypoint(ctx: JobContext):
     
     # Set campaign metadata in session manager for file naming
     session_manager.set_campaign_metadata(campaign_metadata)
-    
-    # Set session manager reference for transcript logger
-    set_session_manager(session_manager)
     
     logging.info("SessionManager created successfully with campaign metadata")
     

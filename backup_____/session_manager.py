@@ -527,24 +527,14 @@ class SessionManager:
         
         # Also set it for tools module
         try:
-            from tools import set_campaign_metadata_for_tools, set_session_manager_for_tools
+            from tools import set_campaign_metadata_for_tools
             set_campaign_metadata_for_tools(metadata)
-            set_session_manager_for_tools(self)  # Pass self reference for tools to call back
         except Exception as e:
             logging.warning(f"Could not set campaign metadata for tools: {e}")
     
     def get_campaign_metadata(self) -> dict:
         """Get current campaign metadata"""
         return self.campaign_metadata.copy()
-
-    def set_lead_file_path(self, lead_path: str):
-        """Store lead file path for metadata inclusion"""
-        self.campaign_metadata['lead_file'] = lead_path
-        logging.info(f"SessionManager: Lead file path stored: {lead_path}")
-
-    def get_lead_file_path(self) -> Optional[str]:
-        """Get stored lead file path"""
-        return self.campaign_metadata.get('lead_file')
 
     # Enhanced recording metadata methods for CRM upload strategy
     def set_recording_metadata(self, metadata: dict):

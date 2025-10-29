@@ -101,5 +101,3 @@
 {"role": "user", "content": "Sorry, currently the agent is not available. Please try later.", "timestamp": "2025-10-22T09:05:40.907322Z", "source": "transcription_node"}
 {"type": "persona_loaded_from_api", "dialed_number": "8655701159", "persona_name": "piperbot", "source": "api_fallback", "persona_use_mode": "api"}
 {"type": "persona_applied", "persona_name": "piperbot", "has_config": true, "has_session_instructions": true, "has_closing": true, "timestamp": "2025-10-22T09:44:01.180406Z"}
-{"type": "persona_loaded_from_api", "dialed_number": "+918655054859", "persona_name": "xeny", "source": "api_fallback", "persona_use_mode": "api"}
-{"type": "persona_applied", "persona_name": "xeny", "has_config": true, "has_session_instructions": true, "has_closing": true, "timestamp": "2025-10-24T14:46:17.619731Z"}

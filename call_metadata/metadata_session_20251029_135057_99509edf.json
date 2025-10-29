@@ -1,0 +1,25 @@
+{
+  "session_id": "session_20251029_135057_99509edf",
+  "dialed_number": "+918655066243",
+  "campaign_metadata": {
+    "campaignId": "68ff5c0f015cbf44dd9f336c",
+    "voiceAgentId": "68ff5b90015cbf44dd9f3269",
+    "clientId": "68ff5a88015cbf44dd9f3006",
+    "sessionId": "session_1761745857",
+    "dialedNumber": "+918655066243",
+    "egressId": "EG_KfWxAFCAvH79"
+  },
+  "files": {
+    "recording": null,
+    "conversation": "/home/TTBS112817/xeny-livekit/conversations/transcript_session_68ff5c0f015c_68ff5b90015c_session17617458.json",
+    "lead": null
+  },
+  "timestamps": {
+    "call_start": "2025-10-29T13:50:57.987953+00:00Z",
+    "call_end": "2025-10-29T13:51:29.544211+00:00Z",
+    "metadata_saved": "2025-10-29T13:51:31.540340Z"
+  },
+  "status": "ready_for_upload",
+  "upload_attempts": 0,
+  "last_upload_attempt": null
+}
